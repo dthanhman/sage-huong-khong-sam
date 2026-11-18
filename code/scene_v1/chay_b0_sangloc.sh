@@ -5,13 +5,14 @@
 # Quy tắc kết luận: tai_lap/QUY_TAC_CHAM.md (thang 3 mức, so với CẢ tb và sage).
 # Chạy: bash scene_v1/chay_b0_sangloc.sh   (từ tai_lap; phiên phải mở suốt)
 set -e
-export SAGE_MAN=D:/CS406/DoAn/Sage/tai_lap/scene_v1/kham_pha SO_TRAIN=841 PYTHONUTF8=1
-export SAGE_ANH=D:/CS406/DoAn/Sage/luu_tru/tim_gap_b0_0811/seg/anh
-export SAGE_RUNS=D:/CS406/DoAn/Sage/tai_lap/scene_v1/runs_b0
-PY=D:/Miniconda3/envs/DoAn/python.exe
+TL=$(cd "$(dirname "$0")/.." && pwd)
+export SAGE_MAN=$TL/scene_v1/kham_pha SO_TRAIN=841 PYTHONUTF8=1
+export SAGE_ANH=${SAGE_ANH:-$TL/b3/anh}
+export SAGE_RUNS=$TL/scene_v1/runs_b0
+PY=${PY:-python}
 BT="tb sage nosam_kp841 m11_kp"
 SEEDS="${SEEDS:-0 1 2}"
-cd D:/CS406/DoAn/Sage/tai_lap/b3
+cd $TL/b3
 mkdir -p $SAGE_RUNS
 
 for s in $SEEDS; do

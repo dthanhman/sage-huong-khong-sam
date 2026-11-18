@@ -1,0 +1,5 @@
+Môi trường máy nhà (đo 18/11/2026)
+Python 3.11.17, torch 2.7.1+cu128, transformers 5.20.1
+Thư viện khác: numpy, pandas, opencv-python, scipy
+GPU: RTX 3050 6 GB, RAM 11,7 GB (Windows 11, Git Bash)
+B3 chính thức chạy trên Kaggle T4 (torch 2.11.0+cu130, Python 3.13)

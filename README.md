@@ -188,7 +188,7 @@ _Kết quả lần sửa này sẽ được cập nhật vào đây._
 
 ---
 
-## Phụ lục: dữ liệu gốc đi kèm (không cần đọc để hiểu)
+## Phụ lục A: dữ liệu gốc đi kèm (không cần đọc để hiểu)
 
 | Thư mục | Có gì |
 |---|---|
@@ -196,8 +196,47 @@ _Kết quả lần sửa này sẽ được cập nhật vào đây._
 | `ket_qua/e18_chi_phi/` | Bảng chi phí đo trên T4 (mục 2.2) |
 | `ket_qua/danh_doi/` | Chỉ số ghép so với mIoU (mục 2.3) |
 | `ket_qua/split_cu/` | Số của các phương án mục 3 |
-| `ket_qua/kham_pha/` | Chỉ số ghép trên val 151 và sàn (mục 4.2, 4.4) |
+| `ket_qua/kham_pha/` | Chỉ số ghép trên val 151, sàn, log train (mục 4.2, 4.4) |
 | `ket_qua/chan_doan_m11/` | Log đo lực kéo (mục 4.5) |
-| `manifest_kham_pha/` | Danh sách ảnh train 841 / val 151 |
-| `code/` | Bản chụp các script chính ngày 18/11 |
 | `hinh/` | Hình minh họa |
+| `code/` | Code chạy được, xem Phụ lục B |
+
+## Phụ lục B: chạy lại
+
+### Cấu trúc `code/`
+
+| Thư mục | Có gì |
+|---|---|
+| `b3/` | `chung.py` (đường dẫn, danh sách lớp, mIoU), `xuat_anh.py` (xuất ảnh ghép), `train_seg.py` / `eval_seg.py` (train, chấm SegFormer B0/B3), `so_sanh_cap.py` (so theo cặp seed) |
+| `b3/sage_student/` | `model.py` (kiến trúc Student của SAGE) và **checkpoint Student đã train** (mỗi file khoảng 0,6 MB): `nosam*` (E17, 5 seed), `nosam_kp841*` (tập khám phá, 5 seed), `m11_kp`, `tbsua_kp841`, `tbsua_w150` |
+| `e17/` | Train Student bỏ SAM; so sánh E17 |
+| `cai_tien/` | M11 (`m11_hoc_chung.py`, dùng hàm trong `train_student_seg.py`), nền B (`tb_sua.py`), chỉ số ghép (`chi_so_ghep.py`, `cong2_ci.py`), độ lệch ảnh (`lech_y.py`). `danh_doi/` là script phân tích, đường dẫn còn cứng, chỉ để đọc |
+| `scene_v1/` | Script chạy từng thí nghiệm; `kham_pha/` (train 841 / val 151); `goc/` (split scene_v1 992/228 của nhóm, kèm `scene_decision.md`) |
+| `chi_phi/` | Đo chi phí (E18) |
+| `pr6_eval/` | Code chỉ số ghép của Lộc lớn (SCD, MS-SSIM, Q_ABF…), chép nguyên `metrics.py` |
+| `QUY_TAC_CHAM.md`, `moi_truong.txt` | Quy tắc so sánh của nhóm; phiên bản thư viện |
+
+### Cần chuẩn bị
+
+1. Dataset **FMB** (repo không kèm). Cần có `train/Visible`, `train/Infrared`, `train/Label`, và tương tự cho `test`.
+2. Checkpoint Student SAGE gốc `checkpoints.pt` (từ repo `RollingPlain/SAGE_IVIF`), đặt vào `code/b3/sage_student/`. Chỉ cần khi xuất ảnh `sage`.
+3. Biến môi trường:
+   ```bash
+   export SAGE_FMB=<thư mục FMB>          # nơi có train/Visible, test/Visible
+   export SAGE_ANH=<nơi ghi ảnh ghép>     # mặc định code/b3/anh
+   export PY=python                        # hoặc đường dẫn python có torch
+   ```
+
+### Lệnh (chạy bằng bash, từ thư mục `code/`)
+
+| Việc | Lệnh | Thời gian (RTX 3050) |
+|---|---|---|
+| Xuất ảnh ghép từ checkpoint có sẵn | `cd b3 && SAGE_MAN=../scene_v1/kham_pha SO_TRAIN=841 $PY xuat_anh.py --bien_the tbsua_w150` | vài phút |
+| Train Student bỏ SAM + M11 (mục 4.3) | `bash scene_v1/chay_p1.sh` | khoảng 1,5 giờ |
+| Đặt sàn từ 5 seed (mục 4.2) | `bash scene_v1/chay_san.sh` | khoảng 1 giờ |
+| Nền B, w_tb = 150 (mục 4.4) | `bash scene_v1/chay_tbsua150.sh` | khoảng 15 phút |
+| M11 bản sửa λ = 5 (mục 4.5) | `bash scene_v1/chay_m11_l5.sh` | khoảng 20 phút |
+| Chẩn đoán lực kéo M11 | `cd cai_tien && SAGE_MAN=../scene_v1/kham_pha SO_TRAIN=841 $PY m11_hoc_chung.py --ten m11_kp_dograd --init nosam_kp841 --epochs 8 --do_grad 10` | khoảng 12 phút |
+| Sàng lọc mIoU bằng B0 (chưa chạy) | `bash scene_v1/chay_b0_sangloc.sh` | khoảng 1,2 giờ mỗi lượt |
+
+Đã thử: xuất 3 ảnh `tbsua_w150` bằng code trong repo này, kết quả **giống hệt từng điểm ảnh** với bản gốc. Các script khác đã chạy thử `--help` và đều nạp được.

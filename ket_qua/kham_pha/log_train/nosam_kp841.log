@@ -1,0 +1,25 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+Student: 0.136M tham số
+epoch   1 bước 106 lr 2.00e-03 loss 4.4659 (fuse 0.2744, grad 1.2142) 0.1 phút
+epoch   5 bước 530 lr 2.00e-03 loss 2.2757 (fuse 0.1526, grad 0.6060) 0.6 phút
+epoch  10 bước 1060 lr 1.99e-03 loss 2.0599 (fuse 0.1328, grad 0.5538) 1.1 phút
+epoch  15 bước 1590 lr 1.97e-03 loss 1.8555 (fuse 0.1527, grad 0.4658) 1.7 phút
+epoch  20 bước 2120 lr 1.95e-03 loss 1.7427 (fuse 0.1386, grad 0.4423) 2.3 phút
+epoch  25 bước 2650 lr 1.92e-03 loss 1.8866 (fuse 0.1420, grad 0.4868) 2.9 phút
+epoch  30 bước 3180 lr 1.89e-03 loss 1.6722 (fuse 0.1340, grad 0.4234) 3.4 phút
+epoch  35 bước 3710 lr 1.85e-03 loss 1.6776 (fuse 0.1369, grad 0.4223) 4.0 phút
+epoch  40 bước 4240 lr 1.81e-03 loss 1.7251 (fuse 0.1529, grad 0.4222) 4.6 phút
+epoch  45 bước 4770 lr 1.76e-03 loss 1.6153 (fuse 0.1390, grad 0.3994) 5.1 phút
+epoch  50 bước 5300 lr 1.71e-03 loss 1.6689 (fuse 0.1374, grad 0.4189) 5.7 phút
+epoch  55 bước 5830 lr 1.65e-03 loss 1.5130 (fuse 0.1307, grad 0.3736) 6.2 phút
+epoch  60 bước 6360 lr 1.59e-03 loss 1.4975 (fuse 0.1264, grad 0.3728) 6.8 phút
+epoch  65 bước 6890 lr 1.52e-03 loss 1.4779 (fuse 0.1352, grad 0.3575) 7.4 phút
+epoch  70 bước 7420 lr 1.45e-03 loss 1.4794 (fuse 0.1342, grad 0.3590) 7.9 phút
+epoch  75 bước 7950 lr 1.38e-03 loss 1.3695 (fuse 0.1286, grad 0.3280) 8.5 phút
+epoch  80 bước 8480 lr 1.31e-03 loss 1.4278 (fuse 0.1303, grad 0.3456) 9.0 phút
+epoch  85 bước 9010 lr 1.23e-03 loss 1.3872 (fuse 0.1312, grad 0.3312) 9.6 phút
+epoch  90 bước 9540 lr 1.15e-03 loss 1.3820 (fuse 0.1335, grad 0.3271) 10.1 phút
+epoch  95 bước 10070 lr 1.08e-03 loss 1.3298 (fuse 0.1324, grad 0.3109) 10.7 phút
+epoch 100 bước 10600 lr 9.98e-04 loss 1.3473 (fuse 0.1360, grad 0.3131) 11.2 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\nosam_kp841.pt

@@ -4,7 +4,7 @@ Tính trên kênh Y: Y ảnh ghép (RGB->YCrCb), Y của VIS, IR 1 kênh, 800x60
 Code chỉ số: pr6_eval/src/evaluation/metrics.py (Lộc lớn). MS-SSIM kiểu TỔNG (như bài, có thể > 1).
 
 Ví dụ:
-  SAGE_ANH=D:/CS406/DoAn/Sage/luu_tru/tim_gap_b0_0811/seg/anh \
+  SAGE_ANH=<thư mục ảnh ghép> \
   python chi_so_ghep.py --bien_the sage nosam tb vis --tap dev
 Ra: cai_tien/chi_so_ghep/{tap}_tung_anh.csv (từng ảnh) và {tap}_tong_hop.csv (trung bình + % so với SAGE).
 """
@@ -19,7 +19,7 @@ import pandas as pd
 
 DAY = Path(__file__).resolve().parent
 sys.path.insert(0, str(DAY.parent / "b3"))
-sys.path.insert(0, str(DAY.parents[1] / "pr6_eval"))
+sys.path.insert(0, str(DAY.parent / "pr6_eval"))   # bản repo: code/pr6_eval
 from chung import ANH, MAN, duong, thu_muc  # noqa: E402
 from src.evaluation.metrics import (entropy, fusion_ms_ssim, q_abf,  # noqa: E402
                                     standard_deviation, sum_of_correlation_differences)

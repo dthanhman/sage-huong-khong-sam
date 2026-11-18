@@ -5,10 +5,10 @@
 # Chạy lại được: checkpoint / ảnh đã có thì bỏ qua.
 # Chạy: bash scene_v1/chay_san.sh   (từ thư mục tai_lap; phiên phải mở suốt, ~1 h)
 set -e
-export SAGE_MAN=D:/CS406/DoAn/Sage/tai_lap/scene_v1/kham_pha SO_TRAIN=841 PYTHONUTF8=1
-export SAGE_ANH=D:/CS406/DoAn/Sage/luu_tru/tim_gap_b0_0811/seg/anh
-PY=D:/Miniconda3/envs/DoAn/python.exe
-TL=D:/CS406/DoAn/Sage/tai_lap
+TL=$(cd "$(dirname "$0")/.." && pwd)
+export SAGE_MAN=$TL/scene_v1/kham_pha SO_TRAIN=841 PYTHONUTF8=1
+export SAGE_ANH=${SAGE_ANH:-$TL/b3/anh}
+PY=${PY:-python}
 LOG=$TL/scene_v1
 
 for s in 1 2 3 4; do
