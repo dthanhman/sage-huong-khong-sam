@@ -1,0 +1,25 @@
+151 ảnh, 17 khối 10 ảnh, B = 2000
+
+== SCD  (SAGE = 1.7211)
+  nosam_kp841   88.9%  CI95 [ 85.6;  91.9]
+  nosam_kp841_s1   87.5%  CI95 [ 84.7;  90.4]
+  nosam_kp841_s2   89.8%  CI95 [ 87.5;  92.0]
+  nosam_kp841_s3   86.1%  CI95 [ 82.3;  90.0]
+  nosam_kp841_s4   91.6%  CI95 [ 89.2;  93.9]
+  -> 5 seed nosam: lệch max−min = 5.48% SAGE, SD = 2.11% SAGE
+
+== MS_SSIM  (SAGE = 1.5736)
+  nosam_kp841  101.4%  CI95 [101.0; 101.8]
+  nosam_kp841_s1  101.9%  CI95 [101.4; 102.5]
+  nosam_kp841_s2  102.1%  CI95 [101.7; 102.7]
+  nosam_kp841_s3  101.5%  CI95 [101.1; 102.1]
+  nosam_kp841_s4  102.1%  CI95 [101.7; 102.7]
+  -> 5 seed nosam: lệch max−min = 0.74% SAGE, SD = 0.34% SAGE
+
+== Q_ABF  (SAGE = 0.6625)
+  nosam_kp841  108.2%  CI95 [106.6; 110.3]
+  nosam_kp841_s1  107.7%  CI95 [106.3; 109.4]
+  nosam_kp841_s2  105.8%  CI95 [104.7; 107.5]
+  nosam_kp841_s3  105.7%  CI95 [104.4; 107.7]
+  nosam_kp841_s4  108.1%  CI95 [106.5; 110.2]
+  -> 5 seed nosam: lệch max−min = 2.46% SAGE, SD = 1.23% SAGE

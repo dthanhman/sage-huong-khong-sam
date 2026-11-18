@@ -1,0 +1,33 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+epoch   1 loss 1.7634 (MSE_TB 0.00348, grad 0.0634) |phần sửa| TB 11.55 mức xám  0.1 phút
+epoch   5 loss 1.3005 (MSE_TB 0.00441, grad 0.0457) |phần sửa| TB 13.18 mức xám  0.6 phút
+epoch  10 loss 1.1996 (MSE_TB 0.00375, grad 0.0424) |phần sửa| TB 12.15 mức xám  1.1 phút
+epoch  15 loss 1.0387 (MSE_TB 0.00371, grad 0.0364) |phần sửa| TB 12.05 mức xám  1.7 phút
+epoch  20 loss 0.9531 (MSE_TB 0.00334, grad 0.0334) |phần sửa| TB 11.40 mức xám  2.3 phút
+epoch  25 loss 0.9942 (MSE_TB 0.00334, grad 0.0350) |phần sửa| TB 11.33 mức xám  2.9 phút
+epoch  30 loss 0.9675 (MSE_TB 0.00319, grad 0.0341) |phần sửa| TB 10.91 mức xám  3.4 phút
+epoch  35 loss 0.8783 (MSE_TB 0.00318, grad 0.0308) |phần sửa| TB 11.03 mức xám  4.0 phút
+epoch  40 loss 0.8585 (MSE_TB 0.00329, grad 0.0300) |phần sửa| TB 11.49 mức xám  4.6 phút
+epoch  45 loss 0.8763 (MSE_TB 0.00324, grad 0.0307) |phần sửa| TB 11.24 mức xám  5.1 phút
+epoch  50 loss 0.8401 (MSE_TB 0.00323, grad 0.0293) |phần sửa| TB 11.18 mức xám  5.7 phút
+epoch  55 loss 0.8180 (MSE_TB 0.00309, grad 0.0286) |phần sửa| TB 10.97 mức xám  6.3 phút
+epoch  60 loss 0.7989 (MSE_TB 0.00311, grad 0.0279) |phần sửa| TB 10.97 mức xám  6.9 phút
+epoch  65 loss 0.8194 (MSE_TB 0.00322, grad 0.0286) |phần sửa| TB 11.17 mức xám  7.4 phút
+epoch  70 loss 0.7809 (MSE_TB 0.00316, grad 0.0272) |phần sửa| TB 11.08 mức xám  8.0 phút
+epoch  75 loss 0.7915 (MSE_TB 0.00331, grad 0.0275) |phần sửa| TB 11.43 mức xám  8.6 phút
+epoch  80 loss 0.9822 (MSE_TB 0.00338, grad 0.0345) |phần sửa| TB 11.33 mức xám  9.1 phút
+epoch  85 loss 0.8317 (MSE_TB 0.00324, grad 0.0290) |phần sửa| TB 11.04 mức xám  9.7 phút
+epoch  90 loss 0.7966 (MSE_TB 0.00335, grad 0.0276) |phần sửa| TB 11.35 mức xám  10.2 phút
+epoch  95 loss 0.7714 (MSE_TB 0.00317, grad 0.0268) |phần sửa| TB 11.12 mức xám  10.8 phút
+epoch 100 loss 0.7529 (MSE_TB 0.00326, grad 0.0261) |phần sửa| TB 11.28 mức xám  11.3 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\tbsua_kp841.pt
+tbsua_kp841: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\tbsua_kp841
+dev: 151 ảnh
+                SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                        
+sage         1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+tb           1.4241   1.6518  0.3995  5.9740  24.5265      0.8089       0.8429    82.7394       104.9669      60.3088      False
+tbcd         1.5609   1.5885  0.6616  6.4694  28.7444      0.7405       0.8480    90.6910       100.9462      99.8681      False
+nosam_kp841  1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+tbsua_kp841  1.5658   1.5571  0.7293  6.5206  29.0887      0.6643       0.8927    90.9748        98.9482     110.0806      False

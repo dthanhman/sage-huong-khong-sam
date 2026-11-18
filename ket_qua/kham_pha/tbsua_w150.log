@@ -1,0 +1,34 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+epoch   1 loss 1.8324 (MSE_TB 0.00091, grad 0.0628) |phần sửa| TB 4.84 mức xám  0.2 phút
+epoch   5 loss 1.4596 (MSE_TB 0.00094, grad 0.0488) |phần sửa| TB 4.60 mức xám  0.6 phút
+epoch  10 loss 1.3278 (MSE_TB 0.00099, grad 0.0437) |phần sửa| TB 4.67 mức xám  1.2 phút
+epoch  15 loss 1.1260 (MSE_TB 0.00101, grad 0.0361) |phần sửa| TB 4.62 mức xám  1.7 phút
+epoch  20 loss 1.0748 (MSE_TB 0.00104, grad 0.0341) |phần sửa| TB 4.68 mức xám  2.3 phút
+epoch  25 loss 1.1303 (MSE_TB 0.00117, grad 0.0354) |phần sửa| TB 4.97 mức xám  2.9 phút
+epoch  30 loss 1.0568 (MSE_TB 0.00107, grad 0.0332) |phần sửa| TB 4.74 mức xám  3.5 phút
+epoch  35 loss 1.0262 (MSE_TB 0.00111, grad 0.0319) |phần sửa| TB 4.87 mức xám  4.0 phút
+epoch  40 loss 0.9976 (MSE_TB 0.00104, grad 0.0312) |phần sửa| TB 4.67 mức xám  4.6 phút
+epoch  45 loss 0.9985 (MSE_TB 0.00118, grad 0.0304) |phần sửa| TB 5.03 mức xám  5.2 phút
+epoch  50 loss 1.0034 (MSE_TB 0.00107, grad 0.0312) |phần sửa| TB 4.70 mức xám  5.7 phút
+epoch  55 loss 0.9746 (MSE_TB 0.00111, grad 0.0300) |phần sửa| TB 4.85 mức xám  6.3 phút
+epoch  60 loss 0.9535 (MSE_TB 0.00113, grad 0.0290) |phần sửa| TB 4.86 mức xám  6.9 phút
+epoch  65 loss 0.9716 (MSE_TB 0.00116, grad 0.0295) |phần sửa| TB 4.91 mức xám  7.5 phút
+epoch  70 loss 0.9541 (MSE_TB 0.00115, grad 0.0289) |phần sửa| TB 4.95 mức xám  8.0 phút
+epoch  75 loss 0.9579 (MSE_TB 0.00118, grad 0.0289) |phần sửa| TB 4.97 mức xám  8.6 phút
+epoch  80 loss 0.9536 (MSE_TB 0.00115, grad 0.0289) |phần sửa| TB 4.95 mức xám  9.2 phút
+epoch  85 loss 0.9079 (MSE_TB 0.00113, grad 0.0274) |phần sửa| TB 4.80 mức xám  9.7 phút
+epoch  90 loss 0.8996 (MSE_TB 0.00116, grad 0.0269) |phần sửa| TB 4.88 mức xám  10.3 phút
+epoch  95 loss 0.8894 (MSE_TB 0.00111, grad 0.0268) |phần sửa| TB 4.77 mức xám  10.8 phút
+epoch 100 loss 0.8934 (MSE_TB 0.00114, grad 0.0268) |phần sửa| TB 4.89 mức xám  11.4 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\tbsua_w150.pt
+tbsua_w150: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\tbsua_w150
+dev: 151 ảnh
+                SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                        
+sage         1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+tb           1.4241   1.6518  0.3995  5.9740  24.5265      0.8089       0.8429    82.7394       104.9669      60.3088      False
+tbcd         1.5609   1.5885  0.6616  6.4694  28.7444      0.7405       0.8480    90.6910       100.9462      99.8681      False
+nosam_kp841  1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+tbsua_kp841  1.5658   1.5571  0.7293  6.5206  29.0887      0.6643       0.8927    90.9748        98.9482     110.0806      False
+tbsua_w150   1.5476   1.5956  0.7231  6.4182  27.5314      0.7086       0.8870    89.9179       101.3988     109.1582      False

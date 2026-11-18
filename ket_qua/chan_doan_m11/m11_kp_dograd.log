@@ -1,0 +1,32 @@
+Nạp ảnh ...
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 23812.25it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+epoch   1 B0    CE 1.0369 nội dung 1.7676 SCD 1.512 cháy 0.01%  1.0 phút
+epoch   2 B0    CE 0.4129 nội dung 1.7718 SCD 1.511 cháy 0.01%  2.0 phút
+epoch   3 B0    CE 0.3374 nội dung 1.7637 SCD 1.508 cháy 0.01%  3.1 phút
+epoch   4 B0    CE 0.2965 nội dung 1.7544 SCD 1.517 cháy 0.01%  4.1 phút
+epoch   5 B0    CE 0.2663 nội dung 1.7643 SCD 1.506 cháy 0.01% | Dev (B0 học chung) 37.50  5.5 phút
+epoch   6 ST+B0 CE 0.2541 nội dung 1.1430 SCD 1.466 cháy 0.00% | g_CE 1.09e+00 g_rào 7.29e+00 tỉ lệ 0.150 cos +0.05  7.2 phút
+epoch   7 ST+B0 CE 0.2340 nội dung 1.1043 SCD 1.487 cháy 0.00% | g_CE 1.30e+00 g_rào 5.22e+00 tỉ lệ 0.248 cos +0.05  9.0 phút
+epoch   8 ST+B0 CE 0.2303 nội dung 1.0856 SCD 1.484 cháy 0.00% | Dev (B0 học chung) 41.49 | g_CE 1.38e+00 g_rào 6.70e+00 tỉ lệ 0.206 cos +0.08  11.0 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\m11_kp_dograd.pt. Tiếp: b3/xuat_anh.py --bien_the m11_kp_dograd -> chi_so_ghep.py -> B0 mới.

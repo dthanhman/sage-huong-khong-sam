@@ -1,0 +1,152 @@
+D:\CS406\DoAn\Sage\tai_lap\e17\so_sanh_e17.py:54: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  mi["TB"] = mi[SEEDS].mean(1); mi["SD"] = mi[SEEDS].std(1, ddof=1) if len(SEEDS) > 1 else np.nan
+D:\CS406\DoAn\Sage\tai_lap\e17\so_sanh_e17.py:54: Pandas4Warning: Starting with pandas version 4.0 all arguments of std will be keyword-only.
+  mi["TB"] = mi[SEEDS].mean(1); mi["SD"] = mi[SEEDS].std(1, ddof=1) if len(SEEDS) > 1 else np.nan
+Seed đủ 4 biến thể: [0, 1, 2]
+
+################ SEED 0 ################
+
+== [273 ảnh] 273 ảnh | vis 62.07  ir 54.66  sage 62.62  tb 64.27  nosam 62.89 | person vis 59.0  ir 70.5  sage 69.5  tb 69.4  nosam 70.2
+  sage−nosam -0.28 [-1.29; +0.61] 
+  nosam−tb   -1.37 [-2.20; -0.24]*
+  nosam−vis  +0.83 [-0.79; +2.99] 
+  sage−vis  +0.55 [-1.39; +2.79] 
+  tb  −sage +1.65 [+0.35; +2.65]*
+
+== [tối] 91 ảnh | vis 55.48  ir 55.11  sage 57.94  tb 60.78  nosam 59.55 | person vis 66.3  ir 77.4  sage 77.4  tb 76.5  nosam 77.6
+  sage−nosam -1.61 [-2.46; +1.57] 
+  nosam−tb   -1.22 [-2.72; +0.79] 
+  nosam−vis  +4.08 [-1.63; +7.96] 
+  sage−vis  +2.46 [-2.38; +7.63] 
+  tb  −sage +2.83 [-2.08; +3.97] 
+
+== [vừa] 91 ảnh | vis 61.97  ir 53.65  sage 61.24  tb 63.37  nosam 61.95 | person vis 36.5  ir 54.3  sage 44.1  tb 48.0  nosam 48.5
+  sage−nosam -0.72 [-1.99; +1.44] 
+  nosam−tb   -1.42 [-2.57; +0.41] 
+  nosam−vis  -0.02 [-1.87; +2.10] 
+  sage−vis  -0.73 [-3.43; +3.08] 
+  tb  −sage +2.14 [-0.48; +3.08] 
+
+== [sáng] 91 ảnh | vis 65.40  ir 57.63  sage 66.27  tb 67.12  nosam 66.04 | person vis 47.8  ir 55.8  sage 59.0  tb 59.0  nosam 58.8
+  sage−nosam +0.23 [-1.96; +1.27] 
+  nosam−tb   -1.08 [-2.80; +0.73] 
+  nosam−vis  +0.64 [-1.16; +3.96] 
+  sage−vis  +0.87 [-0.92; +3.29] 
+  tb  −sage +0.85 [-0.16; +3.55] 
+
+################ SEED 1 ################
+
+== [273 ảnh] 273 ảnh | vis 62.56  ir 56.64  sage 63.07  tb 63.91  nosam 64.07 | person vis 58.8  ir 70.8  sage 69.9  tb 69.4  nosam 70.9
+  sage−nosam -1.00 [-1.79; +0.15] 
+  nosam−tb   +0.16 [-1.39; +1.16] 
+  nosam−vis  +1.51 [-0.05; +3.61] 
+  sage−vis  +0.51 [-1.33; +3.03] 
+  tb  −sage +0.84 [-0.53; +2.51] 
+
+== [tối] 91 ảnh | vis 55.40  ir 58.42  sage 57.67  tb 61.66  nosam 59.31 | person vis 65.7  ir 77.7  sage 78.1  tb 76.8  nosam 78.8
+  sage−nosam -1.64 [-2.49; +1.31] 
+  nosam−tb   -2.36 [-4.10; +1.40] 
+  nosam−vis  +3.90 [-2.36; +8.72] 
+  sage−vis  +2.26 [-3.74; +8.17] 
+  tb  −sage +4.00 [-1.58; +6.00] 
+
+== [vừa] 91 ảnh | vis 63.25  ir 54.35  sage 63.19  tb 63.59  nosam 63.92 | person vis 37.3  ir 53.7  sage 44.4  tb 46.5  nosam 47.2
+  sage−nosam -0.73 [-1.84; +1.03] 
+  nosam−tb   +0.33 [-1.09; +1.60] 
+  nosam−vis  +0.67 [-1.17; +2.73] 
+  sage−vis  -0.06 [-2.46; +3.27] 
+  tb  −sage +0.39 [-0.78; +1.51] 
+
+== [sáng] 91 ảnh | vis 66.41  ir 56.83  sage 67.08  tb 67.70  nosam 67.90 | person vis 49.1  ir 56.8  sage 58.6  tb 60.3  nosam 59.0
+  sage−nosam -0.83 [-2.21; +0.72] 
+  nosam−tb   +0.20 [-1.40; +1.23] 
+  nosam−vis  +1.50 [-0.01; +4.06] 
+  sage−vis  +0.67 [-0.78; +3.23] 
+  tb  −sage +0.63 [-0.47; +2.81] 
+
+################ SEED 2 ################
+
+== [273 ảnh] 273 ảnh | vis 63.02  ir 57.93  sage 64.42  tb 65.09  nosam 64.46 | person vis 59.5  ir 71.3  sage 70.6  tb 70.4  nosam 69.4
+  sage−nosam -0.04 [-1.04; +1.18] 
+  nosam−tb   -0.63 [-1.82; +0.59] 
+  nosam−vis  +1.44 [-0.16; +3.41] 
+  sage−vis  +1.40 [-0.53; +3.92] 
+  tb  −sage +0.67 [-1.48; +2.21] 
+
+== [tối] 91 ảnh | vis 56.79  ir 59.18  sage 59.47  tb 62.96  nosam 59.72 | person vis 66.2  ir 78.5  sage 78.5  tb 77.7  nosam 76.7
+  sage−nosam -0.25 [-1.35; +2.01] 
+  nosam−tb   -3.24 [-3.79; +0.13] 
+  nosam−vis  +2.93 [-2.54; +8.21] 
+  sage−vis  +2.67 [-2.73; +8.53] 
+  tb  −sage +3.49 [-1.64; +4.50] 
+
+== [vừa] 91 ảnh | vis 62.41  ir 55.16  sage 62.87  tb 63.38  nosam 63.95 | person vis 39.6  ir 53.5  sage 45.9  tb 49.6  nosam 48.4
+  sage−nosam -1.09 [-2.17; +0.38] 
+  nosam−tb   +0.57 [-0.44; +1.64] 
+  nosam−vis  +1.55 [-0.25; +3.33] 
+  sage−vis  +0.46 [-1.78; +2.90] 
+  tb  −sage +0.51 [-1.27; +1.76] 
+
+== [sáng] 91 ảnh | vis 66.45  ir 57.58  sage 67.98  tb 67.82  nosam 67.78 | person vis 48.3  ir 55.8  sage 59.9  tb 59.2  nosam 59.2
+  sage−nosam +0.21 [-1.75; +2.69] 
+  nosam−tb   -0.04 [-1.37; +0.85] 
+  nosam−vis  +1.33 [+0.33; +3.91]*
+  sage−vis  +1.54 [-0.66; +5.34] 
+  tb  −sage -0.17 [-1.60; +1.22] 
+
+################ TÓM TẮT THEO SEED (273 ảnh) ################
+seed       0      1      2     TB    SD
+a                                      
+vis    62.07  62.56  63.02  62.55  0.48
+ir     54.66  56.64  57.93  56.41  1.64
+sage   62.62  63.07  64.42  63.37  0.94
+tb     64.27  63.91  65.09  64.42  0.60
+nosam  62.89  64.07  64.46  63.81  0.81
+seed                     0      1       2
+nhom    cap                              
+273 ảnh sage−nosam   -0.28  -1.00   -0.04
+        nosam−tb    -1.37*  +0.16   -0.63
+        nosam−vis    +0.83  +1.51   +1.44
+        sage−vis     +0.55  +0.51   +1.40
+        tb−sage     +1.65*  +0.84   +0.67
+tối     sage−nosam   -1.61  -1.64   -0.25
+        nosam−tb     -1.22  -2.36   -3.24
+        nosam−vis    +4.08  +3.90   +2.93
+        sage−vis     +2.46  +2.26   +2.67
+        tb−sage      +2.83  +4.00   +3.49
+vừa     sage−nosam   -0.72  -0.73   -1.09
+        nosam−tb     -1.42  +0.33   +0.57
+        nosam−vis    -0.02  +0.67   +1.55
+        sage−vis     -0.73  -0.06   +0.46
+        tb−sage      +2.14  +0.39   +0.51
+sáng    sage−nosam   +0.23  -0.83   +0.21
+        nosam−tb     -1.08  +0.20   -0.04
+        nosam−vis    +0.64  +1.50  +1.33*
+        sage−vis     +0.87  +0.67   +1.54
+        tb−sage      +0.85  +0.63   -0.17
+
+################ GỘP 3 SEED (273 ảnh, TB chênh lệch qua seed) ################
+== [273 ảnh] 273 ảnh
+  sage−nosam -0.44 [-1.02; +0.20] 
+  nosam−tb   -0.61 [-1.33; +0.06] 
+  nosam−vis  +1.26 [-0.25; +3.22] 
+  sage−vis  +0.82 [-0.86; +3.04] 
+  tb  −sage +1.05 [+0.08; +2.16]*
+== [tối] 91 ảnh
+  sage−nosam -1.17 [-1.80; +1.49] 
+  nosam−tb   -2.27 [-3.05; +0.27] 
+  nosam−vis  +3.63 [-2.15; +8.04] 
+  sage−vis  +2.47 [-2.92; +8.11] 
+  tb  −sage +3.44 [-1.63; +4.49] 
+== [vừa] 91 ảnh
+  sage−nosam -0.84 [-1.69; +0.52] 
+  nosam−tb   -0.17 [-0.81; +0.95] 
+  nosam−vis  +0.73 [-0.85; +2.51] 
+  sage−vis  -0.11 [-2.21; +2.84] 
+  tb  −sage +1.02 [-0.36; +1.54] 
+== [sáng] 91 ảnh
+  sage−nosam -0.13 [-1.22; +1.06] 
+  nosam−tb   -0.31 [-1.84; +0.75] 
+  nosam−vis  +1.15 [-0.07; +3.70] 
+  sage−vis  +1.03 [-0.73; +3.88] 
+  tb  −sage +0.44 [-0.15; +1.63] 
