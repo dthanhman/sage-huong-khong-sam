@@ -1,0 +1,23 @@
+{
+  "ten": "m11_kp_l5",
+  "init": "nosam_kp841",
+  "lam": 5.0,
+  "beta": 1.0,
+  "w_ir": 0.4,
+  "gamma": 0.0,
+  "eta": 0.0,
+  "tran": 0.92,
+  "le": 0.1,
+  "epochs": 10,
+  "warm_seg": 5,
+  "batch": 4,
+  "crop": [
+    384,
+    512
+  ],
+  "lr_seg": 6e-05,
+  "lr_st": 0.0005,
+  "seed": 0,
+  "thu": 0,
+  "do_grad": 10
+}

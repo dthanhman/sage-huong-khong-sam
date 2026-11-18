@@ -1,0 +1,46 @@
+Nạp ảnh ...
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 27026.42it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+epoch   1 B0    CE 1.0996 nội dung 1.7676 SCD 1.512 cháy 0.01%  1.0 phút
+epoch   2 B0    CE 0.4226 nội dung 1.7718 SCD 1.511 cháy 0.01%  1.9 phút
+epoch   3 B0    CE 0.3404 nội dung 1.7637 SCD 1.508 cháy 0.01%  2.7 phút
+epoch   4 B0    CE 0.2978 nội dung 1.7544 SCD 1.517 cháy 0.01%  3.7 phút
+epoch   5 B0    CE 0.2667 nội dung 1.7643 SCD 1.506 cháy 0.01% | Dev (B0 học chung) 37.62  4.9 phút
+epoch   6 ST+B0 CE 0.2565 nội dung 1.1977 SCD 1.385 cháy 0.02% | g_CE 3.64e+00 g_rào 8.84e+00 tỉ lệ 0.411 cos +0.10  6.5 phút
+epoch   7 ST+B0 CE 0.2310 nội dung 1.1391 SCD 1.510 cháy 0.00% | g_CE 5.55e+00 g_rào 7.35e+00 tỉ lệ 0.756 cos +0.20  8.2 phút
+epoch   8 ST+B0 CE 0.2263 nội dung 1.1197 SCD 1.498 cháy 0.00% | g_CE 8.45e+00 g_rào 7.25e+00 tỉ lệ 1.165 cos +0.07  9.8 phút
+epoch   9 ST+B0 CE 0.2197 nội dung 1.1193 SCD 1.510 cháy 0.00% | g_CE 5.97e+00 g_rào 7.64e+00 tỉ lệ 0.781 cos +0.15  11.6 phút
+epoch  10 ST+B0 CE 0.2148 nội dung 1.1225 SCD 1.514 cháy 0.00% | Dev (B0 học chung) 44.42 | g_CE 3.77e+00 g_rào 7.47e+00 tỉ lệ 0.505 cos +0.08  13.5 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\m11_kp_l5.pt. Tiếp: b3/xuat_anh.py --bien_the m11_kp_l5 -> chi_so_ghep.py -> B0 mới.
+m11_kp_l5: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\m11_kp_l5
+dev: 151 ảnh
+                SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                        
+sage         1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+tb           1.4241   1.6518  0.3995  5.9740  24.5265      0.8089       0.8429    82.7394       104.9669      60.3088      False
+nosam_kp841  1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+m11_kp       1.5337   1.5913  0.7281  6.3330  25.1807      0.6740       0.9173    89.1083       101.1251     109.9016      False
+m11_kp_l5    1.3988   1.5714  0.7195  6.2730  24.4797      0.6574       0.9140    81.2699        99.8613     108.6084      False
+|m11_kp - nosam_kp841| = 6.69 mức xám
+|m11_kp_l5 - nosam_kp841| = 4.19 mức xám
+|sage - nosam_kp841| = 17.34 mức xám

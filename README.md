@@ -31,6 +31,7 @@ Mình train lại Student của SAGE (giữ nguyên kiến trúc) **chỉ với 
 | Chỉ VIS | 62,2 ± 0,5 |
 | Chỉ IR | 56,3 ± 1,5 |
 
+- Bảng trên tính trên đủ 280 ảnh. Nếu bỏ 7 ảnh test bị rò (khung liền kề ảnh train), còn 273 ảnh, thì số là TB 64,42 / bỏ SAM 63,81 / SAGE 63,37 / VIS 62,55. Thứ tự không đổi.
 - SAGE thấp hơn bản bỏ SAM ở **cả 3 seed** (trung bình −0,44 điểm, khoảng tin cậy 95% từ −1,02 đến +0,20). Train lại bản bỏ SAM bằng 3 seed khác, kết luận vẫn vậy.
 - Bài báo SAGE ghi bỏ SAM thì mIoU giảm từ 61,2 xuống 56,5. **Nhóm không tái lập được mức giảm này.**
 - Cách nói đúng: "trong thiết lập của nhóm, **không thấy** SAM giúp mIoU". Chưa nói được là SAM vô dụng.
@@ -160,7 +161,22 @@ Mình train Student bỏ SAM 5 lần với 5 seed, đo trên val 151, rồi đ�
 - ảnh đổi nhiều nhưng rớt sàn → giảm λ xuống 2–3;
 - ảnh vẫn đổi ít → cho Student học quen loss nội dung trước, rồi mới thêm loss phân đoạn.
 
-_Kết quả lần sửa này sẽ được cập nhật vào đây._
+**Kết quả lần sửa (λ = 5, lr Student 5e-4, 10 epoch):**
+
+| Epoch | 6 | 7 | 8 | 9 | 10 |
+|---|---|---|---|---|---|
+| Lực phân đoạn / lực nội dung | 0,41 | 0,76 | 1,17 | 0,78 | 0,51 |
+
+- **Lực đã gần cân bằng** (phần lớn trong khoảng 0,5–1,2), và hai loss vẫn không kéo ngược nhau (cos +0,07 đến +0,20).
+- **Nhưng ảnh vẫn gần như không đổi.** So công bằng, cùng khoảng 8–10 epoch: ảnh lệch bản bỏ SAM 3,6 mức xám với λ = 1 và 4,2 mức xám với λ = 5. Tăng lực phân đoạn gấp khoảng 4 lần mà ảnh chỉ đổi thêm 0,6 mức xám.
+- Chỉ số ghép (% SAGE): MS-SSIM 99,9, Q_ABF 108,6 → vẫn qua sàn; SCD giảm còn 81,3.
+
+**Đọc:** đây là nhánh "ảnh vẫn đổi ít". Kết hợp với việc lực đã cân bằng, khả năng cao là **SegFormer học cùng đã tự thích nghi**: nó tự sửa để phân đoạn tốt trên ảnh hiện có, nên Student không cần đổi ảnh. Phần lớn độ lệch so với bản bỏ SAM đến từ việc đổi loss nội dung, không phải từ học phân đoạn.
+
+**Hướng tiếp (chưa chạy, cần chọn):**
+1. Cho Student học quen loss nội dung của M11 trước, để tách riêng phần thay đổi do phân đoạn gây ra.
+2. Hạn chế SegFormer tự thích nghi: giảm tốc độ học của nó sau giai đoạn khởi động, hoặc dùng một SegFormer "thầy" train trên **nửa dữ liệu khác** (thầy chéo, để thầy không thuộc ảnh đang dạy).
+3. Nếu cả hai không làm ảnh đổi rõ: kết luận M11 không tạo khác biệt, và dồn sức vào nền B (TB + phần sửa).
 
 ---
 
@@ -192,7 +208,7 @@ _Kết quả lần sửa này sẽ được cập nhật vào đây._
 
 | Thư mục | Có gì |
 |---|---|
-| `ket_qua/e17_bo_sam/` | So SAGE với bỏ SAM (mục 2.1) |
+| `ket_qua/e17_bo_sam/` | So SAGE với bỏ SAM (mục 2.1). `runs_b3/` chứa 17 lần chạy SegFormer-B3 (VIS, IR, TB, SAGE, bỏ SAM × 3 seed, thêm 2 Student bỏ SAM khác): ma trận nhầm lẫn từng ảnh (`test_nham_last.npz`), cấu hình, log. Tính lại bảng bằng: `cd code/b3 && SAGE_RUNS=../../ket_qua/e17_bo_sam/runs_b3 python so_sanh_cap.py --bien_the vis tb sage nosam --model b3 --hau _1220_15lop` |
 | `ket_qua/e18_chi_phi/` | Bảng chi phí đo trên T4 (mục 2.2) |
 | `ket_qua/danh_doi/` | Chỉ số ghép so với mIoU (mục 2.3) |
 | `ket_qua/split_cu/` | Số của các phương án mục 3 |
