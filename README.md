@@ -1,6 +1,6 @@
 # Ghép ảnh IR–VIS không cần SAM: tổng kết hướng thử nghiệm
 
-Người làm: Đào Thanh Mân. Cập nhật: 18/11/2026 tối.
+Người làm: Đào Thanh Mân. Cập nhật: 19/11/2026 (thêm mục 4.6 sửa lỗi BatchNorm và mục 4.7 mIoU sàng lọc seed 0).
 
 File này đọc riêng là đủ hiểu. Các thư mục đi kèm chỉ chứa số liệu gốc và code, dùng khi muốn kiểm lại.
 
@@ -135,9 +135,11 @@ Mình train Student bỏ SAM 5 lần với 5 seed, đo trên val 151, rồi đ�
 | M11, λ = 1 | nền A | 101,1 | 109,9 | 89,1 | ✅ |
 | TB + phần sửa, w_tb = 15 | nền B | 98,9 | 110,1 | 91,0 | ❌ (MS-SSIM) |
 | **TB + phần sửa, w_tb = 150** | nền B | **101,4** | **109,2** | 89,9 | ✅ |
+| **Nền A + CE, sửa BN** (`m11a_l5_e30_bn`, mục 4.6) | nền A | **100,6** | **110,4** | 90,6 | ✅ |
+| **Nền B + CE, sửa BN** (`m11b_l15_e30_bn`, mục 4.6) | nền B | **101,5** | **110,3** | 90,0 | ✅ |
 
 - Với w_tb = 15, phần sửa quá tay (trung bình 11,3 mức xám), ảnh trôi về phía VIS. Tăng trọng số giữ TB lên 150 thì phần sửa còn 4,9 mức xám và qua sàn.
-- **Chưa phương án nào có mIoU trên split mới.** Qua sàn chỉ có nghĩa là ảnh không bị hỏng.
+- Qua sàn chỉ có nghĩa là ảnh không bị hỏng. mIoU ở mục 4.7.
 
 ### 4.5. Chẩn đoán M11: vì sao học phân đoạn mà ảnh gần như không đổi
 
@@ -178,14 +180,71 @@ Mình train Student bỏ SAM 5 lần với 5 seed, đo trên val 151, rồi đ�
 2. Hạn chế SegFormer tự thích nghi: giảm tốc độ học của nó sau giai đoạn khởi động, hoặc dùng một SegFormer "thầy" train trên **nửa dữ liệu khác** (thầy chéo, để thầy không thuộc ảnh đang dạy).
 3. Nếu cả hai không làm ảnh đổi rõ: kết luận M11 không tạo khác biệt, và dồn sức vào nền B (TB + phần sửa).
 
+### 4.6. Tìm ra lỗi BatchNorm, chạy lại cả hai nền với CE
+
+**Lỗi:** trong code học cùng (`m11_hoc_chung.py`), Student để ở chế độ train suốt quá trình. Khi đó lớp BatchNorm dùng thống kê của từng batch nhỏ. Nhưng lúc xuất ảnh thật, Student chạy ở chế độ eval (dùng thống kê đã lưu). Hai chế độ cho ảnh khác nhau.
+
+**Bằng chứng** (`code/scene_v1/kiem_bn.py`, trên Student `tbsua_w150`): cùng một ảnh, hai chế độ lệch nhau trung bình 1,51 mức xám; loss giữ ảnh là 1,43 ở chế độ train nhưng chỉ 0,74 ở chế độ eval. Con số này khớp với log cũ: loss nội dung tụt từ 1,28 xuống 0,76 ngay epoch Student bắt đầu học.
+
+**Hệ quả:** trong các lần chạy M11 trước (mục 4.5), Student mất phần lớn sức để **sửa chỗ lệch BatchNorm**, chứ không học từ loss phân đoạn. Đây là một lý do khiến ảnh gần như không đổi. Lần chạy `m11_kp` trong mục 4.7 vẫn là bản có lỗi này.
+
+**Sửa:** thêm cờ `--bn_dong`. Khi bật cờ, BatchNorm của Student để ở chế độ eval cả lúc train. Sau khi sửa, loss nội dung lúc khởi động là 0,747, khớp với chế độ eval (0,74).
+
+**Chạy lại** (30 epoch: 15 epoch đầu chỉ SegFormer-B0 học, 15 epoch sau Student học cùng; sau khởi động B0 học chậm lại 10 lần):
+
+| Bản | Khởi tạo | λ (CE) | lr Student | Ảnh đổi so với bản khởi tạo |
+|---|---|---|---|---|
+| `m11a_l5_e30_bn` (nền A) | bỏ SAM `nosam_kp841` | 5 | 5e-4 | trung bình 4,57 mức xám |
+| `m11b_l15_e30_bn` (nền B) | `tbsua_w150` | 15 | 5e-4 | trung bình 0,81, nhưng person 3,15, car 1,83, đèn giao thông 1,63 |
+
+- Nền B đổi ít nếu tính trung bình cả ảnh, nhưng đổi tập trung ở vật thể. Tức là CE sửa đúng chỗ. **Lọc theo độ lệch trung bình cả ảnh là tiêu chí sai**, nên mình bỏ tiêu chí này.
+- Cả hai vẫn qua sàn ảnh ghép (mục 4.4).
+
+### 4.7. Sàng lọc bằng mIoU (tầng 1), seed 0
+
+SegFormer-B0 train trên 841 ảnh, 100 epoch, batch 8, 14 lớp (bỏ nhãn 0). Chấm val 151 bằng checkpoint cuối. TB, SAGE, bỏ SAM, `m11_kp`, `tbsua_w150` chạy trên Kaggle (T4). Hai bản sửa BN chạy trên máy nhà (RTX 3050), cùng code và cùng cấu hình.
+
+| Ảnh ghép | mIoU (14 lớp) | mIoU 7 lớp in trong bài |
+|---|---|---|
+| **Nền A + CE, sửa BN** | **50,34** | 63,04 |
+| `m11_kp` (nền A + CE, còn lỗi BN) | 49,81 | 61,57 |
+| Bỏ SAM `nosam_kp841` | 49,78 | 61,73 |
+| **Nền B + CE, sửa BN** | **49,69** | **63,17** |
+| TB + phần sửa `tbsua_w150` | 49,26 | 62,62 |
+| TB | 48,14 | 61,57 |
+| SAGE | 47,92 | 61,74 |
+
+So theo cặp (cùng 151 ảnh; khoảng tin cậy bootstrap theo khối 10 ảnh liền số):
+
+| Cặp (bản sau trừ bản trước) | Hiệu | Khoảng tin cậy 95% | Kết luận |
+|---|---|---|---|
+| Nền B + CE − TB | +1,55 | [+0,54; +2,75] | hơn chắc chắn |
+| Nền B + CE − SAGE | +1,76 | [−0,65; +3,02] | chưa phân biệt |
+| Nền A + CE − TB | +2,21 | [−0,60; +2,99] | chưa phân biệt |
+| Nền A + CE − SAGE | +2,42 | [−0,67; +3,13] | chưa phân biệt |
+| Nền A + CE − bỏ SAM (tác dụng của CE) | +0,57 | [−0,11; +1,57] | chưa phân biệt |
+| Nền B + CE − TB + phần sửa (tác dụng của CE) | +0,43 | [−0,28; +1,56] | chưa phân biệt |
+| Bỏ SAM − SAGE | +1,85 | [−1,63; +2,31] | chưa phân biệt |
+
+Một số khoảng tin cậy không đối xứng quanh hiệu, vì mIoU tính trên cả tập chứ không phải trung bình từng ảnh.
+
+**Đọc:**
+- Ở seed 0, cả hai bản có CE đều hơn **max(TB, SAGE) từ 1 điểm trở lên**: nền A +2,21, nền B +1,55. Đây là tiêu chí đã đặt trước.
+- **Phần lớn mức tăng đến từ việc bỏ SAM**, chưa phải từ CE. Bản bỏ SAM chưa có CE đã hơn TB 1,64 điểm. CE chỉ thêm khoảng +0,5 so với nền của nó, và khoảng tin cậy vẫn qua 0.
+- CE nâng rõ nhất **mIoU 7 lớp** (lớp phổ biến): nền A +1,31 so với bỏ SAM, nền B +0,55 so với tbsua_w150.
+- Lớp hiếm dao động rất mạnh giữa các lần chạy. Ví dụ SAGE chỉ có motorcycle 19,7 (các bản khác 45–51), TB chỉ có traffic_light 30,8 (SAGE 47,8). Chừng đó đủ kéo mIoU lên xuống 1–2 điểm.
+
+**Giới hạn của bảng này:** mới **1 seed**; hai bản sửa BN chạy khác máy với các mốc. Seed 1 của cả 5 bản (TB, SAGE, bỏ SAM, nền A + CE, nền B + CE) đang chạy trên Kaggle cùng một máy.
+
+Số liệu gốc: `ket_qua/kham_pha/sang_loc_b0/` (ma trận nhầm lẫn từng ảnh, IoU từng lớp, log train). Tính lại bảng: `cd code/b3 && SAGE_RUNS=../../ket_qua/kham_pha/sang_loc_b0/runs python so_sanh_cap.py --bien_the tb sage nosam_kp841 m11_kp tbsua_w150 m11b_l15_e30_bn m11a_l5_e30_bn --model b0 --tap dev`.
+
 ---
 
 ## 5. Bước tiếp theo
 
-1. Hoàn tất sửa M11 theo mục 4.5.
-2. **Sàng lọc bằng mIoU (tầng 1):** train SegFormer-B0 trên 841 ảnh, chấm val 151, cho: TB, SAGE, bỏ SAM, M11 bản sửa, TB + phần sửa (và chỉ VIS nếu nhóm muốn). Chạy seed 0 trước (khoảng 6–7 giờ). Phương án thua rõ thì bỏ; có triển vọng thì thêm seed 1–2.
-3. TB + phần sửa: thêm loss phân đoạn.
-4. **Vòng chốt (tầng 2):** phương án qua lọc → train lại trên 992 ảnh → SegFormer-B3, 3 seed → chấm Dev 228 một lần, so với SAGE, VIS, TB cùng cấu hình. Thêm một dòng vào bảng chi phí.
+1. **Seed 1** cho TB, SAGE, bỏ SAM, nền A + CE, nền B + CE (đang chạy trên Kaggle). Tiêu chí đặt trước: hơn max(TB, SAGE) từ 1 điểm ở cả 2 seed.
+2. **Kiểm lại phần CE:** CE có thật sự dạy Student không, hay SegFormer học cùng tự thích nghi. Nếu CE đã chạm trần thì đổi hướng cải thiện (ví dụ loss cho lớp hiếm, hoặc thầy chéo).
+3. **Vòng chốt (tầng 2):** phương án qua lọc → train lại trên 992 ảnh → SegFormer-B3, 3 seed → chấm Dev 228 một lần, so với SAGE, VIS, TB cùng cấu hình. Thêm một dòng vào bảng chi phí.
 
 ## 6. Cần nhóm chốt
 
@@ -212,8 +271,9 @@ Mình train Student bỏ SAM 5 lần với 5 seed, đo trên val 151, rồi đ�
 | `ket_qua/e18_chi_phi/` | Bảng chi phí đo trên T4 (mục 2.2) |
 | `ket_qua/danh_doi/` | Chỉ số ghép so với mIoU (mục 2.3) |
 | `ket_qua/split_cu/` | Số của các phương án mục 3 |
-| `ket_qua/kham_pha/` | Chỉ số ghép trên val 151, sàn, log train (mục 4.2, 4.4) |
-| `ket_qua/chan_doan_m11/` | Log đo lực kéo (mục 4.5) |
+| `ket_qua/kham_pha/` | Chỉ số ghép trên val 151, sàn, log train (mục 4.2, 4.4, 4.6) |
+| `ket_qua/kham_pha/sang_loc_b0/` | mIoU sàng lọc B0 seed 0 (mục 4.7): `runs/` có 7 lần chạy (ma trận nhầm lẫn `dev_nham_last.npz`, IoU từng lớp, log), `so_sanh_cap_dev_b0.csv` so mọi cặp |
+| `ket_qua/chan_doan_m11/` | Log đo lực kéo (mục 4.5), các lần chạy nền B trước khi sửa BN |
 | `hinh/` | Hình minh họa |
 | `code/` | Code chạy được, xem Phụ lục B |
 
@@ -253,6 +313,10 @@ Mình train Student bỏ SAM 5 lần với 5 seed, đo trên val 151, rồi đ�
 | Nền B, w_tb = 150 (mục 4.4) | `bash scene_v1/chay_tbsua150.sh` | khoảng 15 phút |
 | M11 bản sửa λ = 5 (mục 4.5) | `bash scene_v1/chay_m11_l5.sh` | khoảng 20 phút |
 | Chẩn đoán lực kéo M11 | `cd cai_tien && SAGE_MAN=../scene_v1/kham_pha SO_TRAIN=841 $PY m11_hoc_chung.py --ten m11_kp_dograd --init nosam_kp841 --epochs 8 --do_grad 10` | khoảng 12 phút |
-| Sàng lọc mIoU bằng B0 (chưa chạy) | `bash scene_v1/chay_b0_sangloc.sh` | khoảng 1,2 giờ mỗi lượt |
+| Sàng lọc mIoU bằng B0 | `bash scene_v1/chay_b0_sangloc.sh` | khoảng 1,2 giờ mỗi lượt |
+| Kiểm lỗi BatchNorm (mục 4.6) | `cd cai_tien && SAGE_MAN=../scene_v1/kham_pha SO_TRAIN=841 $PY ../scene_v1/kiem_bn.py tbsua_w150` | vài phút |
+| Nền A + CE, sửa BN (mục 4.6) | `bash scene_v1/chay_nena_ce.sh` | khoảng 50 phút |
+| Nền B + CE, sửa BN (mục 4.6) | `TEN=m11b_l15_e30_bn LAM=15 EPOCHS=30 BN=1 bash scene_v1/chay_nenb_ce.sh` | khoảng 1 giờ |
+| mIoU B0 cho một bản (mục 4.7) | `TEN=m11b_l15_e30_bn BO_LOC=1 bash scene_v1/chay_nenb_miou.sh` | khoảng 1,2 giờ |
 
 Đã thử: xuất 3 ảnh `tbsua_w150` bằng code trong repo này, kết quả **giống hệt từng điểm ảnh** với bản gốc. Các script khác đã chạy thử `--help` và đều nạp được.

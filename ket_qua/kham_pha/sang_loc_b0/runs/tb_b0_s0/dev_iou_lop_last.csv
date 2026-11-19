@@ -1,0 +1,16 @@
+,IoU_280,IoU_273
+unlabeled,,
+road,80.91,80.91
+sidewalk,17.5,17.5
+building,74.45,74.45
+traffic_light,30.76,30.76
+traffic_sign,42.84,42.84
+vegetation,87.38,87.38
+sky,95.12,95.12
+person,48.81,48.81
+car,68.2,68.2
+truck,1.41,1.41
+bus,28.44,28.44
+motorcycle,44.93,44.93
+bicycle,0.0,0.0
+pole,53.14,53.14

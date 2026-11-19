@@ -1,0 +1,28 @@
+Nạp ảnh ...
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 7263.52it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+epoch   1 B0    CE 1.4847 nội dung 1.2740 SCD 1.563 cháy 0.09%  1.1 phút
+epoch   2 B0    CE 0.5204 nội dung 1.2729 SCD 1.557 cháy 0.09%  2.2 phút
+epoch   3 B0    CE 0.3976 nội dung 1.2694 SCD 1.561 cháy 0.09%  3.1 phút
+epoch   4 B0    CE 0.3306 nội dung 1.2782 SCD 1.562 cháy 0.09%  4.3 phút
+epoch   5 B0    CE 0.2828 nội dung 1.2703 SCD 1.565 cháy 0.09% | Dev (B0 học chung) 36.93  5.4 phút

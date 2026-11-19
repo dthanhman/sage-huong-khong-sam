@@ -21,6 +21,12 @@ M11-SCD (18/11, sau khi m11_b1 rớt cổng 2 ở SCD 85%): thêm vào loss Stud
                (tran = 0,92 ≈ 235/255: vùng sắp cháy; vế 2: chỗ đã sáng không bị đẩy sáng thêm quá le
                 -> giữ màu CrCb của biển báo, chỗ M8c/M8d bị bạc)
   gamma = eta = 0 -> đúng M11 cũ (m11_b1).
+M11 sửa (18/11 khuya, sau chẩn đoán: lam 5 cân lực mà ảnh vẫn ít đổi -> nghi B0 học cùng tự thích nghi):
+  --b0_st F  : nhân lr của B0 với F khi Student đã học (sau warm_seg). 1 = cũ; 0 = B0 ĐÓNG BĂNG lúc Student học
+               (B0 mới học warm_seg epoch, chưa thuộc ảnh như thầy đóng băng của M1) -> Student phải đổi ảnh để giảm CE.
+  --bn_dong  : (19/11) BatchNorm Student ở chế độ eval khi train – sửa lệch train/eval (xem st_train).
+  --nen tb   : nền B. Ảnh = clamp(TB + s * Student), rào chắn = w_tb * MSE(ảnh, TB) + w_g * L1 gradient
+               (đúng loss tb_sua.py); --init là checkpoint tb_sua (có khóa _tb_scale). Lưu kèm _tb_scale cho xuat_anh.
 Chỉ 1.045 ảnh train. Đánh giá thật: xuat_anh.py --bien_the <ten> -> cổng 2 (chi_so_ghep.py) -> cổng 3 (B0 MỚI, Kaggle).
 
 Ví dụ: python m11_hoc_chung.py --thu 30                 (đo tốc độ, bộ nhớ)
@@ -68,6 +74,34 @@ def chay(o, y, ir, tran, le):
     return F.relu(o - tran).square().mean() + F.relu(o - torch.maximum(y, ir) - le).square().mean()
 
 
+NEN = {"ten": "nosam", "s": 0.5}   # đặt trong main theo --nen
+BN_DONG = [False]                    # --bn_dong: BatchNorm của Student luôn ở chế độ eval
+
+
+def st_train(net):
+    """Student về chế độ học. --bn_dong: BatchNorm dùng thống kê đã lưu (như lúc xuất ảnh), không cập nhật.
+    Lý do (19/11, scene_v1/kiem_bn.py): tbsua_w150 crop 384x512 train-mode lệch eval 1,5 mức xám, rào 1,43 vs 0,74
+    -> Student mất công sửa lệch BatchNorm thay vì học theo CE, và ảnh xuất (eval) khác ảnh lúc train."""
+    net.train()
+    if BN_DONG[0]:
+        for m in net.modules():
+            if isinstance(m, torch.nn.modules.batchnorm._BatchNorm):
+                m.eval()
+    return net
+
+
+def tao_anh(net, y, ir):
+    """Ảnh ghép (kênh Y). nosam: đầu ra Student. tb: TB + s * Student, kẹp [0, 1] như tb_sua.py."""
+    r = net(y, ir)[0]
+    return ((y + ir) / 2 + NEN["s"] * r).clamp(0, 1) if NEN["ten"] == "tb" else r
+
+
+def rao_tb(o, y, ir, kx, ky, w_tb, w_g):
+    """Rào chắn nền B, đúng loss tb_sua.py."""
+    lg = F.l1_loss(grad(o, kx, ky), torch.maximum(grad(y, kx, ky), grad(ir, kx, ky)))
+    return w_tb * F.mse_loss(o, (y + ir) / 2) + w_g * lg
+
+
 @torch.no_grad()
 def cham_dev(net, seg, data, dev):
     """mIoU Dev của chính B0 học chung (chỉ để theo dõi; số chính thức là B0 MỚI train trên ảnh xuất ra)."""
@@ -76,12 +110,12 @@ def cham_dev(net, seg, data, dev):
     c = np.zeros((NC, NC), np.int64)
     for i in range(len(Y)):
         y, ir, cc = t(Y[i:i + 1], dev), t(IR[i:i + 1], dev), t(CC[i:i + 1], dev)
-        o = (net(y, ir)[0].clamp(0, 1) * 255).round() / 255
+        o = (tao_anh(net, y, ir).clamp(0, 1) * 255).round() / 255
         with torch.autocast("cuda", dtype=torch.float16):
             lg = seg(pixel_values=chuan_hoa(ycrcb_sang_rgb(o, cc))).logits
         p = F.interpolate(lg.float(), size=y.shape[-2:], mode="bilinear").argmax(1)[0].cpu().numpy()
         c += nham(LAB[i].astype(np.int64), p)
-    net.train(), seg.train()
+    st_train(net), seg.train()
     return cac_miou(c)[0]["mIoU_co_mat"]
 
 
@@ -106,6 +140,13 @@ def main():
     ap.add_argument("--thu", type=int, default=0, help="chỉ chạy N batch để đo tốc độ/bộ nhớ")
     ap.add_argument("--do_grad", type=int, default=0,
                     help="chẩn đoán: mỗi N batch đo riêng ||grad|| lên Student của lam*CE và beta*rào chắn (0 = tắt)")
+    ap.add_argument("--b0_st", type=float, default=1.0,
+                    help="hệ số lr B0 khi Student đã học (1 = cũ, 0 = đóng băng B0 lúc đó)")
+    ap.add_argument("--bn_dong", action="store_true",
+                    help="khóa BatchNorm Student ở chế độ eval khi train (khớp lúc xuất ảnh); mặc định = hành vi cũ")
+    ap.add_argument("--nen", choices=["nosam", "tb"], default="nosam", help="nền A (nosam) hoặc nền B (TB + phần sửa)")
+    ap.add_argument("--w_tb", type=float, default=150.0, help="nền tb: trọng số MSE(ảnh, TB)")
+    ap.add_argument("--w_g", type=float, default=27.0, help="nền tb: trọng số loss gradient")
     a = ap.parse_args()
     assert a.init != "checkpoints", "cấm khởi tạo từ Student SAGE (có SAM) – xem cai_tien/README.md"
     torch.manual_seed(a.seed)
@@ -120,8 +161,15 @@ def main():
     ch, cw = a.crop
 
     net = Network()
-    net.load_state_dict(torch.load(STUDENT / f"{a.init}.pt", map_location="cpu", weights_only=True))
-    net = net.to(dev).train()
+    sd0 = torch.load(STUDENT / f"{a.init}.pt", map_location="cpu", weights_only=True)
+    s_tb = sd0.pop("_tb_scale", None)
+    assert (s_tb is not None) == (a.nen == "tb"), "--nen tb cần --init là checkpoint tb_sua (có _tb_scale), và ngược lại"
+    NEN["ten"] = a.nen
+    if s_tb is not None:
+        NEN["s"] = float(s_tb)
+    net.load_state_dict(sd0)
+    BN_DONG[0] = a.bn_dong
+    net = st_train(net.to(dev))
     from transformers import SegformerForSemanticSegmentation
     seg = SegformerForSemanticSegmentation.from_pretrained(
         "nvidia/mit-b0", num_labels=NC, id2label={i: str(i) for i in range(NC)},
@@ -136,7 +184,8 @@ def main():
                                 weight_decay=0.01)
     warm = max(1, tong // 10)
     sch = torch.optim.lr_scheduler.LambdaLR(
-        opt_seg, lambda s: (s + 1) / warm if s < warm else max(0.0, 1 - (s - warm) / max(1, tong - warm)))
+        opt_seg, lambda s: ((s + 1) / warm if s < warm else max(0.0, 1 - (s - warm) / max(1, tong - warm)))
+        * (a.b0_st if s >= a.warm_seg * so_batch else 1.0))
     opt_st = torch.optim.Adam(net.parameters(), lr=a.lr_st)
     scaler = torch.amp.GradScaler()
 
@@ -159,8 +208,9 @@ def main():
                                    .astype(np.int64)).to(dev)
 
             with torch.set_grad_enabled(hoc_st):
-                o = net(y, ir)[0]
-                nd = noi_dung(o, y, ir, kx, ky, a.w_ir)
+                o = tao_anh(net, y, ir)
+                nd = (rao_tb(o, y, ir, kx, ky, a.w_tb, a.w_g) if a.nen == "tb"
+                      else noi_dung(o, y, ir, kx, ky, a.w_ir))
                 sc = scd(o, y, ir).mean()
                 ch_ = chay(o, y, ir, a.tran, a.le)
                 rao = nd + a.gamma * (2 - sc) + a.eta * ch_    # rào chắn chỉ số ghép, nhân beta
@@ -215,7 +265,10 @@ def main():
               + (f" | Dev (B0 học chung) {m:.2f}" if m == m else "")
               + (f" | g_CE {dong['g_ce']:.2e} g_rào {dong['g_rao']:.2e} tỉ lệ {dong['g_ce'] / dong['g_rao']:.3f}"
                  f" cos {dong['cos_ce_rao']:+.2f}" if gd else "") + f"  {dong['phut']:.1f} phút", flush=True)
-    torch.save(net.state_dict(), STUDENT / f"{a.ten}.pt")
+    sd = net.state_dict()
+    if a.nen == "tb":
+        sd["_tb_scale"] = torch.tensor(NEN["s"])   # để xuat_anh.py dựng lại TB + s * Student
+    torch.save(sd, STUDENT / f"{a.ten}.pt")
     pd.DataFrame(log).to_csv(STUDENT / f"{a.ten}_log.csv", index=False)
     (STUDENT / f"{a.ten}_cfg.json").write_text(json.dumps(vars(a), indent=2), encoding="utf-8")
     print(f"Lưu {STUDENT / (a.ten + '.pt')}. Tiếp: b3/xuat_anh.py --bien_the {a.ten} -> chi_so_ghep.py -> B0 mới.")

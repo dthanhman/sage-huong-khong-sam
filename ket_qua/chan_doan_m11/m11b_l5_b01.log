@@ -1,0 +1,55 @@
+Nạp ảnh ...
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 7140.95it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+epoch   1 B0    CE 1.3225 nội dung 1.2740 SCD 1.563 cháy 0.09%  1.2 phút
+epoch   2 B0    CE 0.4674 nội dung 1.2729 SCD 1.557 cháy 0.09%  2.0 phút
+epoch   3 B0    CE 0.3708 nội dung 1.2694 SCD 1.561 cháy 0.09%  3.0 phút
+epoch   4 B0    CE 0.3105 nội dung 1.2782 SCD 1.562 cháy 0.09%  3.9 phút
+epoch   5 B0    CE 0.2706 nội dung 1.2703 SCD 1.565 cháy 0.09% | Dev (B0 học chung) 37.32  5.3 phút
+epoch   6 B0    CE 0.2601 nội dung 1.2690 SCD 1.555 cháy 0.09%  6.4 phút
+epoch   7 B0    CE 0.2320 nội dung 1.2718 SCD 1.563 cháy 0.09%  7.5 phút
+epoch   8 B0    CE 0.2270 nội dung 1.2729 SCD 1.558 cháy 0.09%  8.6 phút
+epoch   9 B0    CE 0.2195 nội dung 1.2794 SCD 1.562 cháy 0.09%  9.6 phút
+epoch  10 B0    CE 0.2146 nội dung 1.2772 SCD 1.560 cháy 0.09% | Dev (B0 học chung) 44.41  11.1 phút
+epoch  11 B0    CE 0.2046 nội dung 1.2790 SCD 1.567 cháy 0.09%  12.2 phút
+epoch  12 B0    CE 0.1969 nội dung 1.2853 SCD 1.569 cháy 0.09%  13.3 phút
+epoch  13 B0    CE 0.1919 nội dung 1.2728 SCD 1.556 cháy 0.09%  14.4 phút
+epoch  14 B0    CE 0.1921 nội dung 1.2696 SCD 1.559 cháy 0.09%  15.6 phút
+epoch  15 B0    CE 0.1851 nội dung 1.2793 SCD 1.568 cháy 0.09% | Dev (B0 học chung) 44.14  17.0 phút
+epoch  16 ST+B0 CE 0.1793 nội dung 0.7647 SCD 1.549 cháy 0.03% | g_CE 1.78e+00 g_rào 6.28e+00 tỉ lệ 0.284 cos +0.10  18.9 phút
+epoch  17 ST+B0 CE 0.1763 nội dung 0.7587 SCD 1.552 cháy 0.03% | g_CE 1.95e+00 g_rào 5.09e+00 tỉ lệ 0.383 cos +0.12  20.8 phút
+epoch  18 ST+B0 CE 0.1753 nội dung 0.7555 SCD 1.551 cháy 0.03% | g_CE 1.40e+00 g_rào 4.20e+00 tỉ lệ 0.333 cos +0.12  22.6 phút
+epoch  19 ST+B0 CE 0.1786 nội dung 0.7524 SCD 1.546 cháy 0.03% | g_CE 1.78e+00 g_rào 4.95e+00 tỉ lệ 0.359 cos +0.08  24.4 phút
+epoch  20 ST+B0 CE 0.1722 nội dung 0.7447 SCD 1.542 cháy 0.03% | Dev (B0 học chung) 45.17 | g_CE 1.34e+00 g_rào 5.04e+00 tỉ lệ 0.267 cos -0.04  26.5 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\m11b_l5_b01.pt. Tiếp: b3/xuat_anh.py --bien_the m11b_l5_b01 -> chi_so_ghep.py -> B0 mới.
+m11b_l5_b01: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\m11b_l5_b01
+dev: 151 ảnh
+                SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                        
+sage         1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+tb           1.4241   1.6518  0.3995  5.9740  24.5265      0.8089       0.8429    82.7394       104.9669      60.3088      False
+tbsua_w150   1.5476   1.5956  0.7231  6.4182  27.5314      0.7086       0.8870    89.9179       101.3988     109.1582      False
+m11b_l5_b01  1.5429   1.5987  0.7260  6.4145  27.4549      0.7122       0.8865    89.6465       101.5966     109.5953      False
+|tbsua_w150 - m11b_l5_b01| = 0.74 mức xám (val 151 ảnh)
+|tbsua_w150 - tb| = 4.03 mức xám (val 151 ảnh)
+|m11b_l5_b01 - tb| = 3.86 mức xám (val 151 ảnh)

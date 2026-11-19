@@ -1,0 +1,85 @@
+Nạp ảnh ...
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 31214.63it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+epoch   1 B0    CE 1.4830 nội dung 0.7474 SCD 1.561 cháy 0.04%  0.9 phút
+epoch   2 B0    CE 0.5136 nội dung 0.7492 SCD 1.555 cháy 0.04%  1.9 phút
+epoch   3 B0    CE 0.3957 nội dung 0.7512 SCD 1.559 cháy 0.04%  2.8 phút
+epoch   4 B0    CE 0.3281 nội dung 0.7507 SCD 1.561 cháy 0.04%  3.8 phút
+epoch   5 B0    CE 0.2799 nội dung 0.7530 SCD 1.563 cháy 0.04% | Dev (B0 học chung) 36.37  5.4 phút
+epoch   6 B0    CE 0.2670 nội dung 0.7556 SCD 1.553 cháy 0.04%  6.7 phút
+epoch   7 B0    CE 0.2357 nội dung 0.7451 SCD 1.562 cháy 0.04%  7.8 phút
+epoch   8 B0    CE 0.2318 nội dung 0.7430 SCD 1.558 cháy 0.04%  9.1 phút
+epoch   9 B0    CE 0.2225 nội dung 0.7539 SCD 1.561 cháy 0.04%  10.0 phút
+epoch  10 B0    CE 0.2230 nội dung 0.7457 SCD 1.559 cháy 0.04% | Dev (B0 học chung) 44.11  11.1 phút
+epoch  11 B0    CE 0.2096 nội dung 0.7460 SCD 1.566 cháy 0.04%  11.9 phút
+epoch  12 B0    CE 0.1989 nội dung 0.7516 SCD 1.568 cháy 0.04%  12.7 phút
+epoch  13 B0    CE 0.1940 nội dung 0.7508 SCD 1.555 cháy 0.04%  13.5 phút
+epoch  14 B0    CE 0.1945 nội dung 0.7421 SCD 1.557 cháy 0.04%  14.4 phút
+epoch  15 B0    CE 0.1861 nội dung 0.7511 SCD 1.566 cháy 0.04% | Dev (B0 học chung) 43.55  15.5 phút
+epoch  16 ST+B0 CE 0.1780 nội dung 0.7548 SCD 1.555 cháy 0.03% | g_CE 1.43e+01 g_rào 7.49e+00 tỉ lệ 1.913 cos +0.10  17.0 phút
+epoch  17 ST+B0 CE 0.1733 nội dung 0.7605 SCD 1.557 cháy 0.03% | g_CE 1.47e+01 g_rào 7.99e+00 tỉ lệ 1.838 cos -0.04  18.5 phút
+epoch  18 ST+B0 CE 0.1715 nội dung 0.7562 SCD 1.556 cháy 0.03% | g_CE 1.17e+01 g_rào 7.29e+00 tỉ lệ 1.608 cos +0.15  20.0 phút
+epoch  19 ST+B0 CE 0.1743 nội dung 0.7617 SCD 1.553 cháy 0.03% | g_CE 1.39e+01 g_rào 8.91e+00 tỉ lệ 1.563 cos +0.03  21.6 phút
+epoch  20 ST+B0 CE 0.1673 nội dung 0.7348 SCD 1.547 cháy 0.03% | Dev (B0 học chung) 45.20 | g_CE 8.70e+00 g_rào 7.63e+00 tỉ lệ 1.140 cos +0.14  23.3 phút
+epoch  21 ST+B0 CE 0.1702 nội dung 0.7407 SCD 1.556 cháy 0.03% | g_CE 1.09e+01 g_rào 7.00e+00 tỉ lệ 1.557 cos +0.18  24.8 phút
+epoch  22 ST+B0 CE 0.1698 nội dung 0.7497 SCD 1.557 cháy 0.04% | g_CE 1.16e+01 g_rào 7.36e+00 tỉ lệ 1.571 cos +0.13  26.3 phút
+epoch  23 ST+B0 CE 0.1704 nội dung 0.7542 SCD 1.541 cháy 0.03% | g_CE 1.12e+01 g_rào 6.36e+00 tỉ lệ 1.757 cos +0.09  27.8 phút
+epoch  24 ST+B0 CE 0.1675 nội dung 0.7371 SCD 1.553 cháy 0.03% | g_CE 7.53e+00 g_rào 6.46e+00 tỉ lệ 1.165 cos -0.03  29.3 phút
+epoch  25 ST+B0 CE 0.1705 nội dung 0.7382 SCD 1.556 cháy 0.03% | Dev (B0 học chung) 45.31 | g_CE 7.62e+00 g_rào 7.17e+00 tỉ lệ 1.062 cos +0.15  31.1 phút
+epoch  26 ST+B0 CE 0.1682 nội dung 0.7463 SCD 1.547 cháy 0.03% | g_CE 8.21e+00 g_rào 7.37e+00 tỉ lệ 1.115 cos +0.14  32.6 phút
+epoch  27 ST+B0 CE 0.1668 nội dung 0.7435 SCD 1.557 cháy 0.03% | g_CE 9.11e+00 g_rào 7.33e+00 tỉ lệ 1.243 cos +0.19  34.3 phút
+epoch  28 ST+B0 CE 0.1661 nội dung 0.7410 SCD 1.558 cháy 0.04% | g_CE 9.51e+00 g_rào 7.09e+00 tỉ lệ 1.341 cos +0.14  36.1 phút
+epoch  29 ST+B0 CE 0.1676 nội dung 0.7477 SCD 1.555 cháy 0.03% | g_CE 6.89e+00 g_rào 7.01e+00 tỉ lệ 0.983 cos +0.22  37.9 phút
+epoch  30 ST+B0 CE 0.1629 nội dung 0.7408 SCD 1.552 cháy 0.03% | Dev (B0 học chung) 45.85 | g_CE 9.37e+00 g_rào 9.11e+00 tỉ lệ 1.028 cos +0.20  40.0 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\m11b_l15_e30_bn.pt. Tiếp: b3/xuat_anh.py --bien_the m11b_l15_e30_bn -> chi_so_ghep.py -> B0 mới.
+m11b_l15_e30_bn: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\m11b_l15_e30_bn
+Traceback (most recent call last):
+  File "D:\CS406\DoAn\Sage\tai_lap\cai_tien\chi_so_ghep.py", line 79, in <module>
+    main()
+  File "D:\CS406\DoAn\Sage\tai_lap\cai_tien\chi_so_ghep.py", line 62, in main
+    kq = pd.DataFrame(list(ex.map(do_mot, viec, chunksize=8)))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\concurrent\futures\process.py", line 620, in _chain_from_iterable_of_lists
+    for element in iterable:
+  File "D:\Miniconda3\envs\DoAn\Lib\concurrent\futures\_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\concurrent\futures\_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\concurrent\futures\_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+concurrent.futures.process.BrokenProcessPool: A process in the process pool was terminated abruptly while the future was running or pending.
+dev: 151 ảnh
+                    SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                            
+sage             1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+tb               1.4241   1.6518  0.3995  5.9740  24.5265      0.8089       0.8429    82.7394       104.9669      60.3088      False
+tbsua_w150       1.5476   1.5956  0.7231  6.4182  27.5314      0.7086       0.8870    89.9179       101.3988     109.1582      False
+m11b_l15_e30_bn  1.5488   1.5978  0.7308  6.4168  27.5848      0.7096       0.8882    89.9874       101.5372     110.3160      False
+|tbsua_w150 - m11b_l15_e30_bn| = 0.81 mức xám (val 151 ảnh)
+|tbsua_w150 - tb| = 4.03 mức xám (val 151 ảnh)
+|m11b_l15_e30_bn - tb| = 4.14 mức xám (val 151 ảnh)
