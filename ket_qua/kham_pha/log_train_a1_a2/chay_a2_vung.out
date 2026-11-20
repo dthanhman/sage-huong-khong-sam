@@ -1,0 +1,33 @@
+[13:00] train nosam_kp841_vung10 (lam_vung 10)
+[13:13] xuất ảnh nosam_kp841_vung10
+[13:15] tương phản người (val 151)
+116 ảnh có người – trung vị:
+                    tuong_phan  ti_le
+bien_the                             
+sage                     44.54   1.32
+tb                       26.79   1.05
+nosam_kp841              23.50   0.97
+nosam_kp841_vung10       55.71   1.79
+[13:15] chỉ số ghép val 151
+dev: 151 ảnh
+                       SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                               
+sage                1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+nosam_kp841         1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+nosam_kp841_vung10  1.6513   1.5812  0.6961  6.4827  32.1504      0.6964       0.8848    95.9444       100.4818     105.0702       True
+[13:19] train B0 nosam_kp841_vung10 seed 0
+[14:40] nosam_kp841_vung10 s0: "mIoU_co_mat": 49.63012214047207; person,46.88,46.88
+[14:40] SỐ CHÍNH: mIoU lớp đủ ảnh (>= 20 ảnh), so với nosam_kp841 (máy nhà, s0)
+b0 | tập dev | 151 ảnh | 17 khối | seed [0]
+Số ảnh mỗi lớp: road 151, sidewalk 108, building 141, traffic_light 13, traffic_sign 70, vegetation 151, sky 151, person 126, car 147, truck 22, bus 14, motorcycle 1, bicycle 2, pole 141
+
+===== Lớp có >= 20 ảnh: 10 lớp (road, sidewalk, building, traffic_sign, vegetation, sky, person, car, truck, pole)
+                       s0     TB
+nosam_kp841         56.99  56.99
+nosam_kp841_vung10  57.44  57.44
+                           cap  d_tb  d_s0         CI_anh    CI_anh_seed       ket_luan
+nosam_kp841_vung10−nosam_kp841  0.45  0.45 [-0.22; +1.64] [-0.22; +1.64] chưa phân biệt
+
+Ghi D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0\so_sanh_lop_du_dev_b0.csv
+nosam_kp841 person: person,45.08,45.08
+XONG

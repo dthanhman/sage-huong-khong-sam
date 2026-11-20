@@ -1,0 +1,28 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+Tổng 841 cặp train cho mạng ghép
+Student: 0.136M tham số
+epoch   1 bước 106 lr 2.00e-03 loss 4.3167 (fuse 0.2421, grad 1.1968) 0.1 phút
+epoch   5 bước 530 lr 2.00e-03 loss 2.3827 (fuse 0.1580, grad 0.6363) 0.6 phút
+epoch  10 bước 1060 lr 1.99e-03 loss 2.2799 (fuse 0.1440, grad 0.6160) 1.2 phút
+epoch  15 bước 1590 lr 1.97e-03 loss 1.9486 (fuse 0.1598, grad 0.4898) 1.8 phút
+epoch  20 bước 2120 lr 1.95e-03 loss 1.8287 (fuse 0.1433, grad 0.4662) 2.3 phút
+epoch  25 bước 2650 lr 1.92e-03 loss 1.9273 (fuse 0.1428, grad 0.4996) 2.9 phút
+epoch  30 bước 3180 lr 1.89e-03 loss 1.7788 (fuse 0.1442, grad 0.4487) 3.5 phút
+epoch  35 bước 3710 lr 1.85e-03 loss 1.7240 (fuse 0.1393, grad 0.4354) 4.1 phút
+epoch  40 bước 4240 lr 1.81e-03 loss 1.8666 (fuse 0.1585, grad 0.4637) 4.7 phút
+epoch  45 bước 4770 lr 1.76e-03 loss 1.7330 (fuse 0.1429, grad 0.4348) 5.3 phút
+epoch  50 bước 5300 lr 1.71e-03 loss 1.7019 (fuse 0.1389, grad 0.4284) 5.8 phút
+epoch  55 bước 5830 lr 1.65e-03 loss 1.7722 (fuse 0.1429, grad 0.4479) 6.4 phút
+epoch  60 bước 6360 lr 1.59e-03 loss 1.5795 (fuse 0.1370, grad 0.3894) 7.0 phút
+epoch  65 bước 6890 lr 1.52e-03 loss 1.5944 (fuse 0.1415, grad 0.3899) 7.6 phút
+epoch  70 bước 7420 lr 1.45e-03 loss 1.5506 (fuse 0.1377, grad 0.3792) 8.2 phút
+epoch  75 bước 7950 lr 1.38e-03 loss 1.5037 (fuse 0.1332, grad 0.3680) 8.8 phút
+epoch  80 bước 8480 lr 1.31e-03 loss 1.7509 (fuse 0.1431, grad 0.4405) 9.3 phút
+epoch  85 bước 9010 lr 1.23e-03 loss 1.5566 (fuse 0.1388, grad 0.3801) 9.9 phút
+epoch  90 bước 9540 lr 1.15e-03 loss 1.5372 (fuse 0.1406, grad 0.3718) 10.5 phút
+epoch  95 bước 10070 lr 1.08e-03 loss 1.4583 (fuse 0.1406, grad 0.3455) 11.1 phút
+epoch 100 bước 10600 lr 9.98e-04 loss 1.4886 (fuse 0.1397, grad 0.3565) 11.7 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\nosam_kp841_w07.pt
+nosam_kp841_w07: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\nosam_kp841_w07
+nosam_kp841_w07: ghi 0 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\nosam_kp841_w07

@@ -1,0 +1,7 @@
+lop,bien_the,person,car,road,vegetation,motorcycle,sidewalk,pole
+person,nosam_kp841,56.26,29.41,5.5,4.31,1.98,1.55,0.0
+person,sage,57.16,26.21,8.44,3.79,1.56,1.7,0.0
+person,tb,56.24,25.84,8.22,4.04,2.01,1.71,0.0
+sidewalk,nosam_kp841,0.24,1.65,73.38,2.77,0.0,21.76,0.12
+sidewalk,sage,0.25,1.63,68.97,2.42,0.0,26.52,0.1
+sidewalk,tb,0.19,1.73,75.43,2.18,0.0,20.15,0.19

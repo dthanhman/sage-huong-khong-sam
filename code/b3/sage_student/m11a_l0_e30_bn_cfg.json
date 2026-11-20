@@ -1,0 +1,28 @@
+{
+  "ten": "m11a_l0_e30_bn",
+  "init": "nosam_kp841",
+  "lam": 0.0,
+  "beta": 1.0,
+  "w_ir": 0.4,
+  "gamma": 0.0,
+  "eta": 0.0,
+  "tran": 0.92,
+  "le": 0.1,
+  "epochs": 30,
+  "warm_seg": 15,
+  "batch": 4,
+  "crop": [
+    384,
+    512
+  ],
+  "lr_seg": 6e-05,
+  "lr_st": 0.0005,
+  "seed": 0,
+  "thu": 0,
+  "do_grad": 10,
+  "b0_st": 0.1,
+  "bn_dong": true,
+  "nen": "nosam",
+  "w_tb": 150.0,
+  "w_g": 27.0
+}

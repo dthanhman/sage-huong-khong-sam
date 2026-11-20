@@ -1,0 +1,27 @@
+{
+  "bien_the": "tdfusion",
+  "model": "b0",
+  "seed": 0,
+  "gop_dev": false,
+  "lop0": false,
+  "epochs": 100,
+  "n_train": 841,
+  "best_dev_miou": 51.536234811558664,
+  "ckpt": "last",
+  "280": {
+    "mIoU_co_mat": 50.24910378010795,
+    "mIoU_14": 50.24910378010795,
+    "mIoU_7": 62.851986698684684,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.34616756270036,
+    "so_anh": 151
+  },
+  "273": {
+    "mIoU_co_mat": 50.24910378010795,
+    "mIoU_14": 50.24910378010795,
+    "mIoU_7": 62.851986698684684,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.34616756270036,
+    "so_anh": 151
+  }
+}

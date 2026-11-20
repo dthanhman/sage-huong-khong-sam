@@ -50,6 +50,49 @@ def grad_loss(o, s1, s2, kx, ky):
     return F.l1_loss(grad(o, kx, ky), torch.maximum(grad(s1, kx, ky), grad(s2, kx, ky)))
 
 
+VAT = (8, 9, 10, 11, 12, 13)   # nhãn FMB: person, car, truck, bus, motorcycle, bicycle
+KER_VANH = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))   # vành ~7 px quanh vật
+
+
+def vat_the(lab, toi_da=16, dt_min=15, lop=VAT):
+    """A2: tách từng vật (thành phần liên thông của mỗi lớp vật) trong crop nhãn -> list (mask vật, mask vành).
+    Vành = vùng nở ra quanh vật, bỏ chính lớp đó và bỏ nhãn 0 (unlabeled). Chỉ dùng lúc TRAIN."""
+    ra = []
+    for c in lop:
+        m = (lab == c).astype(np.uint8)
+        if m.sum() < dt_min:
+            continue
+        n, cc, st, _ = cv2.connectedComponentsWithStats(m, connectivity=8)
+        for k in range(1, n):
+            if st[k, cv2.CC_STAT_AREA] < dt_min:
+                continue
+            v = (cc == k).astype(np.uint8)
+            vanh = (cv2.dilate(v, KER_VANH) > 0) & (m == 0) & (lab != 0)
+            if vanh.sum() >= dt_min:
+                ra.append((v.astype(bool), vanh))
+    if len(ra) > toi_da:   # quá nhiều vật: giữ các vật NHỎ nhất (người nhỏ là chỗ nosam thua nặng nhất)
+        ra = sorted(ra, key=lambda t: t[0].sum())[:toi_da]
+    return ra
+
+
+def loss_vung(o, y, ir, ds):
+    """A2: phạt khi tương phản vật–vành trên ảnh ghép THẤP hơn tương phản mạnh nhất của 2 nguồn.
+    c(x) = |TB_vật(x) - TB_vành(x)|; loss = TB_vật relu(max(c(Y), c(IR)) - c(o))."""
+    if not ds:
+        return o.new_zeros(())
+    b, mv, mr = zip(*ds)
+    b = torch.tensor(b, device=o.device)
+    mv = torch.from_numpy(np.stack(mv)).to(o.device, torch.float32)
+    mr = torch.from_numpy(np.stack(mr)).to(o.device, torch.float32)
+
+    def c(x):
+        x = x[b, 0]
+        return ((x * mv).sum((1, 2)) / mv.sum((1, 2)) - (x * mr).sum((1, 2)) / mr.sum((1, 2))).abs()
+    with torch.no_grad():
+        dich = torch.maximum(c(y), c(ir))
+    return F.relu(dich - c(o)).mean()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--epochs", type=int, default=100)
@@ -61,6 +104,14 @@ def main():
     ap.add_argument("--ten", default="nosam")
     ap.add_argument("--chi_train", action="store_true",
                     help="chỉ 1.045 ảnh train (bỏ Dev) – dùng làm điểm khởi tạo cho pp chọn trên Dev (M11), tránh rò Dev")
+    ap.add_argument("--w_ir", type=float, default=None,
+                    help="tỉ lệ IR trong MSE cường độ: l_fuse = 5*((1-w)*MSE(o,Y) + w*MSE(o,IR)); bỏ trống = gốc 3*Y + 2*IR (w 0,4)")
+    ap.add_argument("--them", nargs="*", default=[],
+                    help="thư mục dữ liệu NGOÀI (không nhãn) có vi/ và ir/ cùng tên, vd MSRS train; chỉ dùng cho loss ghép")
+    ap.add_argument("--lam_vung", type=float, default=0.0,
+                    help="A2: hệ số loss tương phản vật–vành (mask lấy từ NHÃN train, chỉ lúc train); 0 = tắt (y hệt cũ)")
+    ap.add_argument("--lop_vat", nargs="+", type=int, default=list(VAT),
+                    help="A2: nhãn FMB coi là vật (mặc định 8–13 người+xe); mở rộng: thêm 4 đèn, 5 biển báo, 14 cột")
     a = ap.parse_args()
     torch.manual_seed(a.seed)
     rng = np.random.default_rng(a.seed)
@@ -71,9 +122,24 @@ def main():
                     for s in (("train",) if a.chi_train else ("train", "dev"))])
     assert len(df) == (int(os.environ.get("SO_TRAIN", 1045)) if a.chi_train else 1220) and not df.vis_path.str.startswith("test").any()
     print(f"Nạp {len(df)} ảnh train vào RAM ...", flush=True)
-    Y = np.stack([cv2.cvtColor(cv2.imread(str(duong(p))), cv2.COLOR_BGR2YCrCb)[:, :, 0] for p in df.vis_path])
-    IR = np.stack([cv2.cvtColor(cv2.imread(str(duong(p))), cv2.COLOR_BGR2GRAY) for p in df.ir_path])
-    N, H, W = Y.shape
+    # danh sách (không stack) để nhận ảnh khác kích thước; không có --them thì y hệt bản cũ (cùng dãy ngẫu nhiên)
+    Y = [cv2.cvtColor(cv2.imread(str(duong(p))), cv2.COLOR_BGR2YCrCb)[:, :, 0] for p in df.vis_path]
+    IR = [cv2.cvtColor(cv2.imread(str(duong(p))), cv2.COLOR_BGR2GRAY) for p in df.ir_path]
+    # A2: nhãn chỉ nạp khi bật loss vùng; ảnh ngoài (--them) không có nhãn -> None
+    LAB = ([cv2.imread(str(duong(p)), cv2.IMREAD_GRAYSCALE) for p in df.label_path]
+           if a.lam_vung > 0 else [None] * len(df))
+    for d in a.them:
+        d = Path(d)
+        assert "test" not in d.as_posix().lower(), f"không train trên tập test: {d}"
+        ten = sorted(p.name for p in (d / "vi").iterdir())
+        assert ten and all((d / "ir" / t).exists() for t in ten), f"{d}: vi/ và ir/ không khớp"
+        for t in ten:
+            v, r = cv2.imread(str(d / "vi" / t)), cv2.imread(str(d / "ir" / t), cv2.IMREAD_GRAYSCALE)
+            assert v.shape[:2] == r.shape, f"{d}/{t}: VIS và IR khác kích thước"
+            Y.append(cv2.cvtColor(v, cv2.COLOR_BGR2YCrCb)[:, :, 0]); IR.append(r); LAB.append(None)
+        print(f"  + {len(ten)} cặp ngoài từ {d}", flush=True)
+    N = len(Y)
+    print(f"Tổng {N} cặp train cho mạng ghép", flush=True)
     ch, cw = 192, 256
 
     net = Network().to(dev).train()
@@ -86,24 +152,35 @@ def main():
     log, buoc, t0 = [], 0, time.time()
     for ep in range(1, a.epochs + 1):
         thu_tu = rng.permutation(N)
-        tong = dict(loss=0., fuse=0., grad=0., n=0)
+        tong = dict(loss=0., fuse=0., grad=0., vung=0., n=0)
         for bi in range(so_batch):
             if bi % 2 == 1:      # code gốc: batch lẻ dành cho Teacher, Student chỉ học ở batch chẵn
                 continue
             idx = thu_tu[bi * a.batch:(bi + 1) * a.batch]
-            ys, irs = [], []
-            for k in idx:
+            ys, irs, ds = [], [], []
+            for bb, k in enumerate(idx):
+                H, W = Y[k].shape
                 i0, j0 = rng.integers(0, H - ch + 1), rng.integers(0, W - cw + 1)
-                y, ir = Y[k, i0:i0 + ch, j0:j0 + cw], IR[k, i0:i0 + ch, j0:j0 + cw]
-                if rng.random() < 0.5:
+                y, ir = Y[k][i0:i0 + ch, j0:j0 + cw], IR[k][i0:i0 + ch, j0:j0 + cw]
+                lab = None if LAB[k] is None else LAB[k][i0:i0 + ch, j0:j0 + cw]
+                if rng.random() < 0.5:   # cùng một lần rút ngẫu nhiên như bản cũ -> lam_vung 0 cho dãy y hệt
                     y, ir = y[:, ::-1], ir[:, ::-1]
+                    lab = None if lab is None else lab[:, ::-1]
                 ys.append(y.copy()), irs.append(ir.copy())
+                if lab is not None:
+                    ds += [(bb, v, r) for v, r in vat_the(np.ascontiguousarray(lab), lop=a.lop_vat)]
             y = torch.from_numpy(np.stack(ys)).float().div(255)[:, None].to(dev)
             ir = torch.from_numpy(np.stack(irs)).float().div(255)[:, None].to(dev)
             o = net(y, ir)[0]
-            l_fuse = 3 * F.mse_loss(o, y) + 2 * F.mse_loss(o, ir)
+            if a.w_ir is None:
+                l_fuse = 3 * F.mse_loss(o, y) + 2 * F.mse_loss(o, ir)
+            else:
+                l_fuse = 5 * ((1 - a.w_ir) * F.mse_loss(o, y) + a.w_ir * F.mse_loss(o, ir))
             l_grad = 9 * grad_loss(o, y, ir, kx, ky)
             loss = 3 * l_fuse + 3 * l_grad
+            l_vung = loss_vung(o, y, ir, ds) if a.lam_vung > 0 else o.new_zeros(())
+            if a.lam_vung > 0:
+                loss = loss + a.lam_vung * l_vung
             if not torch.isfinite(loss):
                 sys.exit(f"loss không hữu hạn ở bước {buoc}")
             opt.zero_grad()
@@ -111,11 +188,15 @@ def main():
             opt.step()
             sch.step()
             buoc += 1
-            tong["loss"] += loss.item(); tong["fuse"] += l_fuse.item(); tong["grad"] += l_grad.item(); tong["n"] += 1
+            tong["loss"] += loss.item(); tong["fuse"] += l_fuse.item(); tong["grad"] += l_grad.item()
+            tong["vung"] += l_vung.item(); tong["n"] += 1
             if a.thu and buoc >= a.thu:
                 dt = time.time() - t0
+                n = tong["n"]
                 print(f"Thử {buoc} bước: {dt:.1f}s -> ước tính cả bài {dt / buoc * a.epochs * so_batch / 2 / 60:.0f} phút,"
-                      f" GPU {torch.cuda.max_memory_allocated() / 2**20 if dev == 'cuda' else 0:.0f} MB, loss {loss.item():.4f}")
+                      f" GPU {torch.cuda.max_memory_allocated() / 2**20 if dev == 'cuda' else 0:.0f} MB, loss {loss.item():.4f}"
+                      f" | TB: 3*fuse {3 * tong['fuse'] / n:.4f}, 3*grad {3 * tong['grad'] / n:.4f},"
+                      f" lam*vung {a.lam_vung * tong['vung'] / n:.4f} (vung {tong['vung'] / n:.4f})")
                 return
         n = tong.pop("n")
         dong = {"epoch": ep, "buoc": buoc, "lr": sch.get_last_lr()[0], **{k: v / n for k, v in tong.items()},
@@ -123,7 +204,7 @@ def main():
         log.append(dong)
         if ep % 5 == 0 or ep == 1:
             print(f"epoch {ep:3d} bước {buoc} lr {dong['lr']:.2e} loss {dong['loss']:.4f} "
-                  f"(fuse {dong['fuse']:.4f}, grad {dong['grad']:.4f}) {dong['phut']:.1f} phút", flush=True)
+                  f"(fuse {dong['fuse']:.4f}, grad {dong['grad']:.4f}, vung {dong['vung']:.4f}) {dong['phut']:.1f} phút", flush=True)
     torch.save(net.state_dict(), STUDENT / f"{a.ten}.pt")
     pd.DataFrame(log).to_csv(STUDENT / f"{a.ten}_log.csv", index=False)
     print(f"Lưu {STUDENT / (a.ten + '.pt')}")

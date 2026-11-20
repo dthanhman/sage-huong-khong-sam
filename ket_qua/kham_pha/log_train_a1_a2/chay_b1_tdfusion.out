@@ -1,0 +1,52 @@
+[21:19] xuất ảnh tdfusion
+tdfusion: ghi 989 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\tdfusion
+[21:24] chỉ số ghép val 151
+dev: 151 ảnh
+                SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                        
+sage         1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+tb           1.4241   1.6518  0.3995  5.9740  24.5265      0.8089       0.8429    82.7394       104.9669      60.3088      False
+nosam_kp841  1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+tdfusion     1.7817   1.5937  0.7005  6.6860  33.2138      0.6816       0.9120   103.5185       101.2739     105.7352       True
+[21:31] train B0 tdfusion seed 0
+[22:50] tdfusion s0: "mIoU_co_mat": 50.24910378010795
+[22:50] train B0 nosam_kp841 seed 0
+[00:06] nosam_kp841 s0: "mIoU_co_mat": 50.33171549683123
+[00:06] train B0 tdfusion seed 1
+[01:20] tdfusion s1: "mIoU_co_mat": 49.640999991891256
+[01:20] so cặp (cùng máy nhà, seed 0)
+== mIoU_co_mat theo seed
+                   s0     TB  SD  mIoU_7_TB
+nosam_kp841     50.33  50.33 NaN      62.70
+m11a_l0_e30_bn  49.68  49.68 NaN      62.02
+m11a_l5_e30_bn  50.34  50.34 NaN      63.04
+tdfusion        50.25  50.25 NaN      62.85
+
+== Hiệu số theo cặp seed (B = 2000); kết luận theo thang 3 mức
+                          cap  d_tb  d_s0  CI_anh_lo  CI_anh_hi  CI_anh_seed_lo  CI_anh_seed_hi  so_seed_duong  d_mIoU7_tb       ket_luan
+   nosam_kp841−m11a_l0_e30_bn  0.65  0.65      -0.45       2.31           -0.45            2.31              1        0.68 chưa phân biệt
+   nosam_kp841−m11a_l5_e30_bn -0.01 -0.01      -0.87       1.49           -0.87            1.49              0       -0.34 chưa phân biệt
+         nosam_kp841−tdfusion  0.08  0.08      -1.01       0.83           -1.01            0.83              1       -0.15 chưa phân biệt
+m11a_l0_e30_bn−m11a_l5_e30_bn -0.67 -0.67      -1.24      -0.06           -1.24           -0.06              0       -1.02  kém chắc chắn
+      m11a_l0_e30_bn−tdfusion -0.57 -0.57      -2.14       0.23           -2.14            0.23              0       -0.83 chưa phân biệt
+      m11a_l5_e30_bn−tdfusion  0.09  0.09      -1.42       0.69           -1.42            0.69              1        0.19 chưa phân biệt
+
+== IoU từng lớp (TB seed, bỏ pixel unlabeled) – số phụ
+               nosam_kp841  m11a_l0_e30_bn  m11a_l5_e30_bn  tdfusion
+road                  80.8            80.7            80.7      80.9
+sidewalk              15.7            15.6            15.5      16.9
+building              73.9            74.1            73.8      74.6
+traffic_light         46.2            45.1            48.7      49.0
+traffic_sign          47.4            49.4            49.8      47.8
+vegetation            87.0            86.9            86.7      87.4
+sky                   95.7            95.4            95.3      95.7
+person                45.1            45.4            46.1      45.6
+car                   67.4            67.2            67.4      67.3
+truck                  2.2             2.6             2.5       3.1
+bus                   37.4            30.5            36.7      36.4
+motorcycle            51.1            49.1            47.0      45.0
+bicycle                0.0             0.0             0.0       0.0
+pole                  54.8            53.6            54.5      53.8
+
+Ghi D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0\so_sanh_cap_dev_b0.csv
+XONG

@@ -32,6 +32,14 @@ from chung import ANH, IGNORE, MAN, MEAN, NC, RUNS, STD, cac_miou, doc_nhan, duo
 
 MODEL = {"b0": "nvidia/mit-b0", "b1": "nvidia/mit-b1", "b2": "nvidia/mit-b2", "b3": "nvidia/mit-b3"}
 
+# Đo TRẦN 4 kênh (20/11): biến thể đặc biệt, không ghép ảnh – SegFormer nhận thẳng RGB của VIS + IR từ FMB gốc.
+# Kênh IR chuẩn hóa bằng TB của MEAN/STD ImageNet; tầng đầu thêm kênh thứ 4 = TB trọng số 3 kênh RGB pretrained.
+BT_4KENH = "vis_ir4"
+
+
+def so_kenh(bien_the):
+    return 4 if bien_the == BT_4KENH else 3
+
 
 def ten_run(bien_the, model, seed, gop_dev, lop0=False):
     return f"{bien_the}_{model}_s{seed}" + ("_1220" if gop_dev else "") + ("_15lop" if lop0 else "")
@@ -49,9 +57,15 @@ class FMBSeg(Dataset):
 
     def __getitem__(self, i):
         r = self.df.iloc[i]
-        img = cv2.imread(str(ANH / self.bt / thu_muc(r) / f"{r.image_id}.png"))
-        assert img is not None, f"thiếu ảnh {self.bt}/{r.image_id}, chạy xuat_anh.py trước"
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        if self.bt == BT_4KENH:
+            v = cv2.imread(str(duong(r.vis_path)))
+            ir = cv2.imread(str(duong(r.ir_path)), cv2.IMREAD_GRAYSCALE)
+            assert v is not None and ir is not None and v.shape[:2] == ir.shape, f"lỗi đọc VIS/IR {r.image_id}"
+            img = np.dstack([cv2.cvtColor(v, cv2.COLOR_BGR2RGB), ir])
+        else:
+            img = cv2.imread(str(ANH / self.bt / thu_muc(r) / f"{r.image_id}.png"))
+            assert img is not None, f"thiếu ảnh {self.bt}/{r.image_id}, chạy xuat_anh.py trước"
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         lab = doc_nhan(duong(r.label_path), self.lop0)
         if self.train:
             s = random.uniform(*self.scale)
@@ -69,7 +83,10 @@ class FMBSeg(Dataset):
             lab = lab[y0:y0 + self.crop, x0:x0 + self.crop]
             if random.random() < 0.5:
                 img, lab = img[:, ::-1], lab[:, ::-1]
-        x = (img.astype(np.float32) / 255 - MEAN) / STD
+        if img.shape[2] == 4:
+            x = (img.astype(np.float32) / 255 - np.append(MEAN, MEAN.mean())) / np.append(STD, STD.mean())
+        else:
+            x = (img.astype(np.float32) / 255 - MEAN) / STD
         return torch.from_numpy(x.transpose(2, 0, 1).copy()), torch.from_numpy(lab.copy())
 
 
@@ -79,11 +96,26 @@ def _seed_worker(w, seed):
     np.random.seed(seed * 1000 + w)
 
 
-def tao_model(ten, nc=NC):
+def tao_model(ten, nc=NC, kenh=3):
     from transformers import SegformerForSemanticSegmentation
-    return SegformerForSemanticSegmentation.from_pretrained(
+    m = SegformerForSemanticSegmentation.from_pretrained(
         MODEL[ten], num_labels=nc, id2label={i: str(i) for i in range(nc)},
         label2id={str(i): i for i in range(nc)}, ignore_mismatched_sizes=True)
+    if kenh == 4:   # thêm kênh IR vào tầng đầu: giữ trọng số RGB pretrained, kênh 4 = TB 3 kênh RGB
+        # conv nhận ảnh đầu vào (tên khác nhau theo bản transformers: encoder.patch_embeddings.0.proj | stages.0.patch_embeddings.proj)
+        ten_cu = [n for n, mod in m.named_modules() if isinstance(mod, torch.nn.Conv2d) and mod.in_channels == 3]
+        assert len(ten_cu) == 1, f"không xác định được conv đầu vào: {ten_cu}"
+        cha, _, la = ten_cu[0].rpartition(".")
+        cu = m.get_submodule(ten_cu[0])
+        moi = torch.nn.Conv2d(4, cu.out_channels, cu.kernel_size, cu.stride, cu.padding, bias=cu.bias is not None)
+        with torch.no_grad():
+            moi.weight[:, :3] = cu.weight
+            moi.weight[:, 3:] = cu.weight.mean(1, keepdim=True)
+            if cu.bias is not None:
+                moi.bias.copy_(cu.bias)
+        setattr(m.get_submodule(cha), la, moi)
+        m.config.num_channels = 4
+    return m
 
 
 @torch.inference_mode()
@@ -141,7 +173,7 @@ def main():
     if not a.gop_dev:
         ld = DataLoader(FMBSeg(["dev"], a.bien_the, False, lop0=a.lop0), 2, num_workers=a.workers)
 
-    model = tao_model(a.model, nc).cuda().train()
+    model = tao_model(a.model, nc, so_kenh(a.bien_the)).cuda().train()
     enc = [p for n, p in model.named_parameters() if n.startswith("segformer.")]
     head = [p for n, p in model.named_parameters() if not n.startswith("segformer.")]
     opt = torch.optim.AdamW([{"params": enc, "lr": a.lr}, {"params": head, "lr": a.lr * 10}],
