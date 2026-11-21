@@ -10,6 +10,10 @@
 #   Chẩn đoán (không dùng để chọn): tỉ lệ tương phản người (trung vị từng ảnh) tiến về SAGE 1,32 (nosam 0,97, tb 1,05); rào MS-SSIM >= 99%, Q_ABF >= 98% SAGE.
 # Chạy lại được: bước nào có kết quả thì bỏ qua; B0 dở thì train tiếp (--tiep).
 # LAM nhận đuôi "mr" (mở rộng lớp vật, 20/11), vd LAM="30 10mr".
+# 21/11 – THÊM λ100 (λ10, λ30 không phải dò có hệ thống: λ10 = loss vùng ~10–20% tổng, λ30 = x3; mIoU còn tăng theo λ).
+#   LUẬT CHỌN λ (đặt trước, chọn MỘT lần trên val 151, seed 0, không dò thêm): trong {10, 30, 100}, λ có mIoU 10 lớp cao nhất
+#   VÀ qua rào ảnh (MS-SSIM >= 99%, Q_ABF >= 98% SAGE). Nếu 2 λ cách nhau < 0,3 điểm -> lấy λ NHỎ hơn (ít ép ảnh hơn).
+#   λ chốt -> seed 1, 2 (Student + B0) để so "hơn nhất quán" với SAGE và TB.
 # Chạy (Git Bash): bash scene_v1/chay_a2_vung.sh > scene_v1/chay_a2_vung.out 2>&1   (~3 h)
 set -e
 TL=$(cd "$(dirname "$0")/.." && pwd)

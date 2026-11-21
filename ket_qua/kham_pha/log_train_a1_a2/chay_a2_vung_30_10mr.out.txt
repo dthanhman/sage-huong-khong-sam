@@ -1,0 +1,40 @@
+[22:58] train nosam_kp841_vung30 (lam_vung 30 )
+[23:13] xuất ảnh nosam_kp841_vung30
+[23:15] train nosam_kp841_vung10mr (lam_vung 10 --lop_vat 4 5 8 9 10 11 12 13 14)
+[23:31] xuất ảnh nosam_kp841_vung10mr
+[23:33] tương phản người (val 151)
+116 ảnh có người – trung vị:
+                      tuong_phan  ti_le
+bien_the                               
+sage                       44.54   1.32
+tb                         26.79   1.05
+nosam_kp841                23.50   0.97
+nosam_kp841_vung30         64.55   1.78
+nosam_kp841_vung10mr       51.09   1.91
+[23:33] chỉ số ghép val 151
+                         SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                                 
+sage                  1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+nosam_kp841           1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+nosam_kp841_vung30    1.7762   1.5743  0.6786  6.6549  36.2969      0.7098       0.8644   103.1985       100.0410     102.4275       True
+nosam_kp841_vung10mr  1.5974   1.5854  0.7012  6.4315  28.8549      0.6840       0.9014    92.8134       100.7489     105.8428      False
+[23:40] train B0 nosam_kp841_vung30 seed 0
+[00:56] nosam_kp841_vung30 s0: "mIoU_co_mat": 50.345530114003914; person,47.39,47.39
+[00:56] train B0 nosam_kp841_vung10mr seed 0
+[02:12] nosam_kp841_vung10mr s0: "mIoU_co_mat": 50.12637946192748; person,43.83,43.83
+[02:12] SỐ CHÍNH: mIoU lớp đủ ảnh (>= 20 ảnh), so với nosam_kp841 (máy nhà, s0)
+b0 | tập dev | 151 ảnh | 17 khối | seed [0]
+Số ảnh mỗi lớp: road 151, sidewalk 108, building 141, traffic_light 13, traffic_sign 70, vegetation 151, sky 151, person 126, car 147, truck 22, bus 14, motorcycle 1, bicycle 2, pole 141
+
+===== Lớp có >= 20 ảnh: 10 lớp (road, sidewalk, building, traffic_sign, vegetation, sky, person, car, truck, pole)
+                         s0     TB
+nosam_kp841           56.99  56.99
+nosam_kp841_vung30    57.66  57.66
+nosam_kp841_vung10mr  57.02  57.02
+                             cap  d_tb  d_s0         CI_anh    CI_anh_seed       ket_luan
+  nosam_kp841_vung30−nosam_kp841  0.68  0.68 [-0.25; +1.95] [-0.25; +1.95] chưa phân biệt
+nosam_kp841_vung10mr−nosam_kp841  0.04  0.04 [-0.32; +0.85] [-0.32; +0.85] chưa phân biệt
+
+Ghi D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0\so_sanh_lop_du_dev_b0.csv
+nosam_kp841 person: person,45.08,45.08
+XONG

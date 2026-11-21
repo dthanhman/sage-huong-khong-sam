@@ -93,6 +93,50 @@ def loss_vung(o, y, ir, ds):
     return F.relu(dich - c(o)).mean()
 
 
+KER_DAI = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (21, 21))   # A4: dải ~10 px mỗi bên biên 2 vùng
+
+
+def cap_vung(lab, toi_da=8, px_min=50):
+    """A4 (21/11): mọi cặp vùng KỀ NHAU của 2 lớp bất kỳ trong crop nhãn (bỏ nhãn 0), không gắn lớp cụ thể.
+    Mỗi cặp (a, b): chỉ lấy phần của a và của b nằm trong dải quanh biên chung -> (mask phía a, mask phía b).
+    Quá nhiều cặp: giữ các cặp có dải lớn nhất. Chỉ dùng lúc TRAIN."""
+    lop = [int(c) for c in np.unique(lab) if c != 0]
+    no = {c: cv2.dilate((lab == c).astype(np.uint8), KER_DAI) > 0 for c in lop}
+    ra = []
+    for i, a in enumerate(lop):
+        for b in lop[i + 1:]:
+            dai = no[a] & no[b]
+            ma, mb = dai & (lab == a), dai & (lab == b)
+            if ma.sum() >= px_min and mb.sum() >= px_min:
+                ra.append((ma, mb))
+    if len(ra) > toi_da:
+        ra = sorted(ra, key=lambda t: -(t[0].sum() + t[1].sum()))[:toi_da]
+    return ra
+
+
+def loss_tach(o, y, ir, ds):
+    """A4: phạt khi độ TÁCH 2 vùng kề nhau trên ảnh ghép thấp hơn nguồn tách tốt nhất.
+    s(x) = |TB_a − TB_b| / sqrt((var_a + var_b)/2 + eps); loss = TB_cặp relu(max(s(Y), s(IR)) − s(o)).
+    Bằng chứng (kiem_a3/do_tuong_phan_lop.py, ảnh train): tách đường–vỉa hè VIS 0,45 / IR 1,06 / SAGE 0,83 / nosam 0,49."""
+    if not ds:
+        return o.new_zeros(())
+    b, ma, mb = zip(*ds)
+    b = torch.tensor(b, device=o.device)
+    ma = torch.from_numpy(np.stack(ma)).to(o.device, torch.float32)
+    mb = torch.from_numpy(np.stack(mb)).to(o.device, torch.float32)
+
+    def s(x):
+        x = x[b, 0]
+        na, nb = ma.sum((1, 2)), mb.sum((1, 2))
+        ta, tb = (x * ma).sum((1, 2)) / na, (x * mb).sum((1, 2)) / nb
+        va = ((x - ta[:, None, None]) ** 2 * ma).sum((1, 2)) / na
+        vb = ((x - tb[:, None, None]) ** 2 * mb).sum((1, 2)) / nb
+        return (ta - tb).abs() / torch.sqrt((va + vb) / 2 + 1e-4)
+    with torch.no_grad():
+        dich = torch.maximum(s(y), s(ir))
+    return F.relu(dich - s(o)).mean()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--epochs", type=int, default=100)
@@ -112,6 +156,8 @@ def main():
                     help="A2: hệ số loss tương phản vật–vành (mask lấy từ NHÃN train, chỉ lúc train); 0 = tắt (y hệt cũ)")
     ap.add_argument("--lop_vat", nargs="+", type=int, default=list(VAT),
                     help="A2: nhãn FMB coi là vật (mặc định 8–13 người+xe); mở rộng: thêm 4 đèn, 5 biển báo, 14 cột")
+    ap.add_argument("--lam_tach", type=float, default=0.0,
+                    help="A4: hệ số loss giữ độ tách 2 vùng kề nhau (mọi cặp lớp, mask từ NHÃN train); 0 = tắt")
     a = ap.parse_args()
     torch.manual_seed(a.seed)
     rng = np.random.default_rng(a.seed)
@@ -127,7 +173,7 @@ def main():
     IR = [cv2.cvtColor(cv2.imread(str(duong(p))), cv2.COLOR_BGR2GRAY) for p in df.ir_path]
     # A2: nhãn chỉ nạp khi bật loss vùng; ảnh ngoài (--them) không có nhãn -> None
     LAB = ([cv2.imread(str(duong(p)), cv2.IMREAD_GRAYSCALE) for p in df.label_path]
-           if a.lam_vung > 0 else [None] * len(df))
+           if a.lam_vung > 0 or a.lam_tach > 0 else [None] * len(df))
     for d in a.them:
         d = Path(d)
         assert "test" not in d.as_posix().lower(), f"không train trên tập test: {d}"
@@ -152,12 +198,12 @@ def main():
     log, buoc, t0 = [], 0, time.time()
     for ep in range(1, a.epochs + 1):
         thu_tu = rng.permutation(N)
-        tong = dict(loss=0., fuse=0., grad=0., vung=0., n=0)
+        tong = dict(loss=0., fuse=0., grad=0., vung=0., tach=0., n=0)
         for bi in range(so_batch):
             if bi % 2 == 1:      # code gốc: batch lẻ dành cho Teacher, Student chỉ học ở batch chẵn
                 continue
             idx = thu_tu[bi * a.batch:(bi + 1) * a.batch]
-            ys, irs, ds = [], [], []
+            ys, irs, ds, dt = [], [], [], []
             for bb, k in enumerate(idx):
                 H, W = Y[k].shape
                 i0, j0 = rng.integers(0, H - ch + 1), rng.integers(0, W - cw + 1)
@@ -168,7 +214,11 @@ def main():
                     lab = None if lab is None else lab[:, ::-1]
                 ys.append(y.copy()), irs.append(ir.copy())
                 if lab is not None:
-                    ds += [(bb, v, r) for v, r in vat_the(np.ascontiguousarray(lab), lop=a.lop_vat)]
+                    lab = np.ascontiguousarray(lab)
+                    if a.lam_vung > 0:
+                        ds += [(bb, v, r) for v, r in vat_the(lab, lop=a.lop_vat)]
+                    if a.lam_tach > 0:
+                        dt += [(bb, p, q) for p, q in cap_vung(lab)]
             y = torch.from_numpy(np.stack(ys)).float().div(255)[:, None].to(dev)
             ir = torch.from_numpy(np.stack(irs)).float().div(255)[:, None].to(dev)
             o = net(y, ir)[0]
@@ -181,6 +231,9 @@ def main():
             l_vung = loss_vung(o, y, ir, ds) if a.lam_vung > 0 else o.new_zeros(())
             if a.lam_vung > 0:
                 loss = loss + a.lam_vung * l_vung
+            l_tach = loss_tach(o, y, ir, dt) if a.lam_tach > 0 else o.new_zeros(())
+            if a.lam_tach > 0:
+                loss = loss + a.lam_tach * l_tach
             if not torch.isfinite(loss):
                 sys.exit(f"loss không hữu hạn ở bước {buoc}")
             opt.zero_grad()
@@ -189,14 +242,15 @@ def main():
             sch.step()
             buoc += 1
             tong["loss"] += loss.item(); tong["fuse"] += l_fuse.item(); tong["grad"] += l_grad.item()
-            tong["vung"] += l_vung.item(); tong["n"] += 1
+            tong["vung"] += l_vung.item(); tong["tach"] += l_tach.item(); tong["n"] += 1
             if a.thu and buoc >= a.thu:
                 dt = time.time() - t0
                 n = tong["n"]
                 print(f"Thử {buoc} bước: {dt:.1f}s -> ước tính cả bài {dt / buoc * a.epochs * so_batch / 2 / 60:.0f} phút,"
                       f" GPU {torch.cuda.max_memory_allocated() / 2**20 if dev == 'cuda' else 0:.0f} MB, loss {loss.item():.4f}"
                       f" | TB: 3*fuse {3 * tong['fuse'] / n:.4f}, 3*grad {3 * tong['grad'] / n:.4f},"
-                      f" lam*vung {a.lam_vung * tong['vung'] / n:.4f} (vung {tong['vung'] / n:.4f})")
+                      f" lam*vung {a.lam_vung * tong['vung'] / n:.4f} (vung {tong['vung'] / n:.4f}),"
+                      f" lam*tach {a.lam_tach * tong['tach'] / n:.4f} (tach {tong['tach'] / n:.4f})")
                 return
         n = tong.pop("n")
         dong = {"epoch": ep, "buoc": buoc, "lr": sch.get_last_lr()[0], **{k: v / n for k, v in tong.items()},
@@ -204,7 +258,7 @@ def main():
         log.append(dong)
         if ep % 5 == 0 or ep == 1:
             print(f"epoch {ep:3d} bước {buoc} lr {dong['lr']:.2e} loss {dong['loss']:.4f} "
-                  f"(fuse {dong['fuse']:.4f}, grad {dong['grad']:.4f}, vung {dong['vung']:.4f}) {dong['phut']:.1f} phút", flush=True)
+                  f"(fuse {dong['fuse']:.4f}, grad {dong['grad']:.4f}, vung {dong['vung']:.4f}, tach {dong['tach']:.4f}) {dong['phut']:.1f} phút", flush=True)
     torch.save(net.state_dict(), STUDENT / f"{a.ten}.pt")
     pd.DataFrame(log).to_csv(STUDENT / f"{a.ten}_log.csv", index=False)
     print(f"Lưu {STUDENT / (a.ten + '.pt')}")

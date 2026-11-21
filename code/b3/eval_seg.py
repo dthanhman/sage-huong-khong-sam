@@ -27,7 +27,7 @@ from train_seg import FMBSeg, du_doan, so_kenh, tao_model
 def cham(run, cfg, ck, luu_anh, tap="test"):
     lop0 = bool(cfg.get("lop0"))
     nc = NC + 1 if lop0 else NC
-    model = tao_model(cfg["model"], nc, so_kenh(cfg["bien_the"]))
+    model = tao_model(cfg["model"], nc, so_kenh(cfg["bien_the"]), cfg["bien_the"])
     model.load_state_dict(torch.load(run / f"{ck}.pt", map_location="cpu", weights_only=True))
     model.cuda().eval()
 

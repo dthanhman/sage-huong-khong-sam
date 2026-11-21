@@ -1,0 +1,64 @@
+[02:32] chờ A2 (λ30, λ10mr) xong...
+[02:32] train B0 vis_ir4_lr10 seed 0
+[03:47] vis_ir4_lr10 s0: "mIoU_co_mat": 47.63452686939132; person,53.66,53.66
+[03:47] train B0 hai_nhanh seed 0
+[05:20] hai_nhanh s0: "mIoU_co_mat": 49.66961717052827; person,53.9,53.9
+[05:20] mIoU lớp đủ ảnh, seed 0 (cận trên + vis_ir4/vis/nosam_nha: máy nhà; sage/tb: Kaggle)
+b0 | tập dev | 151 ảnh | 17 khối | seed [0]
+Số ảnh mỗi lớp: road 151, sidewalk 108, building 141, traffic_light 13, traffic_sign 70, vegetation 151, sky 151, person 126, car 147, truck 22, bus 14, motorcycle 1, bicycle 2, pole 141
+
+===== Lớp có >= 20 ảnh: 10 lớp (road, sidewalk, building, traffic_sign, vegetation, sky, person, car, truck, pole)
+                    s0     TB
+vis_ir4_lr10     56.27  56.27
+hai_nhanh        59.27  59.27
+vis_ir4          56.80  56.80
+vis              56.27  56.27
+nosam_kp841_nha  56.99  56.99
+sage             56.90  56.90
+tb               56.98  56.98
+                 cap  d_tb  d_s0         CI_anh    CI_anh_seed       ket_luan
+   vis_ir4_lr10−sage -0.63 -0.63 [-2.42; +0.63] [-2.42; +0.63] chưa phân biệt
+     vis_ir4_lr10−tb -0.71 -0.71 [-2.24; +0.47] [-2.24; +0.47] chưa phân biệt
+vis_ir4_lr10−vis_ir4 -0.53 -0.53 [-2.31; +0.69] [-2.31; +0.69] chưa phân biệt
+      hai_nhanh−sage  2.37  2.37 [+1.12; +3.14] [+1.12; +3.14]  hơn chắc chắn
+        hai_nhanh−tb  2.30  2.30 [+1.17; +3.34] [+1.17; +3.34]  hơn chắc chắn
+   hai_nhanh−vis_ir4  2.47  2.47 [+1.14; +3.53] [+1.14; +3.53]  hơn chắc chắn
+
+===== Lớp có >= 10 ảnh: 12 lớp (road, sidewalk, building, traffic_light, traffic_sign, vegetation, sky, person, car, truck, bus, pole)
+                    s0     TB
+vis_ir4_lr10     53.54  53.54
+hai_nhanh        55.07  55.07
+vis_ir4          53.58  53.58
+vis              54.41  54.41
+nosam_kp841_nha  54.46  54.46
+sage             54.27  54.27
+tb               52.41  52.41
+                 cap  d_tb  d_s0         CI_anh    CI_anh_seed       ket_luan
+   vis_ir4_lr10−sage -0.73 -0.73 [-5.28; +0.10] [-5.28; +0.10] chưa phân biệt
+     vis_ir4_lr10−tb  1.12  1.12 [-2.96; +1.92] [-2.96; +1.92] chưa phân biệt
+vis_ir4_lr10−vis_ir4 -0.05 -0.05 [-1.74; +1.14] [-1.74; +1.14] chưa phân biệt
+      hai_nhanh−sage  0.80  0.80 [-4.79; +2.45] [-4.79; +2.45] chưa phân biệt
+        hai_nhanh−tb  2.66  2.66 [-2.10; +3.99] [-2.10; +3.99] chưa phân biệt
+   hai_nhanh−vis_ir4  1.48  1.48 [+0.38; +2.96] [+0.38; +2.96]  hơn chắc chắn
+
+Ghi D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0_gop\so_sanh_lop_du_dev_b0.csv
+[05:20] IoU từng lớp (val 151, s0)
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "<stdin>", line 4, in <dictcomp>
+  File "D:\Miniconda3\envs\DoAn\Lib\site-packages\pandas\io\parsers\readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\site-packages\pandas\io\parsers\readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\site-packages\pandas\io\parsers\readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\site-packages\pandas\io\parsers\readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "D:\Miniconda3\envs\DoAn\Lib\site-packages\pandas\io\common.py", line 873, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:/CS406/DoAn/Sage/tai_lap/scene_v1/runs_b0_gop/sage_b0_s0/dev_iou_lop_last.csv'

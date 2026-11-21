@@ -1,0 +1,27 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+Tổng 841 cặp train cho mạng ghép
+Student: 0.136M tham số
+epoch   1 bước 106 lr 2.00e-03 loss 8.8136 (fuse 0.4650, grad 1.8060, vung 0.0200) 0.2 phút
+epoch   5 bước 530 lr 2.00e-03 loss 6.0003 (fuse 0.2307, grad 1.2516, vung 0.0155) 0.7 phút
+epoch  10 bước 1060 lr 1.99e-03 loss 5.0365 (fuse 0.1982, grad 0.9862, vung 0.0148) 1.4 phút
+epoch  15 bước 1590 lr 1.97e-03 loss 5.1147 (fuse 0.2116, grad 0.9108, vung 0.0175) 2.1 phút
+epoch  20 bước 2120 lr 1.95e-03 loss 4.5393 (fuse 0.1895, grad 0.8242, vung 0.0150) 2.7 phút
+epoch  25 bước 2650 lr 1.92e-03 loss 4.3399 (fuse 0.1731, grad 0.8359, vung 0.0131) 3.4 phút
+epoch  30 bước 3180 lr 1.89e-03 loss 3.9898 (fuse 0.1806, grad 0.7725, vung 0.0113) 4.1 phút
+epoch  35 bước 3710 lr 1.85e-03 loss 3.9478 (fuse 0.1898, grad 0.7650, vung 0.0108) 4.8 phút
+epoch  40 bước 4240 lr 1.81e-03 loss 4.0380 (fuse 0.2002, grad 0.7542, vung 0.0117) 5.5 phút
+epoch  45 bước 4770 lr 1.76e-03 loss 3.7872 (fuse 0.1766, grad 0.7132, vung 0.0112) 6.1 phút
+epoch  50 bước 5300 lr 1.71e-03 loss 3.6936 (fuse 0.1899, grad 0.7508, vung 0.0087) 6.8 phút
+epoch  55 bước 5830 lr 1.65e-03 loss 3.6386 (fuse 0.1739, grad 0.7113, vung 0.0098) 7.5 phút
+epoch  60 bước 6360 lr 1.59e-03 loss 4.0598 (fuse 0.1751, grad 0.7536, vung 0.0127) 8.2 phút
+epoch  65 bước 6890 lr 1.52e-03 loss 4.1390 (fuse 0.1748, grad 0.7099, vung 0.0148) 8.8 phút
+epoch  70 bước 7420 lr 1.45e-03 loss 3.4406 (fuse 0.1637, grad 0.6452, vung 0.0101) 9.5 phút
+epoch  75 bước 7950 lr 1.38e-03 loss 4.2107 (fuse 0.1647, grad 0.6894, vung 0.0165) 10.2 phút
+epoch  80 bước 8480 lr 1.31e-03 loss 3.0008 (fuse 0.1619, grad 0.6115, vung 0.0068) 10.9 phút
+epoch  85 bước 9010 lr 1.23e-03 loss 3.0512 (fuse 0.1620, grad 0.6272, vung 0.0068) 11.6 phút
+epoch  90 bước 9540 lr 1.15e-03 loss 3.3196 (fuse 0.1653, grad 0.6300, vung 0.0093) 12.2 phút
+epoch  95 bước 10070 lr 1.08e-03 loss 3.6097 (fuse 0.1709, grad 0.6136, vung 0.0126) 12.9 phút
+epoch 100 bước 10600 lr 9.98e-04 loss 3.2026 (fuse 0.1643, grad 0.5934, vung 0.0093) 13.6 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\nosam_kp841_vung100.pt
+nosam_kp841_vung100: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\nosam_kp841_vung100

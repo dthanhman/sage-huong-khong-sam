@@ -35,10 +35,68 @@ MODEL = {"b0": "nvidia/mit-b0", "b1": "nvidia/mit-b1", "b2": "nvidia/mit-b2", "b
 # Đo TRẦN 4 kênh (20/11): biến thể đặc biệt, không ghép ảnh – SegFormer nhận thẳng RGB của VIS + IR từ FMB gốc.
 # Kênh IR chuẩn hóa bằng TB của MEAN/STD ImageNet; tầng đầu thêm kênh thứ 4 = TB trọng số 3 kênh RGB pretrained.
 BT_4KENH = "vis_ir4"
+# Cận trên v2 (21/11), cùng dữ liệu 4 kênh như vis_ir4:
+#   vis_ir4_lr10 : như vis_ir4, conv đầu vào lr x10 (kênh IR mới phải học từ đầu, lr encoder 6e-5 quá chậm).
+#   hai_nhanh    : 2 encoder MiT pretrained riêng (VIS RGB | IR nhân 3 kênh), mỗi tầng: f = v + i + conv1x1([v, i])
+#                  (conv khởi tạo 0 -> lúc đầu là cộng), chung decoder SegFormer. Kiểu CMX đơn giản, gấp đôi encoder.
+BT_LR10 = "vis_ir4_lr10"
+BT_HAI = "hai_nhanh"
+BT_VIS_IR = (BT_4KENH, BT_LR10, BT_HAI)   # đọc thẳng VIS + IR gốc
 
 
 def so_kenh(bien_the):
-    return 4 if bien_the == BT_4KENH else 3
+    return 4 if bien_the in BT_VIS_IR else 3
+
+
+class HaiNhanh(torch.nn.Module):
+    """SegFormer 2 nhánh: nhận x 4 kênh (RGB đã chuẩn hóa ImageNet + IR chuẩn hóa TB MEAN/STD như vis_ir4)."""
+
+    def __init__(self, m):
+        super().__init__()
+        import copy
+        self.segformer = m.segformer                    # nhánh VIS (tên giữ nguyên để nhóm lr encoder)
+        self.segformer_ir = copy.deepcopy(m.segformer)  # nhánh IR, cùng trọng số ImageNet ban đầu
+        self.decode_head = m.decode_head
+        self.config = m.config
+        self.tron = torch.nn.ModuleList(
+            torch.nn.Conv2d(2 * c, c, 1) for c in m.config.hidden_sizes)
+        for t in self.tron:
+            torch.nn.init.zeros_(t.weight)
+            torch.nn.init.zeros_(t.bias)
+        # IR (chuẩn hóa TB) -> 3 kênh chuẩn hóa đúng từng kênh ImageNet: ir3 = (ir*s + m - MEAN_c) / STD_c
+        self.register_buffer("a", torch.tensor(STD.mean() / STD, dtype=torch.float32).view(1, 3, 1, 1))
+        self.register_buffer("b", torch.tensor((MEAN.mean() - MEAN) / STD, dtype=torch.float32).view(1, 3, 1, 1))
+
+    def forward(self, pixel_values):
+        v = pixel_values[:, :3]
+        ir = pixel_values[:, 3:4] * self.a + self.b
+        hv = self.segformer(v, output_hidden_states=True).hidden_states
+        hi = self.segformer_ir(ir, output_hidden_states=True).hidden_states
+        f = [a + b + t(torch.cat([a, b], 1)) for a, b, t in zip(hv, hi, self.tron)]
+        from types import SimpleNamespace
+        return SimpleNamespace(logits=self.decode_head(f))
+
+
+def nhom_tham_so(model, bien_the, lr):
+    """encoder: lr; decoder + khối trộn: lr x10; vis_ir4_lr10: conv đầu vào lr x10."""
+    dau = set()
+    if bien_the == BT_LR10:
+        dau = {n + ".weight" for n, mod in model.named_modules()
+               if isinstance(mod, torch.nn.Conv2d) and mod.in_channels == 4}
+        dau |= {n.replace(".weight", ".bias") for n in dau}
+        assert len(dau) == 2, dau
+    enc, head, d = [], [], []
+    for n, p in model.named_parameters():
+        if n in dau:
+            d.append(p)
+        elif n.startswith("segformer.") or n.startswith("segformer_ir."):
+            enc.append(p)
+        else:
+            head.append(p)
+    g = [{"params": enc, "lr": lr}, {"params": head, "lr": lr * 10}]
+    if d:
+        g.append({"params": d, "lr": lr * 10})
+    return g
 
 
 def ten_run(bien_the, model, seed, gop_dev, lop0=False):
@@ -57,7 +115,7 @@ class FMBSeg(Dataset):
 
     def __getitem__(self, i):
         r = self.df.iloc[i]
-        if self.bt == BT_4KENH:
+        if self.bt in BT_VIS_IR:
             v = cv2.imread(str(duong(r.vis_path)))
             ir = cv2.imread(str(duong(r.ir_path)), cv2.IMREAD_GRAYSCALE)
             assert v is not None and ir is not None and v.shape[:2] == ir.shape, f"lỗi đọc VIS/IR {r.image_id}"
@@ -96,11 +154,13 @@ def _seed_worker(w, seed):
     np.random.seed(seed * 1000 + w)
 
 
-def tao_model(ten, nc=NC, kenh=3):
+def tao_model(ten, nc=NC, kenh=3, bien_the=None):
     from transformers import SegformerForSemanticSegmentation
     m = SegformerForSemanticSegmentation.from_pretrained(
         MODEL[ten], num_labels=nc, id2label={i: str(i) for i in range(nc)},
         label2id={str(i): i for i in range(nc)}, ignore_mismatched_sizes=True)
+    if bien_the == BT_HAI:
+        return HaiNhanh(m)
     if kenh == 4:   # thêm kênh IR vào tầng đầu: giữ trọng số RGB pretrained, kênh 4 = TB 3 kênh RGB
         # conv nhận ảnh đầu vào (tên khác nhau theo bản transformers: encoder.patch_embeddings.0.proj | stages.0.patch_embeddings.proj)
         ten_cu = [n for n, mod in m.named_modules() if isinstance(mod, torch.nn.Conv2d) and mod.in_channels == 3]
@@ -173,11 +233,8 @@ def main():
     if not a.gop_dev:
         ld = DataLoader(FMBSeg(["dev"], a.bien_the, False, lop0=a.lop0), 2, num_workers=a.workers)
 
-    model = tao_model(a.model, nc, so_kenh(a.bien_the)).cuda().train()
-    enc = [p for n, p in model.named_parameters() if n.startswith("segformer.")]
-    head = [p for n, p in model.named_parameters() if not n.startswith("segformer.")]
-    opt = torch.optim.AdamW([{"params": enc, "lr": a.lr}, {"params": head, "lr": a.lr * 10}],
-                            lr=a.lr, weight_decay=0.01)
+    model = tao_model(a.model, nc, so_kenh(a.bien_the), a.bien_the).cuda().train()
+    opt = torch.optim.AdamW(nhom_tham_so(model, a.bien_the, a.lr), lr=a.lr, weight_decay=0.01)
     tong = a.epochs * len(lt)                 # số iter (số batch)
     buoc = tong // a.tich_luy                 # số lần cập nhật trọng số
     warm = min(1500, buoc // 10)
