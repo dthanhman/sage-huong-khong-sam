@@ -1,0 +1,86 @@
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 12722.66it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+hai_nhanh_b0_s2: 841 train, 151 dev, 10500 iter
+iter 500/10500 ep 5 loss 0.936 dev mIoU 31.04 *  273s, còn ~1.5 giờ
+iter 1000/10500 ep 10 loss 0.320 dev mIoU 37.69 *  539s, còn ~1.4 giờ
+iter 1500/10500 ep 15 loss 0.252 dev mIoU 44.04 *  805s, còn ~1.3 giờ
+iter 2000/10500 ep 20 loss 0.204 dev mIoU 49.47 *  1070s, còn ~1.3 giờ
+iter 2500/10500 ep 24 loss 0.190 dev mIoU 52.47 *  1335s, còn ~1.2 giờ
+iter 3000/10500 ep 29 loss 0.174 dev mIoU 48.71  1600s, còn ~1.1 giờ
+iter 3500/10500 ep 34 loss 0.168 dev mIoU 50.79  1866s, còn ~1.0 giờ
+iter 4000/10500 ep 39 loss 0.157 dev mIoU 50.70  2131s, còn ~1.0 giờ
+iter 4500/10500 ep 43 loss 0.150 dev mIoU 52.99 *  2395s, còn ~0.9 giờ
+iter 5000/10500 ep 48 loss 0.149 dev mIoU 50.67  2661s, còn ~0.8 giờ
+iter 5500/10500 ep 53 loss 0.146 dev mIoU 50.73  2926s, còn ~0.7 giờ
+iter 6000/10500 ep 58 loss 0.142 dev mIoU 50.37  3192s, còn ~0.7 giờ
+iter 6500/10500 ep 62 loss 0.137 dev mIoU 51.24  3449s, còn ~0.6 giờ
+iter 7000/10500 ep 67 loss 0.134 dev mIoU 51.63  3705s, còn ~0.5 giờ
+iter 7500/10500 ep 72 loss 0.130 dev mIoU 49.46  3962s, còn ~0.4 giờ
+iter 8000/10500 ep 77 loss 0.127 dev mIoU 50.40  4235s, còn ~0.4 giờ
+iter 8500/10500 ep 81 loss 0.125 dev mIoU 51.01  4512s, còn ~0.3 giờ
+iter 9000/10500 ep 86 loss 0.123 dev mIoU 49.70  4792s, còn ~0.2 giờ
+iter 9500/10500 ep 91 loss 0.120 dev mIoU 49.85  5079s, còn ~0.1 giờ
+iter 10000/10500 ep 96 loss 0.119 dev mIoU 49.85  5361s, còn ~0.1 giờ
+iter 10500/10500 ep 100 loss 0.119 dev mIoU 49.98  5644s, còn ~0.0 giờ
+Xong hai_nhanh_b0_s2 sau 1.57 giờ. Checkpoint: D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0\hai_nhanh_b0_s2\last.pt
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 6983.96it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+== hai_nhanh_b0_s2 [last] tập dev ==
+  280 ảnh: mIoU có mặt (14 lớp) 49.98 | 14 lớp 49.98 | 7 lớp của bài 61.68 | pixel acc 91.44
+  273 ảnh: mIoU có mặt (14 lớp) 49.98 | 14 lớp 49.98 | 7 lớp của bài 61.68 | pixel acc 91.44
+               IoU_280  IoU_273
+unlabeled          NaN      NaN
+road              83.4     83.4
+sidewalk          30.1     30.1
+building          73.0     73.0
+traffic_light     42.1     42.1
+traffic_sign      43.8     43.8
+vegetation        86.5     86.5
+sky               95.6     95.6
+person            53.3     53.3
+car               66.4     66.4
+truck             10.5     10.5
+bus               25.4     25.4
+motorcycle        36.3     36.3
+bicycle            0.0      0.0
+pole              53.3     53.3

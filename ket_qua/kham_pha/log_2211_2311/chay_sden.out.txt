@@ -1,0 +1,32 @@
+[22:31] train Student sden10 (xa, seed 0, lam_vung 10, lam_den 10)
+[22:47] train Student sden30 (xa, seed 0, lam_vung 10, lam_den 30)
+[23:02] xuất ảnh sden10
+[23:04] xuất ảnh sden30
+[23:05] tương phản NGƯỜI (val 151)
+116 ảnh có lớp 8 – trung vị:
+             tuong_phan  ti_le
+bien_the                      
+sage              44.54   1.32
+nosam_kp841       23.50   0.97
+sxa10             68.58   2.34
+sden10            52.75   1.76
+sden30            51.15   1.82
+[23:05] tương phản ĐÈN (val 151)
+13 ảnh có lớp 4 – trung vị:
+             tuong_phan  ti_le
+bien_the                      
+sage               7.27   0.15
+nosam_kp841        8.95   0.26
+sxa10             14.20   0.34
+sden10             8.26   0.20
+sden30             6.58   0.17
+[23:05] rào ảnh val 151
+dev: 151 ảnh
+                SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                        
+sage         1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+nosam_kp841  1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+sxa10        1.6227   1.5826  0.6982  6.4718  31.0162      0.6903       0.8923    94.2808       100.5729     105.3957      False
+sden10       1.5684   1.5876  0.6874  6.4259  29.5617      0.6851       0.9025    91.1237       100.8922     103.7687      False
+sden30       1.5722   1.5886  0.6889  6.3908  28.6551      0.6704       0.9182    91.3475       100.9514     103.9905      False
+[23:12] XONG phần ghép (B0: chờ kết quả sxa10 Kaggle; chạy B0=1 bash scene_v1/chay_sden.sh)

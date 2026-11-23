@@ -1,0 +1,147 @@
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 38406.45it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+hai_nhanh_visvis_b0_s1: 841 train, 151 dev, 10500 iter
+iter 500/10500 ep 5 loss 0.963 dev mIoU 30.34 *  261s, còn ~1.4 giờ
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 6604.61it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+hai_nhanh_visvis_b0_s1: TRAIN TIẾP từ epoch 9, iter 945/10500
+forrtl: error (200): program aborting due to window-CLOSE event
+Image              PC                Routine            Line        Source             
+KERNELBASE.dll     00007FFA02997A2D  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFA0419DDA7  Unknown               Unknown  Unknown
+ntdll.dll          00007FFA05619C6C  Unknown               Unknown  Unknown
+forrtl: error (200): program aborting due to window-CLOSE event
+Image              PC                Routine            Line        Source             
+KERNELBASE.dll     00007FFA02997A2D  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFA0419DDA7  Unknown               Unknown  Unknown
+ntdll.dll          00007FFA05619C6C  Unknown               Unknown  Unknown
+forrtl: error (200): program aborting due to window-CLOSE event
+Image              PC                Routine            Line        Source             
+KERNELBASE.dll     00007FFA02997A2D  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FFA0419DDA7  Unknown               Unknown  Unknown
+ntdll.dll          00007FFA05619C6C  Unknown               Unknown  Unknown
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 27450.19it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+hai_nhanh_visvis_b0_s1: TRAIN TIẾP từ epoch 9, iter 945/10500
+iter 1000/10500 ep 10 loss 0.375 dev mIoU 36.74 *  528s, còn ~1.4 giờ
+iter 1500/10500 ep 15 loss 0.289 dev mIoU 44.05 *  794s, còn ~1.3 giờ
+iter 2000/10500 ep 20 loss 0.252 dev mIoU 46.22 *  1059s, còn ~1.2 giờ
+iter 2500/10500 ep 24 loss 0.225 dev mIoU 48.42 *  1323s, còn ~1.2 giờ
+iter 3000/10500 ep 29 loss 0.214 dev mIoU 49.02 *  1587s, còn ~1.1 giờ
+iter 3500/10500 ep 34 loss 0.197 dev mIoU 46.87  1851s, còn ~1.0 giờ
+iter 4000/10500 ep 39 loss 0.195 dev mIoU 51.34 *  2116s, còn ~1.0 giờ
+iter 4500/10500 ep 43 loss 0.179 dev mIoU 50.59  2379s, còn ~0.9 giờ
+iter 5000/10500 ep 48 loss 0.176 dev mIoU 48.30  2643s, còn ~0.8 giờ
+iter 5500/10500 ep 53 loss 0.171 dev mIoU 52.13 *  2907s, còn ~0.7 giờ
+iter 6000/10500 ep 58 loss 0.167 dev mIoU 49.70  3172s, còn ~0.7 giờ
+iter 6500/10500 ep 62 loss 0.161 dev mIoU 50.00  3435s, còn ~0.6 giờ
+iter 7000/10500 ep 67 loss 0.158 dev mIoU 49.11  3700s, còn ~0.5 giờ
+iter 7500/10500 ep 72 loss 0.153 dev mIoU 51.22  3964s, còn ~0.4 giờ
+iter 8000/10500 ep 77 loss 0.150 dev mIoU 49.48  4228s, còn ~0.4 giờ
+iter 8500/10500 ep 81 loss 0.146 dev mIoU 48.76  4491s, còn ~0.3 giờ
+iter 9000/10500 ep 86 loss 0.144 dev mIoU 49.09  4755s, còn ~0.2 giờ
+iter 9500/10500 ep 91 loss 0.141 dev mIoU 49.58  5020s, còn ~0.1 giờ
+iter 10000/10500 ep 96 loss 0.140 dev mIoU 50.81  5283s, còn ~0.1 giờ
+iter 10500/10500 ep 100 loss 0.140 dev mIoU 50.06  5547s, còn ~0.0 giờ
+Xong hai_nhanh_visvis_b0_s1 sau 1.54 giờ. Checkpoint: D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0\hai_nhanh_visvis_b0_s1\last.pt
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 10651.36it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+== hai_nhanh_visvis_b0_s1 [last] tập dev ==
+  280 ảnh: mIoU có mặt (14 lớp) 50.06 | 14 lớp 50.06 | 7 lớp của bài 59.81 | pixel acc 90.50
+  273 ảnh: mIoU có mặt (14 lớp) 50.06 | 14 lớp 50.06 | 7 lớp của bài 59.81 | pixel acc 90.50
+               IoU_280  IoU_273
+unlabeled          NaN      NaN
+road              80.1     80.1
+sidewalk          19.6     19.6
+building          70.3     70.3
+traffic_light     39.3     39.3
+traffic_sign      43.9     43.9
+vegetation        85.0     85.0
+sky               94.9     94.9
+person            31.1     31.1
+car               68.6     68.6
+truck             24.9     24.9
+bus               39.7     39.7
+motorcycle        49.6     49.6
+bicycle            0.0      0.0
+pole              53.7     53.7

@@ -18,6 +18,7 @@
 
 Ví dụ: python xuat_anh.py --bien_the sage
 """
+_TL = __import__("pathlib").Path(__file__).resolve().parents[1].as_posix()   # thư mục code/
 import argparse
 import sys
 
@@ -84,6 +85,37 @@ def vis_cong_ir_mem(y, ir):
     return nen_mem(yv + iv - iv.mean()).round().clip(0, 255).astype(np.uint8)
 
 
+W_LOP = f"{_TL}/scene_v1/w_lop.json"
+
+
+def oracle_lop(y, ir, lab, nguoc=False, sigma=4.0):
+    """ORACLE 22/11 (chỉ chẩn đoán, dùng NHÃN THẬT cả train lẫn val – không phải phương pháp):
+    F = (1-w)Y + w IR, w theo lớp từ w_lop.json (luật lint), làm mờ Gauss sigma px cho bớt đường nối.
+    nguoc=True: luật NGƯỢC w' = 0,8 - w (cùng đường nối, sai luật) – đối chứng phần lợi do lộ ranh giới nhãn."""
+    import json
+    w = json.load(open(W_LOP))
+    lut = np.array([w[str(c)] for c in range(15)], np.float32)
+    if nguoc:
+        lut = 0.8 - lut
+    wm = cv2.GaussianBlur(lut[lab], (0, 0), sigma)
+    return ((1 - wm) * y.astype(np.float32) + wm * ir).round().clip(0, 255).astype(np.uint8)
+
+
+def ghep_giu_mau(vis_bgr, yf, sigma=2.0, bu=8.0, k_min=0.5, k_max=3.0):
+    """GIỮ MÀU (22/11): thay vì Y mới + CrCb VIS nguyên (bạc màu khi Y bị đẩy sáng: person S chỉ 77% VIS ở nosam),
+    co giãn độ lệch màu (CrCb − 128) theo k = Y_ghép / Y_vis  ->  RGB ra ≈ k · RGB_vis: giữ sắc độ (hue) và
+    độ bão hòa của VIS, như cách nhân hệ số chung của FCDFusion (arXiv 2408.01080) / Brovey trong pansharpening.
+    k tính trên ảnh làm mờ Gauss sigma px, cộng 'bu' mức xám để không khuếch đại nhiễu màu ở vùng VIS gần đen, kẹp [k_min, k_max].
+    Kênh Y GIỮ NGUYÊN -> chỉ số ghép (tính trên Y) không đổi."""
+    ycc = cv2.cvtColor(vis_bgr, cv2.COLOR_BGR2YCrCb).astype(np.float32)
+    yv = cv2.GaussianBlur(ycc[:, :, 0], (0, 0), sigma)
+    yb = cv2.GaussianBlur(yf.astype(np.float32), (0, 0), sigma)
+    k = np.clip((yb + bu) / (yv + bu), k_min, k_max)
+    c = 128 + (ycc[:, :, 1:] - 128) * k[..., None]
+    out = np.dstack([yf.astype(np.float32), c]).round().clip(0, 255).astype(np.uint8)
+    return cv2.cvtColor(out, cv2.COLOR_YCrCb2BGR)
+
+
 def tron_thich_nghi(y, ir):
     w = trong_so_tn(y, ir)
     return ((1 - w) * y.astype(np.float32) + w * ir).round().clip(0, 255).astype(np.uint8)
@@ -99,18 +131,43 @@ def main():
     df = pd.concat([pd.read_csv(MAN / f"{s}.csv", dtype={"image_id": str}) for s in ("train", "dev", "test")])
     if a.gioi_han:
         df = df.head(a.gioi_han)
-    if a.bien_the not in CKPT and a.bien_the not in ("vis", "ir", "tb", "clahe", "tn", "tbct", "tbcd", "vci", "vcim"):
-        assert (STUDENT / f"{a.bien_the}.pt").exists(), f"không có biến thể/checkpoint {a.bien_the}"
-        CKPT[a.bien_the] = f"{a.bien_the}.pt"
-    if a.bien_the in CKPT:
+    goc = a.bien_the
+    # <biến thể>_mau  = Y của <biến thể> + ghép màu giữ bão hòa, k kẹp [0,5; 3] (bản 22/11 chiều, đã chấm B0 3 seed)
+    # <biến thể>_mau2 = như trên nhưng k kẹp [1; 3]: CHỈ trả lại màu, không bao giờ làm nhạt màu dưới mức VIS.
+    #   Lý do (đo 22/11 tối, val151): ở _mau, ảnh sáng có 69% điểm ảnh k < 0,9 (trung vị k 0,83) -> _mau làm NHẠT màu
+    #   ảnh sáng, ngược ý định; nhóm sáng thua nosam cả 3 seed (−0,64), vỉa hè/road/car thua cả 3 seed.
+    k_min = None
+    if a.bien_the.endswith("_mau2"):
+        goc, k_min = a.bien_the[:-5], 1.0
+    elif a.bien_the.endswith("_mau"):
+        goc, k_min = a.bien_the[:-4], 0.5
+    giu_mau = k_min is not None
+    if goc not in CKPT and goc not in ("vis", "ir", "tb", "clahe", "tn", "tbct", "tbcd", "vci", "vcim", "orc_dung", "orc_nguoc"):
+        assert (STUDENT / f"{goc}.pt").exists(), f"không có biến thể/checkpoint {goc}"
+        CKPT[goc] = f"{goc}.pt"
+    if goc in CKPT:
         import torch
         sys.path.insert(0, str(STUDENT))
         from model import Network
         dev = "cuda" if torch.cuda.is_available() else "cpu"
         net = Network()
-        sd = torch.load(STUDENT / CKPT[a.bien_the], map_location="cpu", weights_only=True)
+        sd = torch.load(STUDENT / CKPT[goc], map_location="cpu", weights_only=True)
         s_tb = sd.pop("_tb_scale", None)                # Nền 2 (cai_tien/tb_sua.py): Y = TB + s * Student
         s_tb = None if s_tb is None else float(s_tb)
+        la_vung = any(k.startswith("vung_") for k in sd)   # S-vùng (23/11): nosam đóng băng + mắt + đầu vùng
+        if la_vung:
+            from model_vung import NetworkVung
+            net = NetworkVung(sd["goc.module1.0.weight"].shape[0], rong=sd["vung_dau.0.weight"].shape[0])
+        dim = sd["goc.module1.0.weight" if la_vung else "module1.0.weight"].shape[0]   # S-rộng (21/11): số kênh từ checkpoint
+        if dim != 32 and not la_vung:
+            net = Network(dim)
+        if any(k.startswith("mat_") for k in sd):          # S-mắt (23/11): Student + ResNet18 đóng băng
+            from model_mat import NetworkMat
+            net = NetworkMat(dim)
+        if any(k.startswith("xa_") for k in sd):           # S-xa (21/11): Student + nhánh ngữ cảnh rộng
+            from model_xa import NetworkXa
+            them = len({k.split(".")[1] for k in sd if k.startswith("xa_xuong.")})
+            net = NetworkXa(dim, them)
         if any(k.startswith("dau.") for k in sd):          # M4/M6: Student + đầu trộn (DauTron)
             day = Path(__file__).resolve().parent      # Kaggle: train_student_seg.py nằm cùng thư mục
             sys.path.insert(0, str(day if (day / "train_student_seg.py").exists() else day.parent / "cai_tien"))
@@ -128,26 +185,29 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         vis = cv2.imread(str(duong(r.vis_path)))
         ir = cv2.cvtColor(cv2.imread(str(duong(r.ir_path))), cv2.COLOR_BGR2GRAY)
-        if a.bien_the == "vis":
+        if goc == "vis":
             img = vis
-        elif a.bien_the == "ir":
+        elif goc == "ir":
             img = cv2.cvtColor(ir, cv2.COLOR_GRAY2BGR)
         else:
             ycc = cv2.cvtColor(vis, cv2.COLOR_BGR2YCrCb)
             y = ycc[:, :, 0]
-            if a.bien_the == "clahe":
+            if goc == "clahe":
                 yf = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8)).apply(y)
-            elif a.bien_the == "tb":
+            elif goc == "tb":
                 yf = ((y.astype(np.float64) + ir) / 2).round().astype(np.uint8)
-            elif a.bien_the == "vcim":
+            elif goc == "vcim":
                 yf = vis_cong_ir_mem(y, ir)
-            elif a.bien_the == "vci":
+            elif goc == "vci":
                 yf = vis_cong_ir(y, ir)
-            elif a.bien_the == "tbcd":
+            elif goc == "tbcd":
                 yf = tb_cong_chi_tiet(y, ir)
-            elif a.bien_the == "tbct":
+            elif goc == "tbct":
                 yf = tb_chi_tiet(y, ir)
-            elif a.bien_the == "tn":
+            elif goc in ("orc_dung", "orc_nguoc"):
+                lab = cv2.imread(str(duong(r.label_path)), cv2.IMREAD_GRAYSCALE)
+                yf = oracle_lop(y, ir, lab, nguoc=goc == "orc_nguoc")
+            elif goc == "tn":
                 yf = tron_thich_nghi(y, ir)
             else:
                 with torch.inference_mode():
@@ -155,7 +215,8 @@ def main():
                     if s_tb is not None:
                         o = (t2(y) + t2(ir)) / 2 + s_tb * o
                     yf = (o.clamp(0, 1) * 255).round().byte().cpu().numpy()[0, 0]
-            img = cv2.cvtColor(np.dstack([yf, ycc[:, :, 1:]]), cv2.COLOR_YCrCb2BGR)
+            img = (ghep_giu_mau(vis, yf, k_min=k_min) if giu_mau
+                   else cv2.cvtColor(np.dstack([yf, ycc[:, :, 1:]]), cv2.COLOR_YCrCb2BGR))
         cv2.imwrite(str(out), img)
         n += 1
     print(f"{a.bien_the}: ghi {n} ảnh mới vào {ANH / a.bien_the}", flush=True)

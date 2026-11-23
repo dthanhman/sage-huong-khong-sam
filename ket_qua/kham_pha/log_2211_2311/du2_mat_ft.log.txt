@@ -1,0 +1,20 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+Chưng cất: ảnh Teacher vhn (841 ảnh), w_ref 4.0, w_ref_grad 3.0
+Tổng 841 cặp train cho mạng ghép
+Khởi tạo từ nosam_kp841.pt (121 khóa; 83 khóa mat_ mới)
+Student: 2.948M tham số, học 0.165M
+epoch   1 bước 106 lr 5.00e-04 loss 0.1391 (fuse 0.0203, grad 0.0261, vung 0.0000, tach 0.0000, den 0.0000) 0.2 phút
+epoch   5 bước 530 lr 4.92e-04 loss 0.1164 (fuse 0.0135, grad 0.0253, vung 0.0000, tach 0.0000, den 0.0000) 0.9 phút
+epoch  10 bước 1060 lr 4.67e-04 loss 0.1037 (fuse 0.0112, grad 0.0233, vung 0.0000, tach 0.0000, den 0.0000) 1.6 phút
+epoch  15 bước 1590 lr 4.28e-04 loss 0.0937 (fuse 0.0090, grad 0.0223, vung 0.0000, tach 0.0000, den 0.0000) 2.3 phút
+epoch  20 bước 2120 lr 3.77e-04 loss 0.0888 (fuse 0.0071, grad 0.0225, vung 0.0000, tach 0.0000, den 0.0000) 3.0 phút
+epoch  25 bước 2650 lr 3.18e-04 loss 0.0949 (fuse 0.0082, grad 0.0235, vung 0.0000, tach 0.0000, den 0.0000) 3.7 phút
+epoch  30 bước 3180 lr 2.55e-04 loss 0.0835 (fuse 0.0067, grad 0.0211, vung 0.0000, tach 0.0000, den 0.0000) 4.3 phút
+epoch  35 bước 3710 lr 1.92e-04 loss 0.0781 (fuse 0.0056, grad 0.0205, vung 0.0000, tach 0.0000, den 0.0000) 5.0 phút
+epoch  40 bước 4240 lr 1.32e-04 loss 0.0806 (fuse 0.0060, grad 0.0208, vung 0.0000, tach 0.0000, den 0.0000) 5.8 phút
+epoch  45 bước 4770 lr 8.18e-05 loss 0.0814 (fuse 0.0065, grad 0.0206, vung 0.0000, tach 0.0000, den 0.0000) 6.5 phút
+epoch  50 bước 5300 lr 4.28e-05 loss 0.0730 (fuse 0.0051, grad 0.0192, vung 0.0000, tach 0.0000, den 0.0000) 7.2 phút
+epoch  55 bước 5830 lr 1.83e-05 loss 0.0779 (fuse 0.0061, grad 0.0199, vung 0.0000, tach 0.0000, den 0.0000) 7.9 phút
+epoch  60 bước 6360 lr 1.00e-05 loss 0.0703 (fuse 0.0044, grad 0.0191, vung 0.0000, tach 0.0000, den 0.0000) 8.6 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\du2_mat_ft.pt

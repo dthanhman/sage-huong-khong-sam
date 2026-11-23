@@ -1,0 +1,44 @@
+svung: ghi 992 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\svung
+[13:20] train B0 svung seed 0
+b0 | tập dev | 151 ảnh | 17 khối | seed [0]
+Số ảnh mỗi lớp: road 151, sidewalk 108, building 141, traffic_light 13, traffic_sign 70, vegetation 151, sky 151, person 126, car 147, truck 22, bus 14, motorcycle 1, bicycle 2, pole 141
+
+===== Lớp có >= 20 ảnh: 10 lớp (road, sidewalk, building, traffic_sign, vegetation, sky, person, car, truck, pole)
+                s0     TB
+svung        57.12  57.12
+du2_mat_ft   57.06  57.06
+nosam_kp841  56.99  56.99
+                   cap  d_tb  d_s0         CI_anh    CI_anh_seed       ket_luan
+      svung−du2_mat_ft  0.06  0.06 [-0.37; +0.67] [-0.37; +0.67] chưa phân biệt
+     svung−nosam_kp841  0.14  0.14 [-0.14; +0.41] [-0.14; +0.41] chưa phân biệt
+du2_mat_ft−nosam_kp841  0.08  0.08 [-0.43; +0.49] [-0.43; +0.49] chưa phân biệt
+
+===== Lớp có >= 1 ảnh: 14 lớp (road, sidewalk, building, traffic_light, traffic_sign, vegetation, sky, person, car, truck, bus, motorcycle, bicycle, pole)
+                s0     TB
+svung        49.92  49.92
+du2_mat_ft   50.61  50.61
+nosam_kp841  50.33  50.33
+                   cap  d_tb  d_s0         CI_anh    CI_anh_seed       ket_luan
+      svung−du2_mat_ft -0.69 -0.69 [-2.22; +0.46] [-2.22; +0.46] chưa phân biệt
+     svung−nosam_kp841 -0.41 -0.41 [-3.51; +0.42] [-3.51; +0.42] chưa phân biệt
+du2_mat_ft−nosam_kp841  0.28  0.28 [-1.69; +0.90] [-1.69; +0.90] chưa phân biệt
+
+Ghi D:\CS406\DoAn\Sage\tai_lap\scene_v1\runs_b0\so_sanh_lop_du_dev_b0.csv
+               nosam  svung   du2  vhnKG0
+road            80.8   80.7  81.1    81.6
+sidewalk        15.7   15.2  18.2    20.2
+building        73.9   74.4  73.0    73.5
+traffic_light   46.2   44.6  50.9    39.8
+traffic_sign    47.4   47.8  44.5    46.3
+vegetation      87.0   87.0  86.4    86.9
+sky             95.7   95.5  95.3    95.4
+person          45.1   47.2  47.8    50.1
+car             67.4   67.7  67.8    67.8
+truck            2.2    1.7   2.6     1.4
+bus             37.4   35.1  38.6    28.2
+motorcycle      51.1   48.0  48.4    43.4
+bicycle          0.0    0.0   0.0     0.0
+pole            54.8   54.0  53.8    54.4
+mIoU10          57.0   57.1  57.1    57.8
+mIoU14          50.3   49.9  50.6    49.2
+[14:36] XONG

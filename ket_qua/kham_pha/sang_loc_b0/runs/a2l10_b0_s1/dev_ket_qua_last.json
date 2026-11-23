@@ -1,0 +1,27 @@
+{
+  "bien_the": "nosam_kp841_vung10_s1",
+  "model": "b0",
+  "seed": 1,
+  "gop_dev": false,
+  "lop0": false,
+  "epochs": 100,
+  "n_train": 841,
+  "best_dev_miou": 50.26374421407144,
+  "ckpt": "last",
+  "280": {
+    "mIoU_co_mat": 48.973632709184415,
+    "mIoU_14": 48.973632709184415,
+    "mIoU_7": 62.637945733786246,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.04059520613502,
+    "so_anh": 151
+  },
+  "273": {
+    "mIoU_co_mat": 48.973632709184415,
+    "mIoU_14": 48.973632709184415,
+    "mIoU_7": 62.637945733786246,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.04059520613502,
+    "so_anh": 151
+  }
+}

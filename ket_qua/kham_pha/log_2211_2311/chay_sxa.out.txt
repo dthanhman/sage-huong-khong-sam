@@ -1,0 +1,29 @@
+[20:33] train Student sxa0 (xa, seed 0, lam_vung 0 )
+[20:46] train Student sxa10 (xa, seed 0, lam_vung 10 )
+[21:01] train Student sxa10mr (xa, seed 0, lam_vung 10 --lop_vat 4 5 8 9 10 11 12 13 14)
+[21:17] xuất ảnh sxa0
+[21:20] xuất ảnh sxa10
+[21:21] xuất ảnh sxa10mr
+[21:23] tương phản người (val 151)
+116 ảnh có người – trung vị:
+                    tuong_phan  ti_le
+bien_the                             
+sage                     44.54   1.32
+nosam_kp841              23.50   0.97
+nosam_kp841_vung10       55.71   1.79
+sxa0                     19.60   0.81
+sxa10                    68.58   2.34
+sxa10mr                  35.65   1.05
+[21:23] rào ảnh val 151
+                       SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                               
+sage                1.7211   1.5736  0.6625  6.5957  34.9295      0.6935       0.8801   100.0000       100.0000     100.0000       True
+nosam_kp841         1.5293   1.5953  0.7169  6.2915  24.8782      0.6717       0.9236    88.8529       101.3790     108.2083      False
+nosam_kp841_vung10  1.6513   1.5812  0.6961  6.4827  32.1504      0.6964       0.8848    95.9444       100.4818     105.0702       True
+sxa0                1.5333   1.6050  0.7046  6.2458  24.3734      0.6640       0.9410    89.0879       101.9958     106.3540      False
+sxa10               1.6227   1.5826  0.6982  6.4718  31.0162      0.6903       0.8923    94.2808       100.5729     105.3957      False
+sxa10mr             1.5951   1.5376  0.6818  6.3230  34.2704      0.6587       0.8789    92.6756        97.7118     102.9236      False
+[21:35] train Student sxa10_s1 (xa, seed 1, lam_vung 10 )
+[21:49] train Student sxa10mr_s1 (xa, seed 1, lam_vung 10 --lop_vat 4 5 8 9 10 11 12 13 14)
+[22:03] XONG phần ghép (B0 chấm trên Kaggle)
+XONG

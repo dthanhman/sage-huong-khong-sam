@@ -1,0 +1,27 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+Chưng cất: ảnh Teacher vhn (841 ảnh), w_ref 4.0, w_ref_grad 3.0
+Tổng 841 cặp train cho mạng ghép
+Student: 0.136M tham số
+epoch   1 bước 106 lr 2.00e-03 loss 5.6965 (fuse 0.3434, grad 1.5554, vung 0.0000, tach 0.0000, den 0.0000) 0.2 phút
+epoch   5 bước 530 lr 2.00e-03 loss 2.8958 (fuse 0.1688, grad 0.7965, vung 0.0000, tach 0.0000, den 0.0000) 0.6 phút
+epoch  10 bước 1060 lr 1.99e-03 loss 2.6869 (fuse 0.1509, grad 0.7447, vung 0.0000, tach 0.0000, den 0.0000) 1.3 phút
+epoch  15 bước 1590 lr 1.97e-03 loss 2.8178 (fuse 0.2092, grad 0.7301, vung 0.0000, tach 0.0000, den 0.0000) 1.9 phút
+epoch  20 bước 2120 lr 1.95e-03 loss 2.2463 (fuse 0.1495, grad 0.5992, vung 0.0000, tach 0.0000, den 0.0000) 2.5 phút
+epoch  25 bước 2650 lr 1.92e-03 loss 2.8742 (fuse 0.1673, grad 0.7908, vung 0.0000, tach 0.0000, den 0.0000) 3.1 phút
+epoch  30 bước 3180 lr 1.89e-03 loss 2.2841 (fuse 0.1498, grad 0.6116, vung 0.0000, tach 0.0000, den 0.0000) 3.7 phút
+epoch  35 bước 3710 lr 1.85e-03 loss 2.1978 (fuse 0.1492, grad 0.5834, vung 0.0000, tach 0.0000, den 0.0000) 4.4 phút
+epoch  40 bước 4240 lr 1.81e-03 loss 2.2209 (fuse 0.1666, grad 0.5737, vung 0.0000, tach 0.0000, den 0.0000) 5.1 phút
+epoch  45 bước 4770 lr 1.76e-03 loss 2.1073 (fuse 0.1533, grad 0.5492, vung 0.0000, tach 0.0000, den 0.0000) 5.8 phút
+epoch  50 bước 5300 lr 1.71e-03 loss 2.1493 (fuse 0.1516, grad 0.5648, vung 0.0000, tach 0.0000, den 0.0000) 6.4 phút
+epoch  55 bước 5830 lr 1.65e-03 loss 2.0112 (fuse 0.1450, grad 0.5255, vung 0.0000, tach 0.0000, den 0.0000) 7.1 phút
+epoch  60 bước 6360 lr 1.59e-03 loss 1.9970 (fuse 0.1378, grad 0.5279, vung 0.0000, tach 0.0000, den 0.0000) 7.7 phút
+epoch  65 bước 6890 lr 1.52e-03 loss 1.9265 (fuse 0.1498, grad 0.4924, vung 0.0000, tach 0.0000, den 0.0000) 8.3 phút
+epoch  70 bước 7420 lr 1.45e-03 loss 1.9021 (fuse 0.1456, grad 0.4885, vung 0.0000, tach 0.0000, den 0.0000) 8.9 phút
+epoch  75 bước 7950 lr 1.38e-03 loss 1.7942 (fuse 0.1367, grad 0.4614, vung 0.0000, tach 0.0000, den 0.0000) 9.6 phút
+epoch  80 bước 8480 lr 1.31e-03 loss 1.8138 (fuse 0.1418, grad 0.4628, vung 0.0000, tach 0.0000, den 0.0000) 10.7 phút
+epoch  85 bước 9010 lr 1.23e-03 loss 1.7436 (fuse 0.1415, grad 0.4397, vung 0.0000, tach 0.0000, den 0.0000) 11.8 phút
+epoch  90 bước 9540 lr 1.15e-03 loss 1.7802 (fuse 0.1456, grad 0.4478, vung 0.0000, tach 0.0000, den 0.0000) 13.0 phút
+epoch  95 bước 10070 lr 1.08e-03 loss 1.6671 (fuse 0.1412, grad 0.4145, vung 0.0000, tach 0.0000, den 0.0000) 14.0 phút
+epoch 100 bước 10600 lr 9.98e-04 loss 1.7209 (fuse 0.1435, grad 0.4302, vung 0.0000, tach 0.0000, den 0.0000) 14.7 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\cc_vhn.pt

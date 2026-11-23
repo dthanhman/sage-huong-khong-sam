@@ -21,24 +21,26 @@ from chung import ANH, MAN, duong  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bien_the", nargs="+", required=True)
+    ap.add_argument("--lop", type=int, default=8, help="nhãn cần đo (8 người; 4 đèn – S-đèn 21/11)")
+    ap.add_argument("--px_min", type=int, default=200, help="số px tối thiểu của lớp trong ảnh (đèn nhỏ: dùng 30)")
     a = ap.parse_args()
     man = pd.read_csv(MAN / "dev.csv", dtype={"image_id": str}).set_index("image_id")
     ker = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (31, 31))
     rows = []
     for i in man.index:
         lab = cv2.imread(str(duong(man.loc[i, "label_path"])), cv2.IMREAD_GRAYSCALE)
-        mn = (lab == 8).astype(np.uint8)
-        if mn.sum() < 200:
+        mn = (lab == a.lop).astype(np.uint8)
+        if mn.sum() < a.px_min:
             continue
         vanh = (cv2.dilate(mn, ker) > 0) & (mn == 0) & (lab != 0)
-        if vanh.sum() < 100:
+        if vanh.sum() < min(100, a.px_min):
             continue
         for b in a.bien_the:
             y = cv2.cvtColor(cv2.imread(str(ANH / b / "train" / f"{i}.png")), cv2.COLOR_BGR2YCrCb)[..., 0].astype(float)
             c = abs(y[mn > 0].mean() - y[vanh].mean())
             rows.append({"id": i, "bien_the": b, "tuong_phan": c, "ti_le": c / y.std()})
     d = pd.DataFrame(rows).groupby("bien_the")[["tuong_phan", "ti_le"]].median().loc[a.bien_the]
-    print(f"{len(rows) // len(a.bien_the)} ảnh có người – trung vị:")
+    print(f"{len(rows) // len(a.bien_the)} ảnh có lớp {a.lop} – trung vị:")
     print(d.round(2).to_string())
 
 

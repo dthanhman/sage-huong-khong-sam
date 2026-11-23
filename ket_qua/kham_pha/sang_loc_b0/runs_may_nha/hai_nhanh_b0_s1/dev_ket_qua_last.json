@@ -1,0 +1,27 @@
+{
+  "bien_the": "hai_nhanh",
+  "model": "b0",
+  "seed": 1,
+  "gop_dev": false,
+  "lop0": false,
+  "epochs": 100,
+  "n_train": 841,
+  "best_dev_miou": 54.53450237385197,
+  "ckpt": "last",
+  "280": {
+    "mIoU_co_mat": 51.037939821468,
+    "mIoU_14": 51.037939821468,
+    "mIoU_7": 61.69016411246638,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.19531121686907,
+    "so_anh": 151
+  },
+  "273": {
+    "mIoU_co_mat": 51.037939821468,
+    "mIoU_14": 51.037939821468,
+    "mIoU_7": 61.69016411246638,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.19531121686907,
+    "so_anh": 151
+  }
+}

@@ -41,7 +41,9 @@ BT_4KENH = "vis_ir4"
 #                  (conv khởi tạo 0 -> lúc đầu là cộng), chung decoder SegFormer. Kiểu CMX đơn giản, gấp đôi encoder.
 BT_LR10 = "vis_ir4_lr10"
 BT_HAI = "hai_nhanh"
-BT_VIS_IR = (BT_4KENH, BT_LR10, BT_HAI)   # đọc thẳng VIS + IR gốc
+# Đối chứng (21/11): y hệt hai_nhanh nhưng kênh 4 = ảnh xám của VIS thay cho IR -> tách "thông tin IR" khỏi "2 encoder".
+BT_HAI_VV = "hai_nhanh_visvis"
+BT_VIS_IR = (BT_4KENH, BT_LR10, BT_HAI, BT_HAI_VV)   # đọc thẳng VIS + IR gốc (visvis: không dùng IR)
 
 
 def so_kenh(bien_the):
@@ -118,6 +120,8 @@ class FMBSeg(Dataset):
         if self.bt in BT_VIS_IR:
             v = cv2.imread(str(duong(r.vis_path)))
             ir = cv2.imread(str(duong(r.ir_path)), cv2.IMREAD_GRAYSCALE)
+            if self.bt == BT_HAI_VV:
+                ir = cv2.cvtColor(v, cv2.COLOR_BGR2GRAY)
             assert v is not None and ir is not None and v.shape[:2] == ir.shape, f"lỗi đọc VIS/IR {r.image_id}"
             img = np.dstack([cv2.cvtColor(v, cv2.COLOR_BGR2RGB), ir])
         else:
@@ -159,7 +163,7 @@ def tao_model(ten, nc=NC, kenh=3, bien_the=None):
     m = SegformerForSemanticSegmentation.from_pretrained(
         MODEL[ten], num_labels=nc, id2label={i: str(i) for i in range(nc)},
         label2id={str(i): i for i in range(nc)}, ignore_mismatched_sizes=True)
-    if bien_the == BT_HAI:
+    if bien_the in (BT_HAI, BT_HAI_VV):
         return HaiNhanh(m)
     if kenh == 4:   # thêm kênh IR vào tầng đầu: giữ trọng số RGB pretrained, kênh 4 = TB 3 kênh RGB
         # conv nhận ảnh đầu vào (tên khác nhau theo bản transformers: encoder.patch_embeddings.0.proj | stages.0.patch_embeddings.proj)

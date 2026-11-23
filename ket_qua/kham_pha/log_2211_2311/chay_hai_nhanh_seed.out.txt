@@ -1,0 +1,5 @@
+[14:04] train B0 hai_nhanh seed 1
+[15:39] hai_nhanh s1: "mIoU_co_mat": 51.037939821468
+[15:39] train B0 hai_nhanh seed 2
+[17:14] hai_nhanh s2: "mIoU_co_mat": 49.97520397598697
+XONG

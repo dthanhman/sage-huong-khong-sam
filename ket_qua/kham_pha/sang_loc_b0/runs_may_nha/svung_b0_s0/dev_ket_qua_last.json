@@ -1,0 +1,27 @@
+{
+  "bien_the": "svung",
+  "model": "b0",
+  "seed": 0,
+  "gop_dev": false,
+  "lop0": false,
+  "epochs": 100,
+  "n_train": 841,
+  "best_dev_miou": 51.04245373737432,
+  "ckpt": "last",
+  "280": {
+    "mIoU_co_mat": 49.92120763561771,
+    "mIoU_14": 49.92120763561771,
+    "mIoU_7": 62.847541337871746,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.20058185084618,
+    "so_anh": 151
+  },
+  "273": {
+    "mIoU_co_mat": 49.92120763561771,
+    "mIoU_14": 49.92120763561771,
+    "mIoU_7": 62.847541337871746,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.20058185084618,
+    "so_anh": 151
+  }
+}

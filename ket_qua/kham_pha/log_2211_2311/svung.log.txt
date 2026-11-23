@@ -1,0 +1,12 @@
+train 841 ảnh, dev 151 ảnh; nguồn bản đồ train {'A': 409, 'B': 368, 'dem': 64}
+S-vùng: 3.013M tham số, học 0.0949M
+epoch   1 loss 0.0256 | dev bce 0.0329 IoU mềm người 0.195 VIS 0.024 | 0.2 phút
+epoch   5 loss 0.0204 | dev bce 0.0288 IoU mềm người 0.225 VIS 0.047 | 0.8 phút
+epoch  10 loss 0.0177 | dev bce 0.0275 IoU mềm người 0.301 VIS 0.080 | 1.6 phút
+epoch  15 loss 0.0164 | dev bce 0.0291 IoU mềm người 0.265 VIS 0.054 | 2.4 phút
+epoch  20 loss 0.0153 | dev bce 0.0271 IoU mềm người 0.301 VIS 0.067 | 3.2 phút
+epoch  25 loss 0.0157 | dev bce 0.0277 IoU mềm người 0.291 VIS 0.070 | 4.0 phút
+epoch  30 loss 0.0147 | dev bce 0.0273 IoU mềm người 0.306 VIS 0.067 | 4.9 phút
+epoch  35 loss 0.0152 | dev bce 0.0272 IoU mềm người 0.303 VIS 0.070 | 5.7 phút
+epoch  40 loss 0.0153 | dev bce 0.0271 IoU mềm người 0.296 VIS 0.073 | 6.5 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\svung.pt

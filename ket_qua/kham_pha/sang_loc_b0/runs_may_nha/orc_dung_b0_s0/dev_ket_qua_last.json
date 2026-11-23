@@ -1,0 +1,27 @@
+{
+  "bien_the": "orc_dung",
+  "model": "b0",
+  "seed": 0,
+  "gop_dev": false,
+  "lop0": false,
+  "epochs": 100,
+  "n_train": 841,
+  "best_dev_miou": 57.49022904665707,
+  "ckpt": "last",
+  "280": {
+    "mIoU_co_mat": 56.61982236906472,
+    "mIoU_14": 56.61982236906472,
+    "mIoU_7": 66.47499049226884,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 92.02935935401595,
+    "so_anh": 151
+  },
+  "273": {
+    "mIoU_co_mat": 56.61982236906472,
+    "mIoU_14": 56.61982236906472,
+    "mIoU_7": 66.47499049226884,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 92.02935935401595,
+    "so_anh": 151
+  }
+}

@@ -1,0 +1,11 @@
+split,id,px_doi_lop,cap,khop_2_ke
+test,00169,9034,bus->car,0.873
+test,00167,6242,car->bus,0.769
+test,00170,6000,car->bus,0.857
+train,00342,5649,truck->car,0.856
+train,00378,5311,car->person,0.877
+train,00652,3523,car->person,0.816
+train,00092,2312,truck->person,0.928
+train,01123,2033,car->person,0.796
+test,00168,1758,car->bus,0.792
+train,00399,1502,moto->person,0.921

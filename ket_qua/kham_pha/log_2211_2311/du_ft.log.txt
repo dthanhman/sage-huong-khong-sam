@@ -1,0 +1,14 @@
+Thiết bị: cuda
+Nạp 841 ảnh train vào RAM ...
+Chưng cất: ảnh Teacher vhn (841 ảnh), w_ref 4.0, w_ref_grad 3.0
+Tổng 841 cặp train cho mạng ghép
+Khởi tạo từ nosam_kp841.pt (121 khóa; 0 khóa mat_ mới)
+Student: 0.136M tham số, học 0.136M
+epoch   1 bước 106 lr 2.00e-04 loss 0.1223 (fuse 0.0169, grad 0.0238, vung 0.0000, tach 0.0000, den 0.0000) 0.2 phút
+epoch   5 bước 530 lr 1.97e-04 loss 0.1078 (fuse 0.0125, grad 0.0234, vung 0.0000, tach 0.0000, den 0.0000) 0.7 phút
+epoch  10 bước 1060 lr 1.87e-04 loss 0.0973 (fuse 0.0104, grad 0.0220, vung 0.0000, tach 0.0000, den 0.0000) 1.4 phút
+epoch  15 bước 1590 lr 1.72e-04 loss 0.0898 (fuse 0.0087, grad 0.0212, vung 0.0000, tach 0.0000, den 0.0000) 2.1 phút
+epoch  20 bước 2120 lr 1.52e-04 loss 0.0825 (fuse 0.0068, grad 0.0207, vung 0.0000, tach 0.0000, den 0.0000) 2.7 phút
+epoch  25 bước 2650 lr 1.29e-04 loss 0.0948 (fuse 0.0087, grad 0.0229, vung 0.0000, tach 0.0000, den 0.0000) 3.3 phút
+epoch  30 bước 3180 lr 1.04e-04 loss 0.0884 (fuse 0.0080, grad 0.0215, vung 0.0000, tach 0.0000, den 0.0000) 3.9 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\du_ft.pt

@@ -214,16 +214,18 @@ def main():
                 sc = scd(o, y, ir).mean()
                 ch_ = chay(o, y, ir, a.tran, a.le)
                 rao = nd + a.gamma * (2 - sc) + a.eta * ch_    # rào chắn chỉ số ghép, nhân beta
-            vao = o if hoc_st else o.detach()
+            # (19/11) lam = 0 là đối chứng "không CE": Student chỉ học nội dung, B0 vẫn học bình thường trên ảnh đã tách.
+            ce_st = hoc_st and a.lam > 0
+            vao = o if ce_st else o.detach()
             with torch.autocast("cuda", dtype=torch.float16):
                 lg = seg(pixel_values=chuan_hoa(ycrcb_sang_rgb(vao.clamp(0, 1), cc))).logits
             lg = F.interpolate(lg.float(), size=lab.shape[-2:], mode="bilinear", align_corners=False)
             ce = F.cross_entropy(lg, lab, ignore_index=IGNORE)
             # B0 học bằng CE; Student học bằng lam*CE + beta*nội dung (cùng một lần lan ngược)
-            loss = ce * (a.lam if hoc_st else 1.0) + (a.beta * rao if hoc_st else 0.0)
+            loss = ce * (a.lam if ce_st else 1.0) + (a.beta * rao if hoc_st else 0.0)
             if not torch.isfinite(loss):
                 sys.exit(f"loss không hữu hạn ở epoch {ep}")
-            if hoc_st and a.do_grad and bi % a.do_grad == 0:   # chẩn đoán, không đổi việc train
+            if ce_st and a.do_grad and bi % a.do_grad == 0:   # chẩn đoán, không đổi việc train
                 ps = [q for q in net.parameters() if q.requires_grad]
                 S = 4096.0   # nhân rồi chia lại: tránh tràn dưới FP16 trong B0 (như GradScaler)
                 g1 = torch.autograd.grad(S * a.lam * ce, ps, retain_graph=True, allow_unused=True)
@@ -233,7 +235,7 @@ def main():
                 gd.append((v1.norm().item() / S, v2.norm().item() / S, F.cosine_similarity(v1, v2, dim=0).item()))
             opt_seg.zero_grad(), opt_st.zero_grad()
             scaler.scale(loss).backward()
-            if hoc_st and a.lam != 1.0:          # B0 luôn nhận đúng gradient của CE (không nhân lam)
+            if ce_st and a.lam != 1.0:          # B0 luôn nhận đúng gradient của CE (không nhân lam)
                 scaler.unscale_(opt_seg)
                 for g in opt_seg.param_groups:
                     for p in g["params"]:

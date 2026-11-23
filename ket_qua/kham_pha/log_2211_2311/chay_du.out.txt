@@ -1,0 +1,65 @@
+[10:53] train du_ft
+epoch  30 bước 3180 lr 1.04e-04 loss 0.0884 (fuse 0.0080, grad 0.0215, vung 0.0000, tach 0.0000, den 0.0000) 3.9 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\du_ft.pt
+[10:58] train du_mat_bang_g1
+epoch  30 bước 3180 lr 5.01e-04 loss 0.0449 (fuse 0.0012, grad 0.0137, vung 0.0000, tach 0.0000, den 0.0000) 2.3 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\du_mat_bang_g1.pt
+[11:01] train du_mat_bang_g9
+epoch  30 bước 3180 lr 5.01e-04 loss 0.3716 (fuse 0.0014, grad 0.1225, vung 0.0000, tach 0.0000, den 0.0000) 2.5 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\du_mat_bang_g9.pt
+[11:04] train du_mat_ft
+epoch  30 bước 3180 lr 1.04e-04 loss 0.0794 (fuse 0.0056, grad 0.0209, vung 0.0000, tach 0.0000, den 0.0000) 4.5 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\du_mat_ft.pt
+[11:10] chep_delta dev
+tập dev, 151 ảnh, thầy vhn, nền nosam_kp841
+
+== ck:du_ft
+           road  sidewalk  building  light  sign   veg   sky  person   car  truck   bus  pole
+rms_thay   1.30      3.19      0.29   3.61  0.77  0.73  0.12   14.91  2.12   1.74  3.80  0.82
+chep       0.19      0.11      0.27  -0.20  1.60  0.27  1.21    0.17  0.13   0.19 -0.20  0.21
+nhieu_rms  2.73      3.18      5.51   5.59  4.14  7.30  9.96    4.06  4.81   4.57  3.67  4.54
+
+== ck:du_mat_bang_g1
+           road  sidewalk  building  light  sign   veg   sky  person   car  truck   bus  pole
+rms_thay   1.30      3.19      0.29   3.61  0.77  0.73  0.12   14.91  2.12   1.74  3.80  0.82
+chep       0.33      0.24      0.53   0.02  0.01  0.12  0.29    0.09  0.25   0.15  0.53  0.13
+nhieu_rms  1.94      1.25      1.26   1.11  0.61  1.06  1.41    2.89  1.74   1.15  1.21  0.90
+
+== ck:du_mat_bang_g9
+           road  sidewalk  building  light  sign   veg   sky  person   car  truck  bus  pole
+rms_thay   1.30      3.19      0.29   3.61  0.77  0.73  0.12   14.91  2.12   1.74  3.8  0.82
+chep       0.20      0.15      0.12   0.01  0.02  0.05  0.31    0.07  0.09   0.02  0.1  0.04
+nhieu_rms  1.72      1.22      0.98   0.75  0.57  0.91  1.46    2.45  1.11   0.70  0.8  0.74
+
+== ck:du_mat_ft
+           road  sidewalk  building  light  sign   veg    sky  person   car  truck   bus  pole
+rms_thay   1.30      3.19      0.29   3.61  0.77  0.73   0.12   14.91  2.12   1.74  3.80  0.82
+chep       0.49      0.22      0.83  -0.44  1.59  0.41   1.24    0.31  0.40   0.35  0.31  0.37
+nhieu_rms  2.60      2.64      7.86   6.08  3.32  8.06  10.18    5.34  4.05   3.92  2.90  4.58
+[11:11] chep_delta train
+tập train, 211 ảnh, thầy vhn, nền nosam_kp841
+
+== ck:du_ft
+           road  sidewalk  building  light  sign   veg    sky  person   car  truck   bus  pole
+rms_thay   1.02      6.34      0.61   5.67  1.01  0.77   0.17   17.71  0.92   5.26  3.72  0.78
+chep       0.15      0.02      0.09  -0.14  0.19  0.13   0.45    0.17  0.29  -0.07 -0.08  0.33
+nhieu_rms  3.64      3.68      4.97   5.26  4.72  8.92  14.23    4.27  4.79   4.63  4.41  5.83
+
+== ck:du_mat_bang_g1
+           road  sidewalk  building  light  sign   veg   sky  person   car  truck   bus  pole
+rms_thay   1.02      6.34      0.61   5.67  1.01  0.77  0.17   17.71  0.92   5.26  3.72  0.78
+chep       0.22      0.22      0.17   0.39 -0.01  0.19  0.22    0.14  0.15   0.16  0.26  0.12
+nhieu_rms  2.09      1.73      0.94   1.68  0.90  0.90  1.54    3.09  1.45   2.77  2.41  0.77
+
+== ck:du_mat_bang_g9
+           road  sidewalk  building  light  sign   veg   sky  person   car  truck   bus  pole
+rms_thay   1.02      6.34      0.61   5.67  1.01  0.77  0.17   17.71  0.92   5.26  3.72  0.78
+chep       0.12      0.09      0.05   0.20 -0.03  0.09  0.20    0.11  0.07   0.02  0.05  0.04
+nhieu_rms  1.85      1.33      0.81   1.12  0.70  0.83  1.59    2.64  1.07   1.11  1.10  0.68
+
+== ck:du_mat_ft
+           road  sidewalk  building  light  sign   veg    sky  person   car  truck   bus  pole
+rms_thay   1.02      6.34      0.61   5.67  1.01  0.77   0.17   17.71  0.92   5.26  3.72  0.78
+chep       0.26      0.15      0.24   0.18  0.22  0.29   0.52    0.38  0.46   0.09  0.26  0.45
+nhieu_rms  3.78      3.07      4.86   4.25  3.75  9.50  17.10    5.91  4.19   3.73  3.94  6.67
+[11:13] XONG

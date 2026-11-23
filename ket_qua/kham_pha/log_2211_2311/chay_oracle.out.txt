@@ -1,0 +1,24 @@
+[12:58] train B0 orc_dung seed 0
+[14:14] orc_dung s0 xong
+[14:14] train B0 orc_nguoc seed 0
+[16:12] orc_nguoc s0 xong
+===== Lớp có >= 20 ảnh: 10 lớp (road, sidewalk, building, traffic_sign, vegetation, sky, person, car, truck, pole)
+                s0     TB
+orc_dung     64.83  64.83
+orc_nguoc    59.03  59.03
+nosam_kp841  56.99  56.99
+vis          56.27  56.27
+hai_nhanh    59.27  59.27
+                  cap  d_tb  d_s0          CI_anh     CI_anh_seed       ket_luan
+   orc_dung−orc_nguoc  5.80  5.80  [+2.95; +8.13]  [+2.95; +8.13]  hơn chắc chắn
+ orc_dung−nosam_kp841  7.84  7.84  [+4.92; +9.68]  [+4.92; +9.68]  hơn chắc chắn
+         orc_dung−vis  8.56  8.56 [+6.27; +10.48] [+6.27; +10.48]  hơn chắc chắn
+   orc_dung−hai_nhanh  5.56  5.56  [+3.53; +7.10]  [+3.53; +7.10]  hơn chắc chắn
+orc_nguoc−nosam_kp841  2.04  2.04  [-0.53; +3.85]  [-0.53; +3.85] chưa phân biệt
+        orc_nguoc−vis  2.76  2.76  [+0.86; +5.14]  [+0.86; +5.14]  hơn chắc chắn
+  orc_nguoc−hai_nhanh -0.25 -0.25  [-2.25; +2.08]  [-2.25; +2.08] chưa phân biệt
+      nosam_kp841−vis  0.71  0.71  [-0.51; +2.31]  [-0.51; +2.31] chưa phân biệt
+nosam_kp841−hai_nhanh -2.29 -2.29  [-3.37; -1.03]  [-3.37; -1.03]  kém chắc chắn
+        vis−hai_nhanh -3.00 -3.00  [-4.66; -1.49]  [-4.66; -1.49]  kém chắc chắn
+
+XONG

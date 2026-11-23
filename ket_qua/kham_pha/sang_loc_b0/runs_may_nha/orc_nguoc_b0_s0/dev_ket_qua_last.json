@@ -1,0 +1,27 @@
+{
+  "bien_the": "orc_nguoc",
+  "model": "b0",
+  "seed": 0,
+  "gop_dev": false,
+  "lop0": false,
+  "epochs": 100,
+  "n_train": 841,
+  "best_dev_miou": 55.225065603244204,
+  "ckpt": "last",
+  "280": {
+    "mIoU_co_mat": 54.16205821955231,
+    "mIoU_14": 54.16205821955231,
+    "mIoU_7": 63.4747207063276,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.41532201290319,
+    "so_anh": 151
+  },
+  "273": {
+    "mIoU_co_mat": 54.16205821955231,
+    "mIoU_14": 54.16205821955231,
+    "mIoU_7": 63.4747207063276,
+    "so_lop_co_mat": 14,
+    "pixel_acc": 91.41532201290319,
+    "so_anh": 151
+  }
+}
