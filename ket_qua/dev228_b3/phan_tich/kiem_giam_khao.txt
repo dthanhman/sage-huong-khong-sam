@@ -1,0 +1,64 @@
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 19212.39it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+giám khảo A chấm nửa B 205 ảnh
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 27751.96it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+giám khảo B chấm nửa A 249 ảnh
+454 ảnh Train chưa thấy
+IoU theo lớp: tb | hiệu so tb: ['tbsua_992', 'tbsua_a04', 'm11c_l45_992', 'sage'] || CE tb, hiệu CE tbsua, hinge tbsua
+road        86.4 |   +0.2    +0.3    -0.1    -1.0 || 0.115 +0.048 0.058
+sidewalk    27.2 |   +2.8    +1.5    +2.2    +2.6 || 2.945 -0.583 0.113
+building    78.1 |   -1.5    -0.3    -0.9    -3.4 || 0.303 +0.029 0.073
+light       16.2 |   -0.4    +0.5    +0.7    +1.5 || 3.762 +0.022 0.288
+sign        64.5 |   -0.4    +0.5    -1.5    -2.8 || 0.948 +0.101 0.175
+veg         81.9 |   -1.5    -0.2    -0.8    -1.3 || 0.353 -0.011 0.061
+sky         93.0 |   -1.6    -0.2    -0.5    -2.1 || 0.119 +0.087 0.097
+person      45.8 |   -2.6    -0.5    -1.5    -5.5 || 1.889 -0.032 0.245
+car         73.9 |   -2.2    -0.3    -2.0    -4.6 || 0.364 -0.074 0.030
+truck        7.5 |   -2.3    -0.6    -2.0    -3.4 || 5.086 +0.419 0.644
+bus          8.3 |   +0.6    +0.5    +0.9    +0.3 || 6.601 -0.235 0.375
+moto         2.0 |   -0.2    -0.2    +0.1    -1.3 || 6.131 -0.728 0.123
+bicycle      0.0 |   +0.0    +0.0    +0.0    +0.0 || 10.085 +0.425 0.653
+pole        45.3 |   -1.3    +0.2    -0.5    -1.6 || 1.281 -0.124 0.085
+13 lớp {'tb': 48.47, 'tbsua_992': 47.67, 'tbsua_a04': 48.56, 'm11c_l45_992': 48.01, 'sage': 46.74}
+8 lớp {'tb': 71.12, 'tbsua_992': 69.75, 'tbsua_a04': 71.04, 'm11c_l45_992': 70.14, 'sage': 68.34}
+5 lớp {'tb': 12.23, 'tbsua_992': 12.33, 'tbsua_a04': 12.59, 'm11c_l45_992': 12.61, 'sage': 12.19}

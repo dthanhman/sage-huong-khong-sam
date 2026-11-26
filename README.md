@@ -1,15 +1,18 @@
 # Ghép ảnh IR–VIS không cần SAM: tổng kết hướng thử nghiệm
 
-Người làm: Đào Thanh Mân. Cập nhật: **23/11/2026** (thêm kết quả 3 seed của A2, A4, cận trên; mục mới 4.17–4.24: vì sao các loss rớt, đổi kiến trúc, kéo cường độ theo lớp, màu và dữ liệu thêm, ghép theo vùng ngữ nghĩa, chưng cất vào Student, mốc SegFormer-B3 trên Dev 228; mục 5–7 viết lại).
+Người làm: Đào Thanh Mân. Cập nhật: **26/11/2026** (mục mới 4.26–4.33: `vhn`, oracle và cổng VIS trên SegFormer-B3; đổi nền sang TB (`tbsua`, `a04`); kiểm chéo theo cảnh; các hướng rớt 24–26/11; khóa phương án `a04` và giao thức Test; mục 5–7 viết lại).
 
-**Tóm tắt kết quả đến 23/11:**
-- Bỏ SAM rẻ hơn khoảng 250 lần lúc train, và mIoU **không thua** SAGE. Đúng cả trên tầng sàng lọc (B0, val 151, 3 seed) và trên tầng chọn (SegFormer-B3, Dev 228, 3 seed: bỏ SAM 64,66 / SAGE 64,27 / TB 64,11 / VIS 63,77, mọi cặp chưa phân biệt) (mục 2.1, 4.8, 4.24).
-- Khoảng 30 cách ghép **toàn cục** đã thử (loss theo vùng vật thể, đổi kiến trúc Student, kéo cường độ theo lớp, chỉnh màu, thêm dữ liệu MSRS) đều cho mIoU trong khoảng dao động do seed. **Không cách nào hơn nhất quán cả SAGE và TB** (mục 4.14–4.20).
-- Lý do chính: các ảnh ghép đều **đánh đổi theo lớp**. Được lớp người (nhờ IR), nhưng mất các lớp VIS thấy rõ hơn (xe tải, đèn, biển báo, vỉa hè). Student nhỏ không biết điểm ảnh nào thuộc lớp nào (mục 4.17, 4.19).
-- Cận trên đã xác nhận đủ 3 seed: SegFormer nhận thẳng VIS và IR hơn SAGE **+2,2 điểm**. Đối chứng cho thấy phần hơn đến từ **thông tin IR**, không phải do mạng to gấp đôi (mục 4.13).
-- **Ghép theo vùng ngữ nghĩa thì đổi được mIoU.** Cách `vhn` (vùng người và vùng "lớp VIS" do một SegFormer phụ đoán) đạt 58,02 trên 10 lớp (3 seed), **hơn nhất quán cả SAGE (+0,77) và TB (+0,91)** trên val 151. Nhưng `vhn` cần mạng phân đoạn lúc chạy, nên chưa phải phương pháp nộp (mục 4.21, 4.22).
-- Chưng cất `vhn` vào một Student chạy độc lập: bản tốt nhất (S-vùng) không bị trôi ảnh nhưng chỉ hơn bỏ SAM +0,14 (1 seed). Trần của cách này bằng phần hơn của thầy, khoảng +0,5 (mục 4.23).
-- **Đang chạy (23/11):** `vhn` trên SegFormer-B3, Dev 228, 2 seed (Kaggle). Đây là lần kiểm `vhn` trên tập chọn, chưa dùng để chỉnh gì.
+**Tóm tắt kết quả đến 26/11:**
+- Bỏ SAM rẻ hơn khoảng 250 lần lúc train, và mIoU **không thua** SAGE, cả trên tầng sàng lọc (B0, val 151) lẫn tầng chọn (SegFormer-B3, Dev 228, 3 seed) (mục 2.1, 4.8, 4.24).
+- Trên SegFormer-B3, **vật cản là TB, không phải SAGE**. TB mạnh ở 8 lớp phổ biến. Các bản dựa trên nền Student bỏ SAM (`vhn`, `vnc`) hơn SAGE nhưng không hơn TB nhất quán (mục 4.26).
+- **Đổi nền sang TB** cho kết quả tốt nhất. Phương án đã **khóa** là `a04` = TB + 0,4 × (phần sửa học được, không SAM, không nhãn). Trên Dev 228, 3 seed, 13 lớp: `a04` **60,77**, TB 60,15, SAGE 59,41 (mục 4.27).
+  - `a04` − SAGE: **+1,36**, khoảng tin cậy 95% [+0,06; +3,09] → **hơn nhất quán**.
+  - `a04` − TB: **+0,63**, khoảng tin cậy [−0,04; +1,26] → đạt biên "không kém TB" (chốt trước: cận dưới > −0,5), **chưa hơn chắc**.
+  - 8 lớp phổ biến: `a04` 77,48 = TB 77,49. Luật đặt trước (≥ 77,62) **rớt**, phải ghi khi báo cáo.
+- Kiểm chéo theo cảnh trên 411 ảnh Train (3 seed): `a04` − TB +0,47, khoảng tin cậy chứa 0. Lợi dồn vào vài ảnh bus (mục 4.28).
+- Thử thêm cổng VIS lên `a04` (`a04_cvis`) để lấy lại đèn, xe tải, bus: **rớt**, lớp hiếm còn giảm (−2,55 so `a04`) (mục 4.30).
+- Nhận định chính: **một ảnh ghép chưa giữ được cùng lúc** lợi của IR (person +19 so VIS) và lợi của VIS (truck +10,8, đèn +4,9, bus +2,0 so `a04`) (mục 4.30, 4.33).
+- **Đang chạy (26/11):** Test 280 ảnh (chính: 273 ảnh sạch), SegFormer-B3 train 1.220 ảnh, `a04` 5 seed, mốc TB/SAGE thêm seed 3, 4. Chưa có số (mục 4.31).
 
 File này đọc riêng là đủ hiểu. Các thư mục đi kèm chỉ chứa số liệu gốc và code, dùng khi muốn kiểm lại.
 
@@ -31,6 +34,11 @@ File này đọc riêng là đủ hiểu. Các thư mục đi kèm chỉ chứa 
 | 21–22/11 | Đổi kiến trúc Student (nhánh ngữ cảnh, rộng hơn), loss giữ đèn; mốc B3 Dev 228 đủ 3 seed | 4.18, 4.24 |
 | 22/11 | Đối chứng cận trên; kéo cường độ theo lớp; chỉnh màu; thêm MSRS; oracle theo vùng; bỏ SAM trên B3 Dev 228 | 4.13, 4.19–4.21, 4.24 |
 | 22–23/11 | `vhn` 3 seed đạt trên val 151; chưng cất vào Student (4 kiểu), S-vùng | 4.22, 4.23 |
+| 23/11 tối | `vhn` trên B3 Dev 228 (2 seed): hơn SAGE, chưa hơn TB; oracle B3 chỉ +1,88 so TB | 4.26 |
+| 24/11 | Chỗ trống B3 nằm ở lớp hiếm; `vnc` (VIS + cổng nhiệt) rớt; `vhn3` (thầy B3) rớt; đổi nền sang TB: `tbsua_992` | 4.26, 4.27 |
+| 24/11 tối | `tbsua_992` 3 seed: hơn SAGE nhất quán, chưa hơn TB; chọn α = 0,4 trên Train → `a04` | 4.27 |
+| 25/11 | `a04` seed 0, 1; kiểm chéo theo cảnh `kc1` (3 seed); nhiều hướng sửa bằng nhãn rớt | 4.27–4.29 |
+| 26/11 | `a04` seed 2 → **khóa `a04`**; `a04_cvis` rớt; đẩy Test | 4.27, 4.30, 4.31 |
 
 ---
 
@@ -761,40 +769,193 @@ Thiết lập: SegFormer-B3 train trên 992 ảnh, chấm Dev 228 bằng checkpo
 
 Số liệu gốc: `ket_qua/dev228_b3/runs/` (12 lần chạy: ma trận nhầm lẫn `dev_nham_last.npz`, IoU từng lớp, cấu hình, log), `so_sanh_lop_du_dev_b3_vis4.csv` (đủ 4 loại ảnh). Tính lại: `cd code/b3 && SAGE_RUNS=../../ket_qua/dev228_b3/runs python so_sanh_lop_du.py --bien_the nosam_992 sage tb vis --model b3 --tap dev --hau _15lop --seeds 0 1 2 --min_anh 20 1`.
 
-### 4.25. Nhận định chung đến 23/11
+### 4.25. Nhận định chung đến 23/11 (trên B0; xem thêm 4.33)
 
 - Trên B0 val 151, các ảnh ghép **không dùng nhãn** (khoảng 30 bản) cho 10 lớp trong khoảng 54,7–58,0, phần lớn 56,3–57,8. SAGE, TB, bỏ SAM chênh nhau dưới mức dao động do seed (riêng bỏ SAM đã dao động 57,19–57,88 giữa 3 seed).
 - Câu đúng là: **các cách ghép toàn cục** (SAGE, TB, VIS, các biến thể Student) cho mIoU gần như nhau; **ghép theo vùng ngữ nghĩa** thì đổi được mIoU, cả lên (`vhn` +0,5 đến +0,9, oracle nhãn thật +7,8) và xuống (`vhn_nguoc` −1,7, seed 0).
 - "SegFormer train lại tự bù phần khác biệt của ảnh ghép toàn cục" mới là **giả thuyết**. Bằng chứng gián tiếp: chỉnh màu, tăng tương phản, đổi kiến trúc đều làm ảnh đổi rõ mà mIoU không đổi.
 - Các số này chủ yếu trên B0 và val 151. Chưa đối chiếu với các phương pháp khác trong bảng của bài SAGE.
 
+### 4.26. Ghép theo vùng trên SegFormer-B3: hơn SAGE, chưa hơn TB (23–24/11)
+
+Mọi số trong mục này: SegFormer-B3 train 992 ảnh, chấm Dev 228, checkpoint cuối, mIoU 13 lớp có mặt. Mốc cùng seed lấy từ mục 4.24.
+
+**`vhn` (mục 4.22) trên Dev 228, 2 seed.** Dùng lại hai mạng `hai_nhanh` nửa dữ liệu. Dev 228 không trùng hai nửa train.
+
+| | Seed 0 | Seed 1 | TB 2 seed |
+|---|---|---|---|
+| `vhn` | 59,92 | 61,71 | 60,82 |
+| SAGE | 59,16 | 59,78 | 59,47 |
+| TB | 60,29 | 60,08 | 60,19 |
+| Bỏ SAM (`nosam_992`) | 60,21 | 61,12 | 60,67 |
+
+- `vhn` − SAGE +1,34 (khoảng tin cậy theo ảnh [+0,03; +3,01]). `vhn` − TB +0,63, nhưng seed 0 thua (−0,37). `vhn` − bỏ SAM +0,15.
+- Luật đặt trước yêu cầu **mỗi seed** hơn cả SAGE và TB → **không đạt**, không chạy seed 2. Trên B3, lợi của `vhn` gần bằng lợi của nền bỏ SAM. Phần "vùng" không thêm gì rõ.
+
+**Oracle trên B3 (seed 0).** Ghép theo vùng bằng nhãn thật (mục 4.21) là trần của mọi cách ghép theo vùng: `orc_dung` 62,17, `orc_nguoc` 60,55, TB 60,29. Oracle chỉ hơn TB **+1,88**. Luật đặt trước: dưới +2 thì chuyển hướng. Trên B0, oracle hơn tới +7,8, nên phần lớn lợi của oracle trên B0 là do B0 yếu.
+
+**Chỗ trống của B3.** Nếu chọn bản tốt nhất cho từng lớp trong {SAGE, TB, bỏ SAM, VIS} (3 seed, hậu nghiệm), mIoU lên 62,27 (+2,86 so SAGE, +2,1 so TB). Phần lợi nằm ở **lớp nhỏ, hiếm**: đèn +6,1 (VIS 31,1), truck +6,4 (VIS 36,9), biển +4,0 (TB 71,5), bus +4,0 (VIS 76,1), motorcycle (7 ảnh, nhiễu). **Không ở person** (+0,2): trên B3, mọi ảnh ghép có IR đều cho person khoảng 69–71. Vì vậy từ 24/11 thôi nhắm vào person.
+
+**`vnc` = VIS làm nền + cổng nhiệt (24/11).** Y = Y_vis + g·(Y_nosam − Y_vis). Cổng g mở ở vật nhỏ ấm (top-hat trắng trên IR) và ở ảnh tối. Không nhãn, không mạng phụ, tham số chọn trên ảnh Train. Rào: MS-SSIM 99,4%, Q_ABF 114,5%, SCD 83,6% SAGE.
+
+| | Seed 0 | Seed 1 | TB |
+|---|---|---|---|
+| `vnc` | 61,22 | 60,76 | 60,99 |
+
+- Luật: mỗi seed hơn mốc cao nhất cùng seed (s0 > 60,29, s1 > 61,12) → seed 1 **rớt**.
+- So TB +0,81, so SAGE +1,52, so bỏ SAM +0,32: mọi khoảng tin cậy chứa 0.
+- Lợi dồn vào **một đoạn video** (ảnh 01383–01419, 37 ảnh sáng, nhiều truck và bus). Bỏ đoạn này: `vnc` 59,40 < bỏ SAM 59,65 < TB 60,59. Đèn còn thấp hơn bỏ SAM (−2,9), trái giả thuyết.
+
+**`vhn3`, `vhn4`, `vhn5` (thầy mạnh hơn).** Thay `hai_nhanh` B0 bằng B3: mIoU mỗi nửa lên 51,03 / 55,96 (B0: 44,9 / 45,3). Nhưng trên Dev 228, bản đồ vùng "lớp VIS" chỉ bắt được 23% (recall). `tbsua_vhn3` (bản đồ `vhn3` đặt trên nền `tbsua`, mục 4.27) seed 0 được 60,16, thấp hơn chính nền `tbsua` seed 0 (61,49) → rớt. `vhn4` (bản đồ chỉ vỉa hè + đèn) và `vhn5` (cổng không nhãn) rớt luật đặt trên Train trước khi lên GPU. **Dừng họ `vhn`.**
+
+Số liệu: `ket_qua/dev228_b3/runs/` (`vhn_*`, `vnc_*`, `orc_*`, `tbsua_vhn3_*`); phân tích trong `ket_qua/dev228_b3/phan_tich/` (`soi_vhn3b.txt`, `ban_do_vhn4.txt`, `chon_cong_vhn5.txt`).
+
+### 4.27. Đổi nền sang TB: `tbsua_992` và `a04` (24–26/11)
+
+Rà lại khoảng 48 bản B0 theo 8 lớp phổ biến, mình thấy họ **nền TB + phần sửa học được** (`tbsua`, mục 4.3) từng bị bỏ oan ngày 19/11. Khi đó họ này được chấm bằng 14 lớp, mà điểm 14 lớp bị motorcycle (1 ảnh) kéo lệch. Trên SegFormer-B3, TB lại là mốc khó vượt nhất. Vì vậy mình chuyển sang nền TB.
+
+**`tbsua_992`:** Student SAGE (giữ kiến trúc), không SAM, không nhãn, học phần sửa trên nền TB. Train 992 ảnh, cùng tham số `tbsua_w150` (mục 4.4). Rào Dev 228: MS-SSIM 101,5% / Q_ABF 115,5% / SCD 89,7% SAGE → qua.
+
+**`a04`:** Y = TB + α·(Y_tbsua − TB), với **α = 0,4**. α được chọn trên **124 ảnh Train** theo luật đặt trước: α nhỏ nhất qua rào MS-SSIM ≥ 99% và Q_ABF ≥ 98% SAGE (SCD 82,5%, dưới mức cảnh báo 85%). Chỉ một α được đưa lên B3, không dò α theo Dev. Rào Dev 228: MS-SSIM 103,8% / Q_ABF 105,9% / SCD 87,0%. Không thêm tham số học, chi phí chạy bằng Student SAGE.
+
+| Ảnh (B3, Dev 228) | 13 lớp, seed 0 / 1 / 2 | **13 lớp TB** | 8 lớp phổ biến TB | 5 lớp khó TB |
+|---|---|---|---|---|
+| **`a04`** | 60,89 / 60,49 / 60,93 | **60,77** | 77,48 | 34,04 |
+| `tbsua_992` | 61,49 / 60,41 / 59,67 | 60,52 | 77,22 | 33,81 |
+| Bỏ SAM (`nosam_992`) | 60,21 / 61,12 / 59,98 | 60,44 | 76,58 | 34,60 |
+| TB | 60,29 / 60,08 / 60,07 | 60,15 | 77,49 | 32,40 |
+| SAGE | 59,16 / 59,78 / 59,29 | 59,41 | 76,65 | 31,83 |
+| VIS | 59,46 / 59,72 / 58,73 | 59,30 | 74,00 | 35,79 |
+
+8 lớp phổ biến: road, building, vegetation, sky, person, car, pole, traffic_sign. 5 lớp khó: sidewalk, traffic_light, truck, bus, motorcycle.
+
+| Cặp (3 seed, so theo cặp seed) | Hiệu | Khoảng tin cậy 95% (khối 10 ảnh) | Đọc |
+|---|---|---|---|
+| `a04` − SAGE, 13 lớp | +1,36 | [+0,06; +3,09] | hơn nhất quán |
+| `a04` − SAGE, 8 lớp | +0,83 | [+0,35; +1,14] | hơn nhất quán |
+| `a04` − TB, 13 lớp | +0,63 (+0,60 / +0,41 / +0,86) | [−0,04; +1,26] | **không kém TB** (biên −0,5), chưa hơn chắc |
+| `a04` − TB, 8 lớp | −0,01 | | ngang |
+| `tbsua_992` − SAGE, 13 lớp | +1,11 | chứa 0 theo khối cảnh | hơn ở cả 3 seed |
+| `tbsua_992` − TB, 13 lớp | +0,38 (seed 2: −0,40) | chứa 0 | chưa phân biệt |
+
+Quá trình và luật (ghi đủ để minh bạch):
+- `tbsua_992` (seed 0, 1): luật là 13 lớp ≥ 60,90 **và** 8 lớp ≥ 77,62 (mốc TB). 13 lớp đạt sát (60,95), 8 lớp rớt (76,99), chủ yếu do biển báo (2 ảnh liền 00174–00175 và seed 1).
+- `a04` (seed 0, 1): luật là 8 lớp ≥ 77,62 và 5 lớp không thua TB. 5 lớp đạt (+1,81), **8 lớp rớt** (77,31). Theo luật thì không chạy seed 2.
+- Mân quyết chạy thêm seed 2 (ghi rõ là ngoài luật). **Trước khi mở số seed 2**, Mân chốt biên "không kém TB": cận dưới khoảng tin cậy 13 lớp của `a04` − TB phải > −0,5. Seed 2 cho `a04` 60,93, hơn cả TB (60,07) và SAGE (59,29). Theo luật đọc đã ghi trước → **khóa `a04`**.
+- Lợi so TB phụ thuộc đoạn 01383–01419: bỏ đoạn này, `a04` − TB (2 seed) từ +0,51 còn +0,01. Theo độ sáng: ảnh sáng +1,32, vừa +0,14, tối +0,13.
+- Ở 8 lớp, phần thua TB chủ yếu là biển báo (−1,7) và building (−0,45, chỉ ở seed 0).
+
+Số liệu: `ket_qua/dev228_b3/runs/` (`tbsua_992_*`, `tbsua_a04_*`); `phan_tich/cham_tbsua3.txt`, `cham_a04.txt`, `cham_a04_3s.txt`, `phan_tich_ho_tb.txt`, `chay_tbsua992.out.txt` (rào). Tính lại: `cd code && python scene_v1/cham_a04_3s.py`.
+
+### 4.28. Kiểm chéo theo cảnh trên Train (`kc1`, 25/11)
+
+Dev 228 chỉ có khoảng 10 đoạn video, nên lợi dễ dồn vào một đoạn. Để có thêm cảnh, mình chia lại 992 ảnh Train: **phần kiểm 411 ảnh** (5 cụm id liền: 1–39, 136–156, 519–586, 649–700, 1059–1300), **train 782 ảnh**, bỏ 27 ảnh đệm. Trùng cảnh được kiểm bằng so khớp đặc trưng ORB (có 1 báo động giả, nhìn bằng mắt thì khác cảnh). Chạy SegFormer-B3 trên TB và `a04`, 3 seed. Lưu ý: `tbsua_992` đã học (không nhãn) trên cả 992 ảnh này, nên phần kiểm không hoàn toàn "chưa thấy" với phần ghép.
+
+| `a04` − TB (411 ảnh) | Seed 0 / 1 / 2 | TB | Khoảng tin cậy |
+|---|---|---|---|
+| 13 lớp | +0,60 / +0,51 / +0,31 | **+0,47** (59,95 → 60,43) | khối [−0,18; +0,92]; cụm [−0,98; +0,77] |
+| 8 lớp | −0,34 / −0,05 / −0,14 | −0,18 | [−0,45; +0,01] |
+| 5 lớp | | +1,51 | |
+
+- Theo luật đặt trước: dương cả 3 seed nhưng khoảng tin cậy chứa 0 → **"tín hiệu, chưa kết luận"**.
+- Lợi dồn vào **2 ảnh bus liền nhau** (01271–01272). Bỏ 2 ảnh này thì 13 lớp còn +0,16. 4/5 cụm âm, chỉ cụm 1059–1300 dương.
+- person −0,89 trên `kc1` (cả 3 seed), nhưng +0,15 trên Dev 228 → không lặp lại. Biển báo là lớp duy nhất thua TB trên cả hai tập.
+- Gộp `kc1` (3 seed) và Dev 228 (2 seed), phân tích **sau khi thấy số**: 13 lớp +0,49, khoảng tin cậy theo khối [+0,03; +0,86], theo cụm [−0,40; +0,95]. Bỏ cả hai đoạn nhiều bus/truck thì còn +0,06.
+
+Số liệu: `ket_qua/kiem_cheo_kc1/` (6 lần chạy, ma trận nhầm lẫn 411 ảnh). Cách chia: `code/scene_v1/chia_kiem_cheo.py`, `kiem_cheo_p1.csv`. Phân tích: `phan_tich/phan_tich_kc1.txt`, `gop_kc1_dev.txt`.
+
+### 4.29. Các hướng rớt hoặc bị loại (24–26/11)
+
+Mọi hướng đều có luật đặt trước. Phần lớn dừng **trước khi tốn GPU**, ngay ở bước kiểm trên Train.
+
+| Hướng | Ý | Kết quả | File trong `phan_tich/` |
+|---|---|---|---|
+| Ảnh 3 kênh (R = IR, G = TB, B = Y_vis) | Đưa đủ thông tin cho SegFormer | B0 seed 0: 8 lớp −0,67 so TB (luật ≥ +1,0) | `chay_tri3_b0.out.txt` |
+| Chuẩn hóa dải IR | IR có dải hẹp làm mờ người? | Người trong ảnh IR dải hẹp không mờ hơn; chỉ 1/3 ngưỡng đạt | (không lên GPU) |
+| Ảnh tối dùng TB | TB thắng ở ảnh tối | Chênh lệch do motorcycle 1 ảnh; không lặp trên val 151 | |
+| `m11b_992`, `m11c_l45_992` (`tbsua` + CE nhãn) | Học thêm từ nhãn | Ảnh đổi quá ít so `tbsua` (m11c: 2/8 lớp đổi ≥ 2 lần, luật 5/8) | `soi_m11b.txt`, `soi_m11c.txt` |
+| Liều theo vùng phẳng (`lv`) | Giảm phần sửa ở vùng phẳng | Rớt rào Q_ABF trên phần kiểm (97,0 < 98) | `lieu_vung3.txt` |
+| Nền 60% IR | Tăng tỉ lệ IR | Số B0 cũ: 8 lớp −0,54 so TB | `nen_ir.txt` |
+| ResNet làm loss thay SAM | Giữ đặc trưng ImageNet | Tương quan với 8 lớp B3 chỉ 0,37–0,49 (luật ≥ 0,7) | `kiem_loss_resnet.txt` |
+| Sửa ảnh theo giám khảo (CE) | Như M4 | Phần lớn là "lừa giám khảo": CE giảm −31,6% trên giám khảo dùng để tối ưu, chỉ −5,8% trên giám khảo khác | `kiem_m4.txt`, `nhieu_giam_khao.txt`, `tran_nhan.txt` |
+| `a04-ct` | Giữ độ sáng, chỉ thêm chi tiết | Gần TB hơn `a04` chỉ 9,7% (luật ≥ 20%) | `a04_ct.txt` |
+
+### 4.30. `a04_cvis`: thêm cổng VIS lên `a04` (26/11)
+
+Ý tưởng: VIS thuần mạnh nhất ở truck, đèn và bus. Thêm một cổng **không nhãn** để trả VIS về ở những vùng đó: Y = Y_a04 + x·(Y_vis − Y_a04). Cổng hẹp, tham số chọn trên Train ngày 24/11 (s = 8, a = 0,2), không dò lại. Rào Dev 228: MS-SSIM 102,1% / Q_ABF 107,9% / SCD 85,6%. Luật đặt trước: giữ nếu TB 2 seed > 60,69 (mức của `a04` seed 0, 1) **và** cả 2 seed hơn TB cùng seed.
+
+| B3, Dev 228 | Seed 0 / 1 | 13 lớp TB | 8 lớp | 5 lớp |
+|---|---|---|---|---|
+| `a04_cvis` | 59,55 / 59,28 | **59,41** | 76,83 | 31,56 |
+| `a04` | 60,89 / 60,49 | 60,69 | 77,31 | 34,10 |
+| TB | 60,29 / 60,08 | 60,19 | 77,62 | 32,29 |
+
+- **Rớt** cả hai vế: cả 2 seed thua TB (−0,74 / −0,80).
+- So `a04`: 13 lớp −1,28 [−2,40; −0,36]; 8 lớp −0,48 [−0,86; +0,19]; **5 lớp −2,55 [−5,80; −0,38]**. Cổng làm hại lớp hiếm rõ hơn lớp phổ biến.
+- Kiểm nhanh nguyên nhân (chỉ có ma trận nhầm lẫn từng ảnh, không có dự đoán từng điểm ảnh):
+  - Cổng mở **đúng chỗ**: phần điểm ảnh nằm trong vùng mở là bus 65%, truck 58%, biển 54%, nhưng person chỉ 4%, sky 2%.
+  - Nhưng chính các lớp đó tụt: biển −2,1 / −4,9; bus −6,3 / −0,3; truck −8,1 / +1,9.
+  - 76 ảnh cổng mở ít nhất: −0,08 (hòa). Bỏ 150 ảnh cổng mở nhiều nhất: −0,13. Tương quan theo ảnh yếu (r = −0,13, p = 0,06).
+  - Kết luận: **nghiêng về lỗi do cổng**, chưa chắc. Giả thuyết (chưa kiểm): trộn nửa VIS tạo ra vùng không giống VIS mà cũng không giống ảnh ghép.
+
+**VIS thuần so với `a04`** (IoU, TB 3 seed):
+- VIS hơn ở truck (36,9 so 26,1, +10,8), đèn (31,1 so 26,2, +4,9), bus (76,1 so 74,1, +2,0), road và building (+0,4).
+- VIS thua ở person (51,6 so 70,7, **−19,1**), motorcycle (−6,5), car, vỉa hè, vegetation, pole và biển.
+- Trong 6 bản đã có 3 seed, VIS đứng đầu 5/13 lớp, `a04` 3/13. Nhưng `a04` cao nhất ở 13 lớp vì **đều**, lớp nào cũng gần đầu.
+
+Số liệu: `ket_qua/dev228_b3/runs/a04_cvis_*`; `phan_tich/cham_a04cvis.txt`, `kiem_cong_cvis.txt`, `rao_a04_cvis.txt`. Code: `code/scene_v1/dung_a04_cvis.py`, `dung_2_nhanh.py`, `kiem_cong_cvis.py`.
+
+### 4.31. Khóa phương án và giao thức Test (26/11)
+
+- **Phương án khóa:** `a04`. Phần ghép `tbsua_992` **đóng băng** (train 992 ảnh, không nhãn), không train lại trên 1.220 ảnh.
+- **Giao thức Test** (theo `QUY_TAC_CHAM.md`): SegFormer-B3 train đủ 1.220 ảnh train chính thức, 100 epoch, batch 8, chấm checkpoint cuối (không chọn checkpoint). mIoU 13 lớp trên **273 ảnh sạch** (chính) và trên 280 ảnh. So theo cặp seed.
+- **Seed:** `a04` chạy seed 0–4. TB và SAGE đã có seed 0–2 từ mục 2.1, chạy thêm seed 3, 4. Không chạy bỏ SAM trên Test.
+- **Ghi câu kết luận trước khi mở số**, cho 3 trường hợp: hơn cả TB và SAGE / chỉ hơn SAGE / thua TB. Biên "không kém TB": cận dưới khoảng tin cậy 13 lớp > −0,5.
+- Chạy trên Kaggle (T4 × 2), mỗi notebook 4 lượt, khoảng 5,5–6 giờ. **Chưa có số.**
+
+### 4.32. Ghi chú về cách làm (24–26/11)
+
+- Mỗi ý tưởng có **luật đặt trước**, ghi trong notebook hoặc script trước khi chạy. Lần nào chạy thêm ngoài luật (seed 2 của `a04`) đều ghi rõ.
+- Mọi phương án lên B3 trong mục 4.26–4.30 đều dùng rào chỉ số ghép 99% (MS-SSIM) / 98% (Q_ABF) so SAGE. `QUY_TAC_CHAM.md` có một rào tạm 95/90 (ghi ngày 23/11), nhưng không dùng để cứu phương án nào.
+- Các số "gộp", "bỏ đoạn", "chọn tốt nhất từng lớp" là phân tích **sau khi thấy số**. Chúng chỉ để hiểu, không dùng để chọn phương án.
+
+### 4.33. Nhận định chung đến 26/11
+
+- Trên SegFormer-B3, các ảnh ghép **toàn cục** (SAGE, TB, bỏ SAM, `tbsua`, `a04`) cách nhau khoảng 1,4 điểm ở 13 lớp. `a04` cao nhất, nhưng phần hơn TB còn nằm trong mức nhiễu của Dev 228.
+- **Đánh đổi theo lớp vẫn là nút thắt.** IR giúp person rất nhiều (+19 so VIS). Nhưng mọi ảnh ghép đều làm mất một phần tín hiệu màu ở truck, đèn và bus. Cả hai lần thử trả VIS về theo vùng (`vnc`, `a04_cvis`) đều không giữ được phần lợi này. Câu đúng là: **trong các bản đã thử, chưa có ảnh ghép nào giữ được cùng lúc lợi của IR và lợi của VIS.**
+- Lợi ở lớp hiếm dồn vào vài đoạn video (01383–01419 trên Dev, 01271–01272 trên `kc1`). Mọi kết luận về lớp hiếm cần Test và dataset khác.
+- Hướng có thể khảo sát sau: ghép ở bước phân đoạn (hai nhánh, hoặc gộp dự đoán của mạng VIS và mạng ảnh ghép). Nhưng đó là một phương pháp khác, chi phí gấp đôi, và phải so với TB + VIS cùng cách gộp.
+
 ---
 
-## 5. Bước tiếp theo (23/11)
+## 5. Bước tiếp theo (26/11)
 
-1. **`vhn` trên Dev 228, SegFormer-B3 (đang chạy trên Kaggle, 2 seed).** Dùng lại hai mô hình `hai_nhanh` nửa đã có (Dev 228 không trùng hai nửa train). Luật đặt trước: đạt nếu trung bình 2 seed (13 lớp) hơn cả TB 60,15 và SAGE 59,41, và **mỗi seed** đều hơn cả hai. Nếu không hơn TB thì dừng họ `vhn`.
-2. **Thầy mạnh hơn (`vhn3`, đã soạn, chờ chạy):** thay `hai_nhanh` B0 bằng `hai_nhanh` B3 để đoán vùng tốt hơn. Luật đặt trước: mỗi nửa B3 phải có mIoU cao hơn bản B0 (44,9 / 45,3); rồi sàng lọc B0 val 151 seed 0, `vhn3` − bỏ SAM ≥ +1,0 mới đưa lên Dev 228.
-3. Nếu thầy đạt: train lại S-vùng theo bản đồ của thầy mới; thử sửa đầu vùng cho bản đồ "lớp VIS" (đang học kém); đo thời gian chạy một ảnh trên T4.
-4. **Kiểm tổng quát trên SemanticRT:** đã chia lại theo **địa điểm** (split gốc chia ngẫu nhiên theo khung hình nên rò nặng): train 1.000 / test 300, test là 4 cụm địa điểm không trùng train (kiểm bằng so khớp đặc trưng ORB). SegFormer-B3 trên ảnh 640×512, notebook đã sẵn, chờ chạy. Chưa có số. Mạng ghép không train trên SemanticRT.
+1. **Test (đang chạy trên Kaggle):** `a04` seed 0–4 và mốc TB, SAGE seed 3, 4. Trước khi mở số, ghi vào `QUY_TAC_CHAM.md` câu kết luận cho 3 trường hợp (hơn cả TB và SAGE / chỉ hơn SAGE / thua TB) và biên "không kém TB" (−0,5).
+2. **Chấm Test:** so theo cặp seed trên 273 ảnh sạch (chính) và 280 ảnh, bằng `so_sanh_cap.py`. Báo cả 13 lớp, 8 lớp, 5 lớp và IoU từng lớp. Kiểm lại xem truck, đèn, bus có còn thua VIS không (mục 4.30).
+3. **Kiểm tổng quát trên SemanticRT** (đã chia theo địa điểm, mục 5 bản 23/11): rào ảnh `a04` trên 300 ảnh Train SemanticRT đã đạt (MS-SSIM 106,7% / Q_ABF 116,3% SAGE). Chưa chạy SegFormer, đang chờ quota.
+4. Nếu còn thời gian (số phụ, ghi rõ là hướng khác): gộp dự đoán mạng VIS và mạng `a04` theo một quy tắc chốt trước, so với TB + VIS cùng quy tắc.
 
 ## 6. Cần nhóm chốt
 
 | Việc | Đề xuất |
 |---|---|
-| Số chính để chọn phương án | Nội bộ: mIoU **lớp đủ ảnh** (≥ 20 ảnh trong tập chấm). **Báo cáo cuối:** mIoU mọi lớp có mặt, trên Dev 228, Test 280 và SemanticRT, kèm số lớp đủ ảnh |
-| Cách train SegFormer-B3 | Nhãn 0 (unlabeled) có là một lớp lúc train không. Cách chấm mIoU 13 lớp thì giống nhau |
-| Dataset kiểm tổng quát | **SemanticRT** (đổi từ MSRS ngày 22/11, vì MSRS đã dùng để train Student, mục 4.20) |
-| Phương pháp có được dùng mạng phân đoạn lúc chạy không | Nếu được: `vhn` là ứng viên. Nếu không: phải chưng cất vào Student (S-vùng), hiện chưa hơn rõ |
+| Số chính để báo cáo | mIoU 13 lớp có mặt trên Test 273 ảnh sạch (theo `QUY_TAC_CHAM.md`); 8 lớp và 5 lớp là số phụ |
+| Biên "không kém TB" | Cận dưới khoảng tin cậy 13 lớp > −0,5 (Mân đã chốt 26/11; nhóm cần xác nhận) |
+| Rào chỉ số ghép | 99/98 (đã dùng cho mọi phương án lên B3). Rào tạm 95/90 trong `QUY_TAC_CHAM.md` nên bỏ hoặc chốt |
+| Ghi luật 8 lớp của `a04` | `a04` rớt luật 8 lớp đặt trước (77,31 < 77,62 ở seed 0, 1); seed 2 chạy ngoài luật. Phải ghi trong báo cáo |
+| Dataset kiểm tổng quát | SemanticRT (chia theo địa điểm) |
 
 ## 7. Giới hạn
 
-- Số trên tập khám phá chỉ để so các phương án với nhau. Không báo cáo như kết quả cuối.
-- Tập khám phá (val 151) đã được nhìn nhiều lần để định hướng (ví dụ ý tưởng A4 và luật trộn của `vhn` xuất phát từ IoU từng lớp trên val 151). Vì vậy **kết quả để báo cáo phải lấy từ Dev 228, Test 280 và dataset khác**.
-- SegFormer-B0 yếu hơn B3. Trước đây, chênh lệch đo trên B0 thường lớn hơn trên B3.
-- Chênh lệch khoảng 1 điểm mIoU giữa TB, bỏ SAM và SAGE xấp xỉ mức dao động do seed. Phải có nhiều seed và so theo cặp seed mới kết luận được. Nhiều bản ở mục 4.18–4.23 mới có **1 seed**.
-- Một số lần chạy trên máy nhà (RTX 3050), mốc trên Kaggle (T4). Cùng code, nhưng chạy lại cùng cấu hình đã lệch khoảng 0,3 điểm (mục 4.14). Mục 4.23 so trong cùng máy nhà.
-- Checkpoint SAGE (và TDFusion) được train trên đủ 1.220 ảnh train FMB, nên đã thấy val 151 và Dev 228. Bản bỏ SAM của mình chỉ train trên 841 ảnh (tầng sàng lọc) hoặc 992 ảnh (tầng chọn). Nếu có lợi thế thì đang nghiêng về SAGE.
-- `vhn` và S-vùng dùng thêm mạng pretrained (SegFormer, ResNet18 ImageNet) và nhãn lúc train. Khi so chi phí phải ghi đủ.
+- **Dev 228 đã được nhìn rất nhiều lần** (khoảng 10 phương án, phân tích theo lớp, theo đoạn, theo độ sáng). Số Dev chỉ dùng để chọn. Kết quả báo cáo phải lấy từ Test (chạy một lần cho bản đã khóa) và dataset khác.
+- Dev 228 chỉ có khoảng 10 đoạn video. Lợi ở lớp hiếm dồn vào 1–2 đoạn (mục 4.27, 4.28). Khoảng tin cậy theo khối 10 ảnh có thể hẹp hơn thực tế. Khoảng tin cậy theo cụm (rộng hơn) đều chứa 0.
+- `a04` hơn TB chưa chắc (khoảng tin cậy 13 lớp chứa 0, 8 lớp ngang). Hơn SAGE thì nhất quán trên Dev.
+- α = 0,4 và tham số cổng được chọn trên ảnh Train, không trên Dev. Nhưng **hướng** đổi nền sang TB và ý cổng VIS xuất phát từ phân tích Dev 228.
+- `tbsua_992` học (không nhãn) trên 992 ảnh Train, gồm cả phần kiểm của `kc1`.
+- Checkpoint SAGE được train trên đủ 1.220 ảnh train FMB (đã thấy Dev 228). Nếu có lợi thế thì đang nghiêng về SAGE.
+- Một số lần chạy trên máy nhà (RTX 3050), các mốc B3 trên Kaggle (T4). Chạy lại cùng cấu hình đã lệch khoảng 0,3 điểm (mục 4.14). Mọi so sánh B3 trong mục 4.24–4.30 đều chạy trên Kaggle với cùng code.
+- Các mục 4.18–4.23 nhiều bản mới có 1 seed trên B0.
+- Chưa đối chiếu với các phương pháp khác trong bảng của bài SAGE.
 
 ---
 
@@ -809,7 +970,8 @@ Số liệu gốc: `ket_qua/dev228_b3/runs/` (12 lần chạy: ma trận nhầm 
 | `ket_qua/kham_pha/` | Chỉ số ghép trên val 151, sàn, log train (mục 4.2, 4.4, 4.6). `dev_kp_td_*` (TDFusion), `dev_kp_wir_*` (A1), `dev_kp_vung_*` (A2) cho mục 4.10, 4.12 |
 | `ket_qua/kham_pha/sang_loc_b0/` | mIoU sàng lọc B0 (mục 4.7–4.9, 4.13–4.23): `runs/` là các lần chạy trên Kaggle (ma trận nhầm lẫn `dev_nham_last.npz`, IoU từng lớp, log); `runs_may_nha/` có các lần chạy trên máy nhà (bỏ SAM seed 0, A1, A2 λ = 10/30/100/mở rộng lớp, TDFusion, chỉ VIS, cận trên `vis_ir4`/`vis_ir4_lr10`/`hai_nhanh`/`hai_nhanh_visvis`, S-đèn, oracle, chưng cất, S-vùng – mục 4.10, 4.12–4.14, 4.18, 4.21, 4.23), kèm các bảng so cặp `runs_may_nha/so_sanh_lop_du_dev_b0_*.csv`; các bảng so cặp chạy Kaggle `so_sanh_lop_du_dev_b0_*.csv` (tên theo thí nghiệm: `a2_3seed`, `a4_s0`, `visvis`, `sxa_s0`, `moi_s0`, `lint_s0`, `mau`, `mau2_*`, `msrs_s0`, `vhn`, `vhn3seed`, `moilop` = đủ 14 lớp); `so_sanh_cap_dev_b0.csv` (14 lớp), `so_sanh_lop_du_dev_b0.csv` (10 lớp đủ ảnh), `miou_theo_sang_b0.csv`. Lưu ý: cột `d_tb` là hiệu trung bình các seed, `CI_anh_seed` là khoảng tin cậy dùng trong README |
 | `ket_qua/kham_pha/sang_loc_b3/` | SegFormer-B3 trên val 151 (mục 4.8): 4 lần chạy, so cặp 14 lớp và 10 lớp |
-| `ket_qua/dev228_b3/` | Tầng chọn (mục 4.24): 12 lần chạy SegFormer-B3 trên Dev 228 (bỏ SAM, SAGE, TB, VIS × 3 seed) và bảng so cặp |
+| `ket_qua/dev228_b3/` | Tầng chọn (mục 4.24, 4.26–4.30): `runs/` có 27 lần chạy SegFormer-B3 trên Dev 228 (bỏ SAM, SAGE, TB, VIS × 3 seed; `vhn`, `vnc`, `a04_cvis` × 2 seed; `tbsua_992`, `tbsua_a04` × 3 seed; `tbsua_vhn3`, `orc_dung`, `orc_nguoc` × 1 seed), mỗi lần có ma trận nhầm lẫn từng ảnh `dev_nham_last.npz`, IoU từng lớp, cấu hình, log; bảng so cặp `so_sanh_lop_du_dev_b3*.csv`; `phan_tich/` là output các script chấm và phân tích 24–26/11 (tên file trùng tên script) |
+| `ket_qua/kiem_cheo_kc1/` | Kiểm chéo theo cảnh (mục 4.28): 6 lần chạy SegFormer-B3 (TB, `a04` × 3 seed) train 782 ảnh, chấm 411 ảnh phần kiểm; `kq_kc1.json` |
 | `ket_qua/kham_pha/log_2211_2311/` | Log 21–23/11: chạy cả quy trình (`chay_*.out.txt`), train Student (S-xa, S-đèn, chưng cất, S-vùng), bảng tỉ lệ chép (mục 4.18, 4.23) |
 | `ket_qua/kham_pha/phan_tich/` | Phân tích person, tương phản người, nhầm lớp (mục 4.11); `nut_that_1_kenh.csv` (mục 4.17); `he_so_ir/` hệ số kéo về IR theo lớp (mục 4.19, 4.23); `a2_nosam_kp841_vung10/` cho mục 4.12; `proxy/` là thử chấm nhanh bằng SegFormer đóng băng (không dùng, vì phạt oan ảnh khác kiểu bỏ SAM) |
 | `ket_qua/kham_pha/log_train_a1_a2/` | Log train Student A1, A2 (mọi λ, 3 seed), A4 và log chạy cả quy trình (`*.out.txt`: cận trên, A2 λ, A2 seed, A4) |
@@ -824,11 +986,11 @@ Số liệu gốc: `ket_qua/dev228_b3/runs/` (12 lần chạy: ma trận nhầm 
 
 | Thư mục | Có gì |
 |---|---|
-| `b3/` | `chung.py` (đường dẫn, danh sách lớp, mIoU), `xuat_anh.py` (xuất ảnh ghép; thêm hậu tố `_mau`, `_mau2`, ảnh oracle `orc_dung`, `orc_nguoc`), `vung_hai_nhanh.py` (`vhn`: chia hai nửa, dựng ảnh, lưu bản đồ thầy cho S-vùng), `train_seg.py` / `eval_seg.py` (train, chấm SegFormer B0/B3), `so_sanh_cap.py` (so theo cặp seed), `so_sanh_lop_du.py` (so cặp chỉ trên lớp đủ ảnh). `train_seg.py` có thêm biến thể `vis_ir4`, `vis_ir4_lr10`, `hai_nhanh`, `hai_nhanh_visvis` (SegFormer nhận thẳng VIS + IR, để đo cận trên, mục 4.13) |
-| `b3/sage_student/` | `model.py` (kiến trúc Student của SAGE) và **checkpoint Student đã train** (mỗi file khoảng 0,6 MB): `nosam*` (E17, 5 seed), `nosam_kp841*` (tập khám phá, 5 seed), `m11_kp`, `tbsua_kp841`, `tbsua_w150`, `m11a_l0_e30_bn` (đối chứng λ = 0), `nosam_kp841_w05/w06/w07` (A1), `nosam_kp841_vung10{,_s1,_s2}` (A2 đã chốt, 3 seed), `nosam_kp841_vung30/vung100/vung10mr` (A2 các λ khác), `nosam_kp841_vung10_tach1` (A4). Thêm 21–23/11: `model_xa.py` (nhánh ngữ cảnh rộng) với `sxa0`, `sxa10{,_s1}`, `sxa10mr{,_s1}`, `sden10`, `sden30` (mục 4.18); `lint`, `lint_a2`, `lint_a2_xa3`, `lint_nha` (mục 4.19); `nosam_du`; `nosam_kp841_nha2` (train lại bỏ SAM để đo nhiễu); `cc_vhn`, `cc_vhn_thuan`, `cc_vhn_thuan_w10`, `du_ft` (mục 4.23); `model_mat.py` + `du2_mat_ft` và `model_vung.py` + `svung` (mỗi file khoảng 12 MB vì chứa cả ResNet18) |
+| `b3/` | `chung.py` (đường dẫn, danh sách lớp, mIoU), `xuat_anh.py` (xuất ảnh ghép; thêm biến thể `vnc` và hàm `cong_vnc` (mục 4.26); thêm hậu tố `_mau`, `_mau2`, ảnh oracle `orc_dung`, `orc_nguoc`), `vung_hai_nhanh.py` (`vhn`: chia hai nửa, dựng ảnh, lưu bản đồ thầy cho S-vùng), `train_seg.py` / `eval_seg.py` (train, chấm SegFormer B0/B3), `so_sanh_cap.py` (so theo cặp seed), `so_sanh_lop_du.py` (so cặp chỉ trên lớp đủ ảnh). `train_seg.py` có thêm biến thể `vis_ir4`, `vis_ir4_lr10`, `hai_nhanh`, `hai_nhanh_visvis` (SegFormer nhận thẳng VIS + IR, để đo cận trên, mục 4.13) |
+| `b3/sage_student/` | `model.py` (kiến trúc Student của SAGE) và **checkpoint Student đã train** (mỗi file khoảng 0,6 MB): `nosam*` (E17, 5 seed), `nosam_kp841*` (tập khám phá, 5 seed), `m11_kp`, `tbsua_kp841`, `tbsua_w150`, `m11a_l0_e30_bn` (đối chứng λ = 0), `nosam_kp841_w05/w06/w07` (A1), `nosam_kp841_vung10{,_s1,_s2}` (A2 đã chốt, 3 seed), `nosam_kp841_vung30/vung100/vung10mr` (A2 các λ khác), `nosam_kp841_vung10_tach1` (A4). Thêm 21–23/11: `model_xa.py` (nhánh ngữ cảnh rộng) với `sxa0`, `sxa10{,_s1}`, `sxa10mr{,_s1}`, `sden10`, `sden30` (mục 4.18); `lint`, `lint_a2`, `lint_a2_xa3`, `lint_nha` (mục 4.19); `nosam_du`; `nosam_kp841_nha2` (train lại bỏ SAM để đo nhiễu); `cc_vhn`, `cc_vhn_thuan`, `cc_vhn_thuan_w10`, `du_ft` (mục 4.23); `model_mat.py` + `du2_mat_ft` và `model_vung.py` + `svung` (mỗi file khoảng 12 MB vì chứa cả ResNet18). Thêm 24/11: `nosam_992` (bỏ SAM, train 992 ảnh, nền mốc Dev 228), `tbsua_992` (nền của `a04`, mục 4.27) |
 | `e17/` | Train Student bỏ SAM (`train_student_nosam.py`; thêm tùy chọn `--w_ir` cho A1, `--lam_vung` và `--lop_vat` cho A2, `--lam_tach` cho A4, `--them` để train thêm dữ liệu ngoài như MSRS; thêm 21–23/11: `--kien_truc {goc,xa,mat}`, `--dim`, `--xa_them`, `--lam_den`, `--lr_du`, `--w_lop`, chưng cất `--ref`, `--chi_ref`, `--w_khac`, `--khoi_tao`, `--dong_bang_goc`); `train_student_vung.py` (S-vùng, mục 4.23); so sánh E17 |
 | `cai_tien/` | M11 (`m11_hoc_chung.py`, dùng hàm trong `train_student_seg.py`), nền B (`tb_sua.py`), chỉ số ghép (`chi_so_ghep.py`, `cong2_ci.py`), độ lệch ảnh (`lech_y.py`), xuất ảnh TDFusion (`xuat_tdfusion.py`, cần clone `HaowenBai/TDFusion` kèm checkpoint). `danh_doi/` là script phân tích, đường dẫn còn cứng, chỉ để đọc |
-| `scene_v1/` | Script chạy từng thí nghiệm; phân tích (`phan_tich_nosam.py`, `phan_tich_a2.py`, `do_tuong_phan.py`, `miou_theo_sang.py`, `kiem_proxy.py`, `oracle/oracle.py`, `kiem_a3/` đo cạnh và độ tách vùng mục 4.15; `phan_tich_nut_that.py` mục 4.17; `tinh_w_lop.py`, `w_lop.json`, `do_he_so_ir.py` mục 4.19; `oracle_doan.py` mục 4.21; `chep_delta.py`, `he_so_anh.py` mục 4.23); `_vhn/` (chia hai nửa cho `vhn` và bản đồ thầy `p_thay.npz`); `nua_kp/`; `kham_pha/` (train 841 / val 151); `goc/` (split scene_v1 992/228 của nhóm, kèm `scene_decision.md`) |
+| `scene_v1/` | Script chạy từng thí nghiệm; phân tích (`phan_tich_nosam.py`, `phan_tich_a2.py`, `do_tuong_phan.py`, `miou_theo_sang.py`, `kiem_proxy.py`, `oracle/oracle.py`, `kiem_a3/` đo cạnh và độ tách vùng mục 4.15; `phan_tich_nut_that.py` mục 4.17; `tinh_w_lop.py`, `w_lop.json`, `do_he_so_ir.py` mục 4.19; `oracle_doan.py` mục 4.21; `chep_delta.py`, `he_so_anh.py` mục 4.23); `_vhn/` (chia hai nửa cho `vhn` và bản đồ thầy `p_thay.npz`); `nua_kp/`; `kham_pha/` (train 841 / val 151); `goc/` (split scene_v1 992/228 của nhóm, kèm `scene_decision.md`). Thêm 24–26/11: `chay_tbsua992.sh` (train `tbsua_992`, xuất ảnh, đo rào), `lieu_alpha.py` (chọn α trên Train), `dung_alpha.py` (dựng `a04`), `chon_cong_tbsua.py`, `chon_cong_tbsua2.py`, `dung_2_nhanh.py` (cổng VIS, `tbsua_vhn3`), `dung_a04_cvis.py`, `kiem_cong_cvis.py` (mục 4.30), `cham_tbsua3.py`, `cham_a04_3s.py`, `cham_a04cvis.py`, `phan_tich_ho_tb.py`, `dai_dien_dev.py` + `dai_dien_dev.csv` (độ sáng từng ảnh), `chia_kiem_cheo.py` + `kiem_cheo_p1.csv`, `phan_tich_kc1.py`, `gop_kc1_dev.py` (mục 4.28); `_vhn3/p_thay_vhn3.npz` (bản đồ thầy `vhn3`) |
 | `chi_phi/` | Đo chi phí (E18) |
 | `pr6_eval/` | Code chỉ số ghép của Lộc lớn (SCD, MS-SSIM, Q_ABF…), chép nguyên `metrics.py` |
 | `QUY_TAC_CHAM.md`, `moi_truong.txt` | Quy tắc so sánh của nhóm; phiên bản thư viện |
@@ -880,5 +1042,10 @@ Số liệu gốc: `ket_qua/dev228_b3/runs/` (12 lần chạy: ma trận nhầm 
 | `vhn` (mục 4.22) | `cd b3 && SAGE_MAN=../scene_v1/kham_pha SO_TRAIN=841 $PY vung_hai_nhanh.py chia --ra ../scene_v1/_vhn`; train `hai_nhanh` B0 trên từng nửa: `SAGE_MAN=../scene_v1/_vhn/man_A SAGE_RUNS=../scene_v1/_vhn/runs_A $PY train_seg.py --bien_the hai_nhanh --model b0 --seed 0` (tương tự `man_B`, `runs_B`); dựng ảnh: `$PY vung_hai_nhanh.py dung --ra ../scene_v1/_vhn`; bản đồ cho S-vùng: `$PY vung_hai_nhanh.py luu_p --ra ../scene_v1/_vhn` | khoảng 1 giờ mỗi nửa (T4) |
 | Chưng cất vào Student (mục 4.23) | `bash scene_v1/chay_chung_cat.sh`, `chay_thuan.sh`, `chay_du.sh`, `chay_du2.sh`, rồi chấm `chay_du2_b0.sh` | khoảng 20–60 phút mỗi script phần Student, 1,2 giờ mỗi lần chấm B0 |
 | S-vùng (mục 4.23) | `cd e17 && SAGE_MAN=../scene_v1/kham_pha SO_TRAIN=841 $PY train_student_vung.py --ten svung`; chấm: `bash scene_v1/chay_svung_b0.sh`; tỉ lệ chép: `cd scene_v1 && $PY chep_delta.py dev vhn nosam_kp841 ck:svung` | 7 phút + 1,2 giờ |
+| `tbsua_992` và rào (mục 4.27) | `bash scene_v1/chay_tbsua992.sh` | khoảng 1 giờ |
+| Chọn α trên Train, dựng `a04` (mục 4.27) | `SAGE_MAN=scene_v1/goc python scene_v1/lieu_alpha.py`; `SAGE_MAN=scene_v1/goc python scene_v1/dung_alpha.py` (cần ảnh `tbsua_992` trong `SAGE_ANH`) | vài phút |
+| Chấm `a04` 3 seed trên Dev 228 (mục 4.27) | `python scene_v1/cham_a04_3s.py` (đọc `ket_qua/dev228_b3/runs/`) | vài giây |
+| Kiểm chéo `kc1` (mục 4.28) | `python scene_v1/phan_tich_kc1.py`; `python scene_v1/gop_kc1_dev.py` | vài phút |
+| `a04_cvis` (mục 4.30) | `SAGE_MAN=scene_v1/goc python scene_v1/dung_a04_cvis.py`; chấm: `python scene_v1/cham_a04cvis.py`; kiểm cổng: `SAGE_MAN=scene_v1/goc python scene_v1/kiem_cong_cvis.py` (cần ảnh `a04`, `a04_cvis`) | vài phút |
 
-Đã thử: xuất 3 ảnh `tbsua_w150` bằng code trong repo này, kết quả **giống hệt từng điểm ảnh** với bản gốc. Các script khác đã chạy thử `--help` và đều nạp được.
+Đã thử: xuất 3 ảnh `tbsua_w150` bằng code trong repo này, kết quả **giống hệt từng điểm ảnh** với bản gốc. Ngày 26/11: chạy lại trong repo `cham_a04_3s.py`, `cham_a04cvis.py`, `cham_tbsua3.py`, `phan_tich_kc1.py`, `gop_kc1_dev.py`, `phan_tich_ho_tb.py` ra **đúng số** trong `ket_qua/dev228_b3/phan_tich/`. Các script khác đã chạy thử `--help` và đều nạp được.

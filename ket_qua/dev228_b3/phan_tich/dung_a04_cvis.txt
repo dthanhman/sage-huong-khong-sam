@@ -1,0 +1,5 @@
+a04_cvis 1220
+        |dY|  mo_cong_%  chay_%
+split                          
+dev    1.726     16.883   0.000
+train  2.204     21.086   0.001

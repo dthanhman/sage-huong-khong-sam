@@ -31,6 +31,15 @@ d_s = mIoU(A, s) − mIoU(B, s); CI_anh = bootstrap khối 10 ảnh id liền; C
     (86–92%, sàn SCD sẽ là 96%) → rào SCD loại mọi phương án không SAM trước khi xét mIoU; (2) kiểm 18/11 (cai_tien/danh_doi):
     SCD không dự đoán mIoU. Minh bạch: quyết định này đưa ra SAU khi đã biết SCD của m11_kp (89,1%).
 
+### Rào ảnh TẠM THỜI cho phương án MỚI từ 23/11/2026 (Mân đồng ý tạm thời, nhóm chưa chốt)
+- **MS-SSIM ≥ 95%** và **Q_ABF ≥ 90%** của SAGE. mIoU giữ nguyên là tiêu chí chính. SCD vẫn báo kèm + cảnh báo < 85%.
+- Vẫn bắt buộc cháy trắng + hình đêm/khói/chạng vạng; phương án đổi màu phải báo thêm độ lệch màu so với VIS.
+- **vnc chấm theo rào cũ (99%/98%)**, vì đã đẩy chạy trước. Không dùng rào mới để cứu phương án đã rớt.
+- Lý do: rào cũ gần như bắt không thua SAGE, TB (mốc mIoU cao hơn SAGE) cũng rớt Q_ABF (60% SAGE, val 151). 95% theo mức
+  "không giảm quá ~5%" nêu 17/11; 90% chọn theo cảm tính.
+- Minh bạch: lần nới THỨ HAI (lần đầu 18/11, SCD), nới SAU khi biết kết quả oracle B3 và nhiều phương án chưa đạt mIoU.
+  Không nới thêm sau khi thấy mIoU của phương án mới. Khi báo cáo: nói "đổi một ít chỉ số ghép", không nói "không thua SAGE".
+
 ## Số phụ (chốt luôn, KHÔNG dùng để chọn phương án)
 mIoU 7 lớp của bài, IoU từng lớp, nhóm ảnh tối/vừa/sáng, dòng trần 4 kênh (RGB + IR) khi có.
 

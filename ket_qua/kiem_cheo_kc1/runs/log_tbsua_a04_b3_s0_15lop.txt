@@ -1,0 +1,44 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] You passed `num_labels=15` which is incompatible to the `id2label` map of length `1000`.
+Loading weights:   0%|          | 0/628 [00:00<?, ?it/s]Loading weights: 100%|██████████| 628/628 [00:00<00:00, 8043.14it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b3
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.weight                                       | UNEXPECTED | 
+classifier.bias                                         | UNEXPECTED | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+tbsua_a04_b3_s0_15lop: 782 train, 411 dev, 9700 iter
+iter 500/9700 ep 6 loss 0.638 dev mIoU 46.75 *  362s, còn ~1.9 giờ
+iter 1000/9700 ep 11 loss 0.235 dev mIoU 51.88 *  741s, còn ~1.8 giờ
+iter 1500/9700 ep 16 loss 0.195 dev mIoU 53.20 *  1120s, còn ~1.7 giờ
+iter 2000/9700 ep 21 loss 0.174 dev mIoU 53.79 *  1499s, còn ~1.6 giờ
+iter 2500/9700 ep 26 loss 0.153 dev mIoU 54.25 *  1878s, còn ~1.5 giờ
+iter 3000/9700 ep 31 loss 0.138 dev mIoU 54.51 *  2255s, còn ~1.4 giờ
+iter 3500/9700 ep 37 loss 0.134 dev mIoU 55.67 *  2636s, còn ~1.3 giờ
+iter 4000/9700 ep 42 loss 0.128 dev mIoU 55.68 *  3014s, còn ~1.2 giờ
+iter 4500/9700 ep 47 loss 0.120 dev mIoU 55.54  3394s, còn ~1.1 giờ
+iter 5000/9700 ep 52 loss 0.119 dev mIoU 54.92  3773s, còn ~1.0 giờ
+iter 5500/9700 ep 57 loss 0.118 dev mIoU 55.30  4151s, còn ~0.9 giờ
+iter 6000/9700 ep 62 loss 0.112 dev mIoU 56.66 *  4530s, còn ~0.8 giờ
+iter 6500/9700 ep 68 loss 0.107 dev mIoU 56.36  4912s, còn ~0.7 giờ
+iter 7000/9700 ep 73 loss 0.106 dev mIoU 57.09 *  5292s, còn ~0.6 giờ
+iter 7500/9700 ep 78 loss 0.103 dev mIoU 57.08  5670s, còn ~0.5 giờ
+iter 8000/9700 ep 83 loss 0.099 dev mIoU 57.36 *  6048s, còn ~0.4 giờ
+iter 8500/9700 ep 88 loss 0.095 dev mIoU 57.28  6427s, còn ~0.3 giờ
+iter 9000/9700 ep 93 loss 0.094 dev mIoU 58.04 *  6806s, còn ~0.1 giờ
+iter 9500/9700 ep 98 loss 0.092 dev mIoU 58.32 *  7183s, còn ~0.0 giờ
+iter 9700/9700 ep 100 loss 0.092 dev mIoU 57.75  7350s, còn ~0.0 giờ
+Xong tbsua_a04_b3_s0_15lop sau 2.04 giờ. Checkpoint: /kaggle/working/runs/tbsua_a04_b3_s0_15lop/last.pt

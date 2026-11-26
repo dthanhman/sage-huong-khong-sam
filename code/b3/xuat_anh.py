@@ -18,8 +18,9 @@
 
 Ví dụ: python xuat_anh.py --bien_the sage
 """
-_TL = __import__("pathlib").Path(__file__).resolve().parents[1].as_posix()   # thư mục code/
 import argparse
+_TL = __import__("pathlib").Path(__file__).resolve().parents[1].as_posix()   # thư mục code/
+import os
 import sys
 
 import cv2
@@ -85,7 +86,7 @@ def vis_cong_ir_mem(y, ir):
     return nen_mem(yv + iv - iv.mean()).round().clip(0, 255).astype(np.uint8)
 
 
-W_LOP = f"{_TL}/scene_v1/w_lop.json"
+W_LOP = os.environ.get("SAGE_W_LOP", f"{_TL}/scene_v1/w_lop.json")
 
 
 def oracle_lop(y, ir, lab, nguoc=False, sigma=4.0):
@@ -116,6 +117,36 @@ def ghep_giu_mau(vis_bgr, yf, sigma=2.0, bu=8.0, k_min=0.5, k_max=3.0):
     return cv2.cvtColor(out, cv2.COLOR_YCrCb2BGR)
 
 
+VNC_GOC = "nosam_992"   # nền ảnh ghép của vnc (Student bỏ SAM train 992 ảnh, cùng nền với mốc B3 Dev228)
+
+
+def cong_vnc(y, ir, k=31, a=15.0, b=30.0, no=9, sm=4.0, toi_lo=80.0, toi_hi=110.0, g_min=0.2):
+    """VNC (23/11) – cổng g trong [g_min, 1] cho Y = Y_vis + g·(Y_nosam − Y_vis). KHÔNG nhãn, KHÔNG mạng phụ.
+    - Cổng nhiệt: s = top-hat trắng (elip k x k) của IR đã làm mịn 2 px = vật NHỎ ấm hơn nền (người); vùng lớn
+      (tòa nhà giáp trời lạnh) bị loại – bản đầu dùng IR − Gauss25(IR) mở sai ở mép nhà/trời (xem hinh_cai_tien/vnc_train_00341).
+      g = clip((s − a)/b), nới vùng (dilate no x no), làm mờ Gauss sm px. Tham số CHỌN TRÊN ẢNH TRAIN SÁNG
+      (496 ảnh, scene_v1 train 992): tách người tốt nhất (g người 0,76; tòa nhà 0,17, truck 0,15, đèn 0,31). Không nhìn Dev.
+    - Cổng tối (theo ảnh): mean(Y_vis) <= toi_lo -> 1 (dùng nosam), >= toi_hi -> 0, tuyến tính ở giữa.
+      toi_lo ≈ P10 độ sáng ảnh train (79), toi_hi dưới trung vị train (115). Ghi rõ: mốc 100 ở giữa có tham khảo
+      phân tích Dev228 (ảnh sáng/tối) trước đó.
+    - g_min = 0,2: mức nhỏ nhất qua rào MS-SSIM >= 99% SAGE trên 83 ảnh train (0: 98,6%; 0,1: 99,0%; 0,2: 99,3%).
+    Lý do (phân tích B3 Dev228 3 seed): ở ảnh sáng VIS thắng ảnh ghép ở đèn/truck/bus/vỉa hè (lớp hiếm, diện mạo bị
+    ảnh ghép đổi), còn person cần IR; ở ảnh tối ảnh ghép thắng."""
+    yv = y.astype(np.float32)
+    irs = cv2.GaussianBlur(ir, (0, 0), 2)
+    s = cv2.morphologyEx(irs, cv2.MORPH_TOPHAT, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))).astype(np.float32)
+    g = np.clip((s - a) / b, 0, 1)
+    g = cv2.GaussianBlur(cv2.dilate(g, np.ones((no, no), np.uint8)), (0, 0), sm)
+    toi = float(np.clip((toi_hi - yv.mean()) / (toi_hi - toi_lo), 0, 1))
+    return np.maximum(np.maximum(g, toi), g_min)
+
+
+def vis_neo_cong(y, ir, yn):
+    g = cong_vnc(y, ir)
+    yv = y.astype(np.float32)
+    return (yv + g * (yn.astype(np.float32) - yv)).round().clip(0, 255).astype(np.uint8)
+
+
 def tron_thich_nghi(y, ir):
     w = trong_so_tn(y, ir)
     return ((1 - w) * y.astype(np.float32) + w * ir).round().clip(0, 255).astype(np.uint8)
@@ -142,6 +173,9 @@ def main():
     elif a.bien_the.endswith("_mau"):
         goc, k_min = a.bien_the[:-4], 0.5
     giu_mau = k_min is not None
+    la_vnc = goc == "vnc"
+    if la_vnc:
+        goc = VNC_GOC                                   # chạy Student nền rồi trộn với VIS theo cổng
     if goc not in CKPT and goc not in ("vis", "ir", "tb", "clahe", "tn", "tbct", "tbcd", "vci", "vcim", "orc_dung", "orc_nguoc"):
         assert (STUDENT / f"{goc}.pt").exists(), f"không có biến thể/checkpoint {goc}"
         CKPT[goc] = f"{goc}.pt"
@@ -215,6 +249,8 @@ def main():
                     if s_tb is not None:
                         o = (t2(y) + t2(ir)) / 2 + s_tb * o
                     yf = (o.clamp(0, 1) * 255).round().byte().cpu().numpy()[0, 0]
+                if la_vnc:
+                    yf = vis_neo_cong(y, ir, yf)
             img = (ghep_giu_mau(vis, yf, k_min=k_min) if giu_mau
                    else cv2.cvtColor(np.dstack([yf, ycc[:, :, 1:]]), cv2.COLOR_YCrCb2BGR))
         cv2.imwrite(str(out), img)

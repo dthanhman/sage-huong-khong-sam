@@ -1,0 +1,30 @@
+Dev228: cổng mở TB 15.2% (trung vị 10.9, max 44.6); |dY| TB 1.97; ảnh cổng đóng hẳn (<0,5%): 26
+Spearman (%cổng mở, chênh acc pixel cvis−a04): r=-0.125 p=0.059
+Spearman (|dY|, chênh acc pixel): r=-0.062 p=0.353
+
+mIoU13 cvis−a04 theo nhóm mức cổng (cộng ma trận trong nhóm, TB 2 seed):
+  cổng ít     76 ảnh, mở   0.0–  5.8%: +0.29 / -0.46 TB -0.08
+  cổng vừa    76 ảnh, mở   5.8– 22.1%: -0.71 / -2.96 TB -1.83
+  cổng nhiều  76 ảnh, mở  22.1– 44.6%: -1.03 / -0.29 TB -0.66
+
+Bỏ dần ảnh cổng mở nhiều nhất → mIoU13 cvis−a04 (TB 2 seed):
+  bỏ   0 ảnh: -1.28
+  bỏ  20 ảnh: -1.43
+  bỏ  50 ảnh: -1.28
+  bỏ 100 ảnh: -1.02
+  bỏ 150 ảnh: -0.13
+
+Từng lớp: % pixel nằm trong vùng cổng mở | IoU cvis−a04 s0/s1:
+  road        8.8%  |  -0.8 /  -0.5
+  sidewalk   11.7%  |  -0.1 /  -1.2
+  building   20.6%  |  +2.2 /  -2.1
+  light      18.1%  |  -0.9 /  -0.6
+  sign       53.5%  |  -2.1 /  -4.9
+  veg        35.3%  |  +0.0 /  -0.2
+  sky         1.8%  |  +0.4 /  -0.5
+  person      3.8%  |  +0.5 /  -0.3
+  car        28.8%  |  +0.2 /  +0.1
+  truck      57.6%  |  -8.1 /  +1.9
+  bus        64.7%  |  -6.3 /  -0.3
+  moto       18.2%  |  -2.9 /  -7.1
+  pole       38.9%  |  +0.3 /  -0.2

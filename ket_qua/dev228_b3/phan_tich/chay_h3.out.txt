@@ -1,0 +1,13 @@
+[10:43] train
+[11:31] xuất ảnh + rào
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\m11c_l45_992.pt. Tiếp: b3/xuat_anh.py --bien_the m11c_l45_992 -> chi_so_ghep.py -> B0 mới.
+m11c_l45_992: ghi 1220 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\m11c_l45_992
+dev: 228 ảnh
+                 SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                         
+sage          1.6982   1.5689  0.6117  6.6512  36.6650      0.7175       0.8514   100.0000       100.0000     100.0000       True
+tb            1.4298   1.6377  0.3926  6.0318  24.2661      0.7999       0.8378    84.1900       104.3881      64.1857      False
+tbsua_992     1.5234   1.5922  0.7067  6.4494  27.5191      0.7161       0.8761    89.7029       101.4872     115.5321      False
+m11b_992      1.5300   1.5904  0.7041  6.4561  27.8449      0.7158       0.8747    90.0949       101.3733     115.0987      False
+m11c_l45_992  1.5245   1.5984  0.6825  6.4464  27.6644      0.7272       0.8712    89.7678       101.8809     111.5734      False
+XONG

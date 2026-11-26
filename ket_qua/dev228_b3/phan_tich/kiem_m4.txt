@@ -1,0 +1,16 @@
+91 ảnh
+CE 8 lớp (giám khảo chưa thấy), TB = 0.248
+tb                     CE 0.2480 (+0.00%) ảnh tốt hơn TB 0% | |Y-TB| 0.00 | theo gk A +0.0% B +0.0%
+a04                    CE 0.2584 (+4.21%) ảnh tốt hơn TB 30% | |Y-TB| 1.73 | theo gk A -0.3% B +7.3%
+tbsua                  CE 0.2876 (+15.99%) ảnh tốt hơn TB 27% | |Y-TB| 4.32 | theo gk A +4.7% B +23.7%
+m4_l1                  CE 0.2341 (-5.60%) ảnh tốt hơn TB 65% | |Y-TB| 2.36 | theo gk A -7.7% B -4.2%
+m4_l1_bnTRAIN          CE 0.2364 (-4.66%) ảnh tốt hơn TB 59% | |Y-TB| 2.21 | theo gk A -5.4% B -4.2%
+m4_l1_lr1e3            CE 0.2399 (-3.24%) ảnh tốt hơn TB 57% | |Y-TB| 1.59 | theo gk A -5.4% B -1.8%
+m4_l1_lr1e3_bnTRAIN    CE 0.2409 (-2.83%) ảnh tốt hơn TB 51% | |Y-TB| 1.44 | theo gk A -4.3% B -1.9%
+m4_l3                  CE 0.2347 (-5.34%) ảnh tốt hơn TB 60% | |Y-TB| 3.28 | theo gk A -6.8% B -4.3%
+m4_l3_bnTRAIN          CE 0.2391 (-3.59%) ảnh tốt hơn TB 54% | |Y-TB| 2.98 | theo gk A -3.8% B -3.4%
+m4_l0.3                CE 0.2349 (-5.26%) ảnh tốt hơn TB 63% | |Y-TB| 1.46 | theo gk A -7.5% B -3.7%
+m4_l0.3_bnTRAIN        CE 0.2377 (-4.16%) ảnh tốt hơn TB 56% | |Y-TB| 1.32 | theo gk A -5.6% B -3.1%
+TRẦN tối ưu từng ảnh al CE 0.1721 so TB 0.2517 (-31.6%) |Y-TB| 2.37 | giám khảo KIA -5.8% (giám khảo kia ĐÃ thấy ảnh này)
+TRẦN tối ưu từng ảnh w CE 0.1117 so TB 0.2517 (-55.6%) |Y-TB| 9.38 | giám khảo KIA -3.4% (giám khảo kia ĐÃ thấy ảnh này)
+gradient M4 tại điểm hội tụ: ||CE|| / ||15·MSE neo|| [2.61419044 0.31144264] tỉ lệ 13.11

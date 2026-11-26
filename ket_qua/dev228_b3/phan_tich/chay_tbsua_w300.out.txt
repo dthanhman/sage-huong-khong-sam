@@ -1,0 +1,11 @@
+epoch 100 loss 1.0041 (MSE_TB 0.00086, grad 0.0276) |phần sửa| TB 4.05 mức xám  13.0 phút
+Lưu D:\CS406\DoAn\Sage\tai_lap\b3\sage_student\tbsua_w300_992.pt
+tbsua_w300_992: ghi 1220 ảnh mới vào D:\CS406\DoAn\Sage\luu_tru\tim_gap_b0_0811\seg\anh\tbsua_w300_992
+dev: 228 ảnh
+                   SCD  MS_SSIM   Q_ABF      EN       SD  MS_SSIM_IR  MS_SSIM_VIS  SCD_%sage  MS_SSIM_%sage  Q_ABF_%sage  qua_cong2
+bien_the                                                                                                                           
+sage            1.6982   1.5689  0.6117  6.6512  36.6650      0.7175       0.8514   100.0000       100.0000     100.0000       True
+tb              1.4298   1.6377  0.3926  6.0318  24.2661      0.7999       0.8378    84.1900       104.3881      64.1857      False
+tbsua_992       1.5234   1.5922  0.7067  6.4494  27.5191      0.7161       0.8761    89.7029       101.4872     115.5321      False
+tbsua_w300_992  1.5127   1.5993  0.6936  6.4114  26.9671      0.7308       0.8685    89.0747       101.9384     113.3809      False
+XONG

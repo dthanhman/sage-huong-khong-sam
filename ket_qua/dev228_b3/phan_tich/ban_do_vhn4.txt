@@ -1,0 +1,8 @@
+sidewalk  t=0 | A: đúng 0.48 phủ 0.53 | B: đúng 0.39 phủ 0.53
+sidewalk  t=0.3 | A: đúng 0.69 phủ 0.38 | B: đúng 0.51 phủ 0.31
+sidewalk  t=0.5 | A: đúng 0.73 phủ 0.28 | B: đúng 0.46 phủ 0.16
+sidewalk  t=0.7 | A: đúng 0.79 phủ 0.21 | B: đúng 0.50 phủ 0.11
+light     t=0 | A: đúng 0.34 phủ 0.33 | B: đúng 0.29 phủ 0.29
+light     t=0.3 | A: đúng 0.69 phủ 0.23 | B: đúng 0.60 phủ 0.17
+light     t=0.5 | A: đúng 0.76 phủ 0.18 | B: đúng 0.69 phủ 0.12
+light     t=0.7 | A: đúng 0.82 phủ 0.14 | B: đúng 0.78 phủ 0.08

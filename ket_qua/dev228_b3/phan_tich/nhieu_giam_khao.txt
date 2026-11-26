@@ -1,0 +1,123 @@
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 26227.21it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 22609.53it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 17448.62it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 14983.28it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[transformers] You passed `num_labels=14` which is incompatible to the `id2label` map of length `1000`.
+Loading weights:   0%|          | 0/192 [00:00<?, ?it/s]Loading weights: 100%|██████████| 192/192 [00:00<00:00, 21055.41it/s]
+[transformers] [1mSegformerForSemanticSegmentation LOAD REPORT[0m from: nvidia/mit-b0
+Key                                                     | Status     | 
+--------------------------------------------------------+------------+-
+classifier.bias                                         | UNEXPECTED | 
+classifier.weight                                       | UNEXPECTED | 
+decode_head.linear_fuse.weight                          | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.weight | MISSING    | 
+decode_head.linear_projections.{0, 1, 2, 3}.proj.bias   | MISSING    | 
+decode_head.batch_norm.num_batches_tracked              | MISSING    | 
+decode_head.classifier.weight                           | MISSING    | 
+decode_head.batch_norm.running_var                      | MISSING    | 
+decode_head.classifier.bias                             | MISSING    | 
+decode_head.batch_norm.bias                             | MISSING    | 
+decode_head.batch_norm.weight                           | MISSING    | 
+decode_head.batch_norm.running_mean                     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+76 ảnh
+0
+10
+20
+30
+40
+50
+60
+70
+số khối 3
+TB CE: {'vis': 0.262, 'nosam_kp841': 0.231, 'm11a_l0_e30_bn': 0.244, 'tdfusion': 0.227, 'du2_mat_ft': 0.229}
+a04                  NGOÀI   -3.9% CI khối [-5.0;-2.7] | vis -0.8 nosam_kp841 -4.8 m11a_l0_e30_bn -6.4 tdfusion -3.8 du2_mat_ft -4.0 | |Y-TB| 1.56 | ảnh tốt hơn TB (ngoài) 84%
+tbsua                NGOÀI   -4.5% CI khối [-5.4;+1.1] | vis +2.8 nosam_kp841 -4.7 m11a_l0_e30_bn -10.1 tdfusion -4.5 du2_mat_ft -4.5 | |Y-TB| 3.91 | ảnh tốt hơn TB (ngoài) 72%
+mot_vis              NGOÀI  -21.1% CI khối [-22.2;-19.6] | vis -33.3 nosam_kp841 -22.0 m11a_l0_e30_bn -22.2 tdfusion -21.2 du2_mat_ft -21.1 | |Y-TB| 2.01 | ảnh tốt hơn TB (ngoài) 100%
+mot_nosam_kp841      NGOÀI  -30.5% CI khối [-30.6;-30.4] | vis -17.5 nosam_kp841 -33.8 m11a_l0_e30_bn -33.6 tdfusion -30.2 du2_mat_ft -30.8 | |Y-TB| 1.95 | ảnh tốt hơn TB (ngoài) 100%
+mot_m11a_l0_e30_bn   NGOÀI  -29.3% CI khối [-29.9;-29.1] | vis -12.0 nosam_kp841 -30.9 m11a_l0_e30_bn -36.3 tdfusion -29.1 du2_mat_ft -29.5 | |Y-TB| 1.97 | ảnh tốt hơn TB (ngoài) 100%
+ba                   NGOÀI  -29.7% CI khối [-30.1;-28.6] | vis -29.0 nosam_kp841 -31.8 m11a_l0_e30_bn -33.7 tdfusion -29.4 du2_mat_ft -29.9 | |Y-TB| 1.97 | ảnh tốt hơn TB (ngoài) 100%
